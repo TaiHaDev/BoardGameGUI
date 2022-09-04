@@ -1,14 +1,18 @@
 package comp1140.ass2.gui;
 
+import comp1140.ass2.game.GameInstance;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Viewer extends Application {
@@ -18,7 +22,7 @@ public class Viewer extends Application {
 
     private final Group root = new Group();
     private final Group controls = new Group();
-    private TextField playerTextField;
+    private Label playerTextField = new Label();
     private TextField boardTextField;
 
 
@@ -29,6 +33,26 @@ public class Viewer extends Application {
      */
     void displayState(String boardState) {
         // FIXME Task 6: implement the state viewer
+        try {
+            GameInstance gameInstance = new GameInstance(boardState);
+            StringBuilder outputString = new StringBuilder();
+            for (var e : gameInstance.players) {
+                outputString.append(gameInstance.toString(e));
+            }
+            playerTextField = new Label(outputString.toString());
+            playerTextField.setMaxWidth(1200);
+            playerTextField.setWrapText(true);
+            playerTextField.setLayoutY(45);
+
+        } catch (NumberFormatException e) {
+            playerTextField = new Label("Invalid input");
+            playerTextField.setLayoutY(350);
+            playerTextField.setLayoutX(550);
+        } finally {
+            playerTextField.setFont(Font.font("arial", 16));
+            playerTextField.setTextFill(Color.LIGHTSKYBLUE);
+            root.getChildren().add(playerTextField);
+        }
     }
 
     /**
@@ -42,6 +66,9 @@ public class Viewer extends Application {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                if (!playerTextField.getText().isEmpty()) {
+                    playerTextField.setText("");
+                }
                 displayState(boardTextField.getText());
             }
         });
@@ -59,7 +86,6 @@ public class Viewer extends Application {
         root.getChildren().add(controls);
 
         makeControls();
-
         primaryStage.setScene(scene);
         primaryStage.show();
     }

@@ -3,15 +3,20 @@ package comp1140.ass2.game;
 import javafx.scene.paint.Color;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Player {
 
     private String name;
     private Date birthday;
     private Color color;
+    private int score;
 
-    public Player(String name, Date birthday, Color color) {
-
+    public Player(String name, Date birthday, Color color, int score) {
+        this.name = name;
+        this.birthday = birthday;
+        this.color = color;
+        this.score = score;
     }
 
     /**
@@ -32,7 +37,7 @@ public class Player {
     }
 
     public String getName() {
-        return null;
+        return name;
     }
 
     public void setName(String name) {
@@ -53,5 +58,30 @@ public class Player {
 
     public void setColor(Color color) {
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player player)) return false;
+        return score == player.score && Objects.equals(getName(), player.getName()) && Objects.equals(getBirthday(), player.getBirthday()) && Objects.equals(getColor(), player.getColor());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getBirthday(), getColor(), score);
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

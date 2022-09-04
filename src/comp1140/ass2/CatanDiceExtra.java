@@ -1,6 +1,24 @@
 package comp1140.ass2;
 
+import comp1140.ass2.game.*;
+
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class CatanDiceExtra {
+    public static void main(String[] args) {
+        System.out.println(isActionValid("X63bbmoolWK02R0105R0205R0509S02XR3237W01X00", "buildR3137"));
+        GameInstance gameInstance = new GameInstance("X00WR0205XW00X00");
+        System.out.println(gameInstance.board.isCoastalAnd5RoadsAway(2,6, new Player("X",null,null,0)));
+        Map<Integer, Integer> test = Map.of(1,2);
+        System.out.println(test.get(2));
+
+    }
 
     /**
      * Check if the string encoding of a board state is well-formed.
@@ -17,9 +35,61 @@ public class CatanDiceExtra {
      */
     public static boolean isBoardStateWellFormed(String boardState) {
         // FIXME: Task 3
-	return false;
+//         turn section
+        String regex1 = "^(W|X)([3-6][1-3]|00)([b,g,l,m,o,w]{0}|[b,g,l,m,o,w]{2,6})(W(C[0-4])*(J(0[0-9]|1[0-9]))*" +
+                "(K(0[0-9]|1[0-9]))*(R(\\d\\d\\d\\d))*(S([0-4][0-9]|5[0-3]))*(T([0-4][0-9]|5[0-3]))*)(X(C[0-4])*" +
+                "(J(0[0-9]|1[0-9]))*(K(0[0-9]|1[0-9]))*(R(\\d\\d\\d\\d))*(S([0-4][0-9]|5[0-3]))*(T([0-4][0-9]|5[0-3]))*)" +
+                "(W(0[0-9]|1[0-1])R?A?X(0[0-9]|1[0-1]))?(W(0[0-9]|1[0-1])X(0[0-9]|1[0-1])R?A?)?(W(0[0-9]|1[0-1])" +
+                "R?X(0[0-9]|1[0-1])A?)?(W(0[0-9]|1[0-1])A?X(0[0-9]|1[0-1])R?)?$";
+        String regex2 = "^(W|X)([3-6][1-3]|00)(b*g*l*m*o*w*)(W(C[0-4])*(J(0[0-9]|1[0-9]))*(K(0[0-9]|1[0-9]))*" +
+                "(R(\\d\\d\\d\\d))*(S([0-4][0-9]|5[0-3]))*(T([0-4][0-9]|5[0-3]))*)(X(C[0-4])*(J(0[0-9]|1[0-9]))*" +
+                "(K(0[0-9]|1[0-9]))*(R(\\d\\d\\d\\d))*(S([0-4][0-9]|5[0-3]))*(T([0-4][0-9]|5[0-3]))*)" +
+                "(W(0[0-9]|1[0-1])R?A?X(0[0-9]|1[0-1]))?(W(0[0-9]|1[0-1])X(0[0-9]|1[0-1])R?A?)?(W(0[0-9]|1[0-1])R?X" +
+                "(0[0-9]|1[0-1])A?)?(W(0[0-9]|1[0-1])A?X(0[0-9]|1[0-1])R?)?$";
+        Pattern p = Pattern.compile(regex1);
+        Matcher m = p.matcher(boardState);
+        boolean b = m.matches();
+        Pattern p2 = Pattern.compile(regex2);
+        Matcher m2 = p2.matcher(boardState);
+        b = b && m2.matches();
+        boolean roadValid = isValidRoad(boardState);
+        return b && roadValid;
     }
 
+    /**
+     *
+     * @param boardState
+     * @return
+     */
+
+
+    public static boolean isValidRoad(String boardState) {
+        boolean roadValid = true;
+        long numberOfRoad = countRoad(boardState);
+        for (int i = 0; i < numberOfRoad; i++) {
+            if (boardState.contains("R")) {
+                try {
+                    int roadIndex = boardState.indexOf('R');
+                    String roadEncoding = boardState.substring(roadIndex, roadIndex + 5);
+                    boardState = boardState.replaceFirst(roadEncoding,"");
+                    int firstPos = Integer.parseInt(roadEncoding.substring(1,3));
+                    int secondPos = Integer.parseInt(roadEncoding.substring(3,5));
+                    if (firstPos > secondPos || secondPos > 53) {
+                        roadValid = false;
+                    }
+                } catch (Exception ignore) {
+                    roadValid = false;
+                }
+            }
+        }
+        return roadValid;
+    }
+
+    public static int countRoad(String boardState) {
+        boardState = boardState.replaceAll("[X,W]\\d\\dR", "");
+        Long numberOfRoad = boardState.chars().filter(x -> x == 'R').count();
+        return numberOfRoad.intValue();
+    }
     /**
      * Check if the string encoding of a player action is well-formed.
      * Note that this does not mean checking if the action is valid
@@ -33,9 +103,31 @@ public class CatanDiceExtra {
      * @return true iff the string is a well-formed representation of
      * a player action, false otherwise.
      */
+
     public static boolean isActionWellFormed(String action) {
         // FIXME: Task 4
-	    return false;
+	    String regex = "^(keep[b,g,l,m,o,w]{0,6}|build(R([0-4][0-9]|5[0-3]){2}|K(0[0-9]|1[0-9])|S([0-4][0-9]|5[0-3])|" +
+                "T([0-4][0-9]|5[0-3])|C[0-4])|trade[b,g,l,m,o,w]{1,3}|swap[b,g,l,m,o,w][b,g,l,m,o,w])$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(action);
+        boolean b = m.matches();
+        if (b && action.length() >= 6 && action.substring(0,4).equals("keep")) {
+            String resources = action.substring(4,action.length());
+            b = isSorted(resources);
+
+        } else if (b && action.length() == 10 && action.substring(0,6).equals("buildR")) {
+            b = isValidRoad(action.substring(5,10));
+        } else if (b && action.length() == 7 && action.substring(0,5).equals("trade")) {
+            String resources = action.substring(5,7);
+            b = isSorted(resources) && !resources.contains("m");
+        }
+        return b;
+    }
+
+    public static boolean isSorted(String str) {
+        char[] charList = str.toCharArray();
+        Arrays.sort(charList);
+        return new String(charList).equals(str);
     }
 
     /**
@@ -49,7 +141,14 @@ public class CatanDiceExtra {
      */
     public static String rollDice(int numOfDice) {
         // FIXME: Task 5
-        return "";
+        char[] resources = new char[numOfDice];
+        Random random = new Random();
+        char[] resourcesList = new char[]{'b','l','w','g','o','m'};
+        for (int i = 0; i < numOfDice; i++) {
+            resources[i] = resourcesList[random.nextInt(resourcesList.length)];
+        }
+        Arrays.sort(resources);
+        return new String(resources);
     }
 
     /**
@@ -90,8 +189,90 @@ public class CatanDiceExtra {
      */
     public static boolean isActionValid(String boardState, String action) {
         // FIXME: Task 7
+        // determine phase
+        boolean isRollPhase;
+        GameInstance gameInstance = new GameInstance(boardState);
+        Player currentPlayer = gameInstance.getCurrentPlayer();
+        var resourcesMap = gameInstance.getDiceResult();
+
+        System.out.println(boardState);
+
+        if (gameInstance.getRollsDone() == 0 || gameInstance.getRollsDone() == 3){
+            isRollPhase = false;
+        } else {
+            isRollPhase = true;
+        }
+        if (isActionWellFormed(action)) {
+            if (isRollPhase) {
+                if (action.contains("keep")) {
+                    String regex = action.substring(4,action.length());
+                    return GameInstance.isResourcesSufficient(resourcesMap,GameInstance.stringResourcesToMap(regex));
+                }
+            } else {
+                if (action.contains("build")) { //is build phase
+                    String structureIdentifier = action.substring(5, action.length());
+                    char typeOfBuilding = structureIdentifier.charAt(0);
+                    if (typeOfBuilding == 'R') {
+                        int firstPos = Integer.parseInt(structureIdentifier.substring(1,3));
+                        int secondPos = Integer.parseInt(structureIdentifier.substring(3,5));
+                        if (gameInstance.getRollsDone() == 0) {
+                            if (gameInstance.board.isRoadValid(firstPos, secondPos))
+                                return gameInstance.board.isCoastalAnd5RoadsAway(firstPos, secondPos, currentPlayer);
+                        }
+
+                            if(gameInstance.board.isRoadBuildable(firstPos, secondPos, currentPlayer)) {
+                                if (GameInstance.isResourcesSufficient(resourcesMap, Road.cost)) {
+                                    return true;
+
+                            }}
+
+                    } else if (typeOfBuilding == 'C') {
+                        int location = Integer.parseInt(structureIdentifier.substring(1,2));
+                        if (gameInstance.board.canCastleBuild(location)) {
+                            if (GameInstance.isResourcesSufficient(resourcesMap, Castle.cost))
+                                return true;
+                        }
+
+                    } else {
+                        int location = Integer.parseInt(structureIdentifier.substring(1,3));
+                        if (typeOfBuilding == 'K') {
+                            if (gameInstance.board.canKnightBuild(location, currentPlayer )) {
+                                if (GameInstance.isResourcesSufficient(resourcesMap, Knight.cost))
+                                    return true;
+                            }
+                        } else if (typeOfBuilding == 'S') {
+                            if (gameInstance.board.canSettlementBuild(location, currentPlayer)) {
+                                if (GameInstance.isResourcesSufficient(resourcesMap, Settlement.cost))
+                                    return true;
+                            }
+                        } else if (typeOfBuilding == 'T') {
+                            if (gameInstance.board.canCityBuild(location, currentPlayer)) {
+                                if (GameInstance.isResourcesSufficient(resourcesMap, City.cost))
+                                    return true;
+                            }
+                        }
+
+                    }
+            } else if (action.contains("trade")) {
+                    String tradeList = action.substring(5, action.length());
+                    Map<Resource, Integer> payResources = Map.of(Resource.GOLD, 2 * tradeList.length());
+                    return GameInstance.isResourcesSufficient(resourcesMap, payResources);
+                } else if (action.contains("swap")) {
+                    assert action.length() == 6;
+                    Resource out = Resource.decodeChar(action.charAt(4));
+                    Resource in = Resource.decodeChar(action.charAt(5));
+                    if (GameInstance.isResourcesSufficient(resourcesMap, Map.of(out, 1))) {
+                        if (gameInstance.board.isKnightResourceAvailable(in, currentPlayer))
+                            return true;
+                    }
+                }
+            }
+        }
         return false;
     }
+
+
+
 
     /**
      * Return an integer array containing the length of the longest contiguous
@@ -106,7 +287,14 @@ public class CatanDiceExtra {
      */
     public static int[] longestRoad(String boardState) {
         // FIXME: Task 8a
-        return null;
+        GameInstance gameInstance = new GameInstance(boardState);
+        Player w = null;
+        Player x = null;
+        for (var e : gameInstance.players) {
+            if (e.getName().equals("W")) w = e;
+            if (e.getName().equals("X")) x = e;
+        }
+        return gameInstance.board.countRoads(w,x);
     }
 
     /**

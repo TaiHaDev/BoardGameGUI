@@ -1,15 +1,23 @@
 package comp1140.ass2.game;
 
-public class Road implements Building {
+import java.util.Map;
 
-    @Override
-    public Resource[] getCost() {
-        return null;
+public class Road extends Building {
+    int source;
+    int destination;
+
+    boolean isCoastal;
+    public static Map<Resource, Integer> cost = Map.of(Resource.BRICK,1,
+            Resource.LUMBER, 1);
+    public static int point = 0;
+    public Road(Player owner, int source, int destination, boolean isCoastal) {
+        super(owner);
+        this.isCoastal = isCoastal;
+        this.source = source;
+        this.destination = destination;
     }
 
-    @Override
-    public int getPoints() {
-        return 0;
+    public static boolean isValidRoad() {
+        return false;
     }
-
 }
