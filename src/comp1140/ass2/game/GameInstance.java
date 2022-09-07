@@ -1,70 +1,99 @@
 package comp1140.ass2.game;
 
+import javafx.scene.paint.Color;
+
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameInstance {
-    public Board board = new Board();
+
+    private final Board board = new Board();
     private int rollsDone;
     private int diceCount;
     private int round;
-    public Deque<Player> players = new LinkedList<>();
+    public CircularQueue<Player> players = new CircularQueue<>();
     private Map<Resource, Integer> diceResult = new HashMap<>();
-
 
     public static void main(String[] args) {
         String boardState = "W63gmWC3J09K00K01K03K07K08K14R0003R0004R0104R0307R0408R0711R0712R0812R1116R1217R1621R1622R1722R1723R1823R2127R2228R2329R2733R2833R2834R2934R2935S00S01S07S16S17XK02K04K05K06K11K12R0105R0205R0206R0509R0610R0813R0913R0914R1014R1015R1318R1419R1520R1925R2025R2026R2531R2632R3136R3137R3237S02S09S20T10W11RAX05";
-
-
     }
+
     public GameInstance(String encodedString) {
-        String[] parts = splitEncodedString(encodedString);
-        String turn = parts[0];
-        String resources = turn.substring(2, turn.length());
-        String score = parts[2];
-        int xIndex = score.indexOf('X');
-        String wScoreString = score.substring(0, xIndex);
-        String xScoreString = score.substring(xIndex, score.length());
-        int wScore = Integer.parseInt(wScoreString.substring(0,2));
-        int xScore = Integer.parseInt(wScoreString.substring(0,2));
-        this.diceCount = Character.getNumericValue(turn.charAt(0));
-        this.rollsDone = Character.getNumericValue(turn.charAt(1));
-        String currentPlayer = encodedString.substring(0,1);
-        Player x = new Player("X", null, null, xScore);
-        Player w = new Player("W", null, null, wScore);
-        if (currentPlayer.equals(x.getName())) {
-            this.players.addLast(x);
-            this.players.addLast(w);
-        } else {
-            this.players.addLast(w);
-            this.players.addLast(x);
+        char turn = encodedString.charAt(0); // TODO add into class
+        this.diceCount = Integer.parseInt(encodedString.substring(1, 2));
+        this.rollsDone = Integer.parseInt(encodedString.substring(2, 3));
+        HashMap<Resource, Integer> resources = new HashMap<>();
+        int currentChar = 3;
+        for (char c : encodedString.substring(currentChar).toCharArray()) {
+            if (!Arrays.asList('b', 'g', 'l', 'm', 'o', 'w').contains(c)) break;
+            Resource resource = switch (c) {
+                case 'b' -> Resource.BRICK;
+                case 'g' -> Resource.GRAIN;
+                case 'l' -> Resource.LUMBER;
+                case 'm' -> Resource.GOLD;
+                case 'o' -> Resource.ORE;
+                case 'w' -> Resource.WOOL;
+                default -> throw new IllegalStateException("Unexpected value: " + c);
+            };
+            resources.put(resource, 1 + resources.getOrDefault(resource, 0));
+            currentChar++;
         }
-        this.diceResult = stringResourcesToMap(resources);
+        this.setDiceResult(resources);
 
-        String playerBoardState = parts[1];
-        String firstState = playerBoardState.substring(0, playerBoardState.indexOf("X"));
-        String secondState = playerBoardState.substring(playerBoardState.indexOf("X") + 1, playerBoardState.length());
-        if (!firstState.isEmpty())
-            decodeStateString(firstState,w);
-        if (!secondState.isEmpty())
-            decodeStateString(secondState, x);
+        for (int i = 0; i < 2; i++) {
+            char id = encodedString.charAt(currentChar++);
+            Player player = new Player();
+            player.setName(String.valueOf(id));
+            players.add(player);
+
+            while (true) {
+                char c = encodedString.charAt(currentChar++);
+                if (c == 'C') {
+                    int position = Character.getNumericValue(encodedString.charAt(currentChar++));
+                    Castle castle = new Castle(player);
+                    this.getBoard().getCastleBoard()[position] = castle;
+                } else if (c == 'J' || c == 'K') {
+                    Knight knight = new Knight(player);
+                    knight.setJoker(c == 'J');
+                    // add one to the second parameter because in String#substring,
+                    // lower bound is inclusive, while upper is exclusive.
+                    int position = Integer.parseInt(encodedString.substring(currentChar++, 1 + currentChar++));
+                    this.getBoard().getKnightBoard().put(position, knight);
+                } else if (c == 'R') {
+                    currentChar++;
+                    currentChar++;
+                    currentChar++;
+                    currentChar++;
+                } else if (c == 'S') {
+                    currentChar++;
+                    currentChar++;
+                } else if (c == 'T') {
+                    currentChar++;
+                    currentChar++;
+                } else {
+                    currentChar--;
+                    break;
+                }
+            }
+        }
+
     }
 
-    public static String[] splitEncodedString(String encodedString) {
-        return encodedString.substring(1, encodedString.length()).split("W");
-    }
     public void decodeStateString(String state, Player player) {
         String[] structureIdentifiers = state.split("(?=[A-Z])");
         for (var building : structureIdentifiers) {
             board.updateBoardUsingEncodedString(building, player);
         }
     }
+
     public static Map<Resource, Integer> stringResourcesToMap(String resources) {
         Map<Resource, Integer> finalMap = new HashMap<>();
-        for (var e : resources.toCharArray()) {
+        for (char e : resources.toCharArray()) {
             Resource resource = Resource.decodeChar(e);
-            Long countChar = resources.chars().filter(c -> c == e).count();
+            long countChar = resources.chars().filter(c -> c == e).count();
             if (!finalMap.containsKey(resource)) {
-                finalMap.put(resource, countChar.intValue());
+                finalMap.put(resource, (int) countChar);
             }
         }
         return finalMap;
@@ -154,7 +183,7 @@ public class GameInstance {
     }
 
     public CircularQueue<Player> getPlayers() {
-        return null;
+        return players;
     }
 
     public void setPlayers(CircularQueue<Player> players) {
@@ -225,25 +254,25 @@ public class GameInstance {
     public String toString(Player player) {
         StringBuilder outputString = new StringBuilder();
         if (player.equals(getCurrentPlayer())) {
-            outputString.append("Player ").append(player.toString()).append(" can roll ").append(diceCount).append(" dices ").append("with ").append
-                            (Integer.toString(3 - rollsDone)).append(" re roll trial(s) left, ").append(" the current resources are ").
+            outputString.append("Player ").append(player).append(" can roll ").append(diceCount).append(" dices ").append("with ").append
+                            (3 - rollsDone).append(" re roll trial(s) left, ").append(" the current resources are ").
                     append(diceResult.toString()).append(" and posses properties: \n");
         } else {
-            outputString.append("Player ").append(player.toString()).append(" have properties: \n");
+            outputString.append("Player ").append(player).append(" have properties: \n");
         }
-        for (var e : board.castleBoard) {
+        for (var e : board.getCastleBoard()) {
             if (e.getOwner() != null && e.getOwner().equals(player)) {
-                outputString.append("Castle number ").append(Arrays.asList(board.castleBoard).indexOf(e)).append(", ");
+                outputString.append("Castle number ").append(Arrays.asList(board.getCastleBoard()).indexOf(e)).append(", ");
             }
         }
-        for (var e : board.knightBoard.entrySet()) {
+        for (var e : board.getKnightBoard().entrySet()) {
             Knight knight = e.getValue();
             if (knight.getOwner() != null && knight.getOwner().equals(player)) {
                 outputString.append("Knight number ").append(e.getKey()).append(", ");
             }
         }
         for (int i = 0; i < 54; i++) {
-            for (GameGraph.Node node : board.roadBoard.adjacencyMatrix.get(i)) {
+            for (GameGraph.Node node : board.getRoadBoard().adjacencyMatrix.get(i)) {
                 if (node.player != null &&  node.player.equals(player) && node.location > i) {
                     outputString.append(" Road number " + i  + node.location).append(", ");
                 }
@@ -260,12 +289,19 @@ public class GameInstance {
                     outputString.append("House number " + entry.getKey()).append(", ");
                 }
             }
-            ;
         }
         outputString.append("\n");
         outputString.append("With a total point of ").append(player.getScore()).append("\n\n\n");
 
 
         return outputString.toString();
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setDiceResult(Map<Resource, Integer> diceResult) {
+        this.diceResult = diceResult;
     }
 }
