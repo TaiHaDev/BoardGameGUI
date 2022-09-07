@@ -7,10 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CatanDiceExtra {
-    public static void main(String[] args) {
-        System.out.println(isActionValid("X63bbmoolWK02R0105R0205R0509S02XR3237W01X00", "buildR3137"));
-        GameInstance gameInstance = new GameInstance("X00WR0205XW00X00");
-    }
+
 
     /**
      * Check if the string encoding of a board state is well-formed.
@@ -280,10 +277,10 @@ public class CatanDiceExtra {
         return game.getPlayers().stream()
                 .sorted(Comparator.comparing(Player::getName))
                 .mapToInt(player ->
-                (int) game.getBoard().getKnightBoard().values().stream()
-                        .filter(knight -> player.equals(knight.getOwner()))
-                        .count()
-        ).toArray();
+                        (int) game.getBoard().getKnightBoard().values().stream()
+                                .filter(knight -> player.equals(knight.getOwner()))
+                                .count()
+                ).toArray();
     }
 
     /**

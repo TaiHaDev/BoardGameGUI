@@ -12,6 +12,9 @@ public class Player {
     private Color color;
     private int score;
 
+    public static void main(String[] args) {
+
+    }
     /**
      * The game 'tries' to claim the passed road and
      * returns whether it worked (i.e., was the road
