@@ -249,16 +249,22 @@ public class CatanDiceExtra {
      * @return array of contiguous road lengths, one per player.
      */
     public static int[] longestRoad(String boardState) {
-        // FIXME: Task 8a
-        return null;
-//        GameInstance gameInstance = new GameInstance(boardState);
-//        Player w = null;
-//        Player x = null;
-//        for (var e : gameInstance.players) {
-//            if (e.getName().equals("W")) w = e;
-//            if (e.getName().equals("X")) x = e;
-//        }
-//        return gameInstance.getBoard().countRoads(w,x);
+        GameInstance game = new GameInstance(boardState);
+        Map<Player, Integer> longestRoad = new HashMap<>();
+        for (Player player : game.getPlayers()) {
+            int[][] matrix = new int[GameGraph.VERTICES][GameGraph.VERTICES];
+            for (Road road : game.getBoard().getRoads()) {
+                if (player.equals(road.getOwner())) {
+                    matrix[road.getStart()][road.getEnd()] = 1;
+                    matrix[road.getEnd()][road.getStart()] = 1;
+                }
+            }
+            Map<Integer, Integer> minimumCost = new HashMap<>();
+        }
+        return longestRoad.entrySet().stream()
+                .sorted(Comparator.comparing(e -> e.getKey().getName()))
+                .mapToInt(Map.Entry::getValue)
+                .toArray();
     }
 
     /**
