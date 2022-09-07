@@ -1,6 +1,8 @@
-package comp1140.ass2.game;
+package comp1140.ass2.game.buildings;
 
-import java.util.HashMap;
+import comp1140.ass2.game.board.Player;
+import comp1140.ass2.game.helper.Resource;
+
 import java.util.Map;
 
 public class City extends Building {

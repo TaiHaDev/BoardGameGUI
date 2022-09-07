@@ -1,8 +1,11 @@
-package comp1140.ass2.game;
+package comp1140.ass2.game.buildings;
+
+import comp1140.ass2.game.board.Player;
+import comp1140.ass2.game.helper.Resource;
 
 import java.util.Map;
 
-abstract class Building {
+public abstract class Building {
 
     private int point;
     private Player owner;

@@ -1,5 +1,6 @@
-package comp1140.ass2.game;
+package comp1140.ass2.game.board;
 
+import comp1140.ass2.game.buildings.Road;
 import javafx.scene.paint.Color;
 
 import java.util.Date;

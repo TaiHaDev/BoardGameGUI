@@ -1,9 +1,12 @@
 package comp1140.ass2.game;
 
-import javafx.geometry.HPos;
+import comp1140.ass2.game.board.Board;
+import comp1140.ass2.game.board.Player;
+import comp1140.ass2.game.buildings.*;
+import comp1140.ass2.game.helper.CircularQueue;
+import comp1140.ass2.game.helper.Resource;
 
 import java.util.*;
-import java.util.List;
 
 public class GameInstance {
 
@@ -12,8 +15,6 @@ public class GameInstance {
     private int diceCount;
     public CircularQueue<Player> players = new CircularQueue<>();
     private Map<Resource, Integer> diceResult = new HashMap<>();
-
-
 
     public GameInstance(String encodedString) {
         char turn = encodedString.charAt(0);

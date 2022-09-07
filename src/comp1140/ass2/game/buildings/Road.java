@@ -1,4 +1,6 @@
-package comp1140.ass2.game;
+package comp1140.ass2.game.buildings;
+
+import comp1140.ass2.game.helper.Resource;
 
 import java.util.Map;
 
