@@ -12,13 +12,6 @@ public class Player {
     private Color color;
     private int score;
 
-    public Player(String name, Date birthday, Color color, int score) {
-        this.name = name;
-        this.birthday = birthday;
-        this.color = color;
-        this.score = score;
-    }
-
     /**
      * The game 'tries' to claim the passed road and
      * returns whether it worked (i.e., was the road
@@ -41,30 +34,33 @@ public class Player {
     }
 
     public void setName(String name) {
-
+        this.name = name;
     }
 
     public Date getBirthday() {
-        return null;
+        return this.birthday;
     }
 
     public void setBirthday(Date birthday) {
-
+        this.birthday = birthday;
     }
 
     public Color getColor() {
-        return null;
+        return this.color;
     }
 
     public void setColor(Color color) {
-
+        this.color = color;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Player player)) return false;
-        return score == player.score && Objects.equals(getName(), player.getName()) && Objects.equals(getBirthday(), player.getBirthday()) && Objects.equals(getColor(), player.getColor());
+        return score == player.score &&
+                Objects.equals(getName(), player.getName()) &&
+                Objects.equals(getBirthday(), player.getBirthday()) &&
+                Objects.equals(getColor(), player.getColor());
     }
 
     @Override

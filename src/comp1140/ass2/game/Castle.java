@@ -12,7 +12,7 @@ public class Castle extends Building {
     }
 
     @Override
-    public Resource[] getCost() {
+    public Map<Resource, Integer> getCost() {
         return null;
     }
 

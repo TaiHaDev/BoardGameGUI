@@ -1,26 +1,20 @@
 package comp1140.ass2.game;
 
-import javafx.scene.paint.Color;
+import javafx.geometry.HPos;
 
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class GameInstance {
 
     private final Board board = new Board();
     private int rollsDone;
     private int diceCount;
-    private int round;
     public CircularQueue<Player> players = new CircularQueue<>();
     private Map<Resource, Integer> diceResult = new HashMap<>();
 
-    public static void main(String[] args) {
-        String boardState = "W63gmWC3J09K00K01K03K07K08K14R0003R0004R0104R0307R0408R0711R0712R0812R1116R1217R1621R1622R1722R1723R1823R2127R2228R2329R2733R2833R2834R2934R2935S00S01S07S16S17XK02K04K05K06K11K12R0105R0205R0206R0509R0610R0813R0913R0914R1014R1015R1318R1419R1520R1925R2025R2026R2531R2632R3136R3137R3237S02S09S20T10W11RAX05";
-    }
-
     public GameInstance(String encodedString) {
-        char turn = encodedString.charAt(0); // TODO add into class
+        char turn = encodedString.charAt(0);
         this.diceCount = Integer.parseInt(encodedString.substring(1, 2));
         this.rollsDone = Integer.parseInt(encodedString.substring(2, 3));
         HashMap<Resource, Integer> resources = new HashMap<>();
@@ -46,6 +40,11 @@ public class GameInstance {
             Player player = new Player();
             player.setName(String.valueOf(id));
             players.add(player);
+            if (player.getName().equals(String.valueOf(turn))) {
+                while (players.peek() != player) {
+                    players.pop();
+                }
+            }
 
             while (true) {
                 char c = encodedString.charAt(currentChar++);
@@ -56,21 +55,30 @@ public class GameInstance {
                 } else if (c == 'J' || c == 'K') {
                     Knight knight = new Knight(player);
                     knight.setJoker(c == 'J');
-                    // add one to the second parameter because in String#substring,
-                    // lower bound is inclusive, while upper is exclusive.
-                    int position = Integer.parseInt(encodedString.substring(currentChar++, 1 + currentChar++));
+                    // increment before current parameter because String#substring's
+                    // upper bound is exclusive
+                    int position = Integer.parseInt(encodedString.substring(currentChar++, ++currentChar));
                     this.getBoard().getKnightBoard().put(position, knight);
                 } else if (c == 'R') {
-                    currentChar++;
-                    currentChar++;
-                    currentChar++;
-                    currentChar++;
+                    int position1 = Integer.parseInt(encodedString.substring(currentChar++, ++currentChar));
+                    int position2 = Integer.parseInt(encodedString.substring(currentChar++, ++currentChar));
+                    for (int j = 0; j < this.getBoard().getRoads().length; j++) {
+                        Road road = this.getBoard().getRoads()[j];
+                        if (road == null) continue;
+                        if ((road.getStart() == position1 && road.getEnd() == position2) ||
+                                (road.getEnd() == position1 && road.getStart() == position2)) {
+                            road.setOwner(player);
+                            break;
+                        }
+                    }
                 } else if (c == 'S') {
-                    currentChar++;
-                    currentChar++;
+                    Settlement settlement = new Settlement(player, true);
+                    int position = Integer.parseInt(encodedString.substring(currentChar++, ++currentChar));
+                    this.getBoard().getResidentialBuilding().put(position, settlement);
                 } else if (c == 'T') {
-                    currentChar++;
-                    currentChar++;
+                    City city = new City(player);
+                    int position = Integer.parseInt(encodedString.substring(currentChar++, ++currentChar));
+                    this.getBoard().getResidentialBuilding().put(position, city);
                 } else {
                     currentChar--;
                     break;
@@ -78,13 +86,6 @@ public class GameInstance {
             }
         }
 
-    }
-
-    public void decodeStateString(String state, Player player) {
-        String[] structureIdentifiers = state.split("(?=[A-Z])");
-        for (var building : structureIdentifiers) {
-            board.updateBoardUsingEncodedString(building, player);
-        }
     }
 
     public static Map<Resource, Integer> stringResourcesToMap(String resources) {
@@ -100,23 +101,19 @@ public class GameInstance {
     }
 
     public static boolean isResourcesSufficient(Map<Resource, Integer> resources, Map<Resource, Integer> requirement)  {
-        for (var entry : requirement.entrySet()) {
-            if (resources.getOrDefault(entry.getKey(), -1) < entry.getValue()) {
-                return false;
-            } else if (resources.get(entry.getKey()) == 6 && entry.getValue() == 6) {
-                return true;
-            }
-        }
-        return true;
+        return requirement.keySet().stream()
+                .allMatch(resource -> resources.containsKey(resource) &&
+                        resources.get(resource) >= requirement.get(resource));
     }
+
     public Player getCurrentPlayer() {
-        return players.getFirst();
+        return players.peek();
     }
 
     public Player nextPlayer() {
-        players.addLast(players.removeFirst());
-        return players.getFirst();
+        return players.pop();
     }
+
     /**
      * The constructor should initialise the trivial
      * variables to assign (round, dice count),
@@ -166,20 +163,12 @@ public class GameInstance {
         return null;
     }
 
-    public int getRound() {
-        return 0;
-    }
-
-    public void setRound(int round) {
-
-    }
-
     public int getDiceCount() {
         return 0;
     }
 
     public void setDiceCount(int diceCount) {
-
+        this.diceCount = diceCount;
     }
 
     public CircularQueue<Player> getPlayers() {
@@ -187,15 +176,7 @@ public class GameInstance {
     }
 
     public void setPlayers(CircularQueue<Player> players) {
-
-    }
-
-    public Road[] getRoads() {
-        return null;
-    }
-
-    public void setRoads(Road[] roads) {
-
+        this.players = players;
     }
 
     public void tradeGold() {
@@ -272,12 +253,12 @@ public class GameInstance {
             }
         }
         for (int i = 0; i < 54; i++) {
-            for (GameGraph.Node node : board.getRoadBoard().adjacencyMatrix.get(i)) {
-                if (node.player != null &&  node.player.equals(player) && node.location > i) {
-                    outputString.append(" Road number " + i  + node.location).append(", ");
-                }
-            }
-        } for (var entry : board.residentialBuilding.entrySet()) {
+//            for (Road road : board.getRoads()) {
+//                if (player.equals(road.getOwner())) {
+//                    outputString.append(" Road start ").append(i).append(road.getStart()).append(", ");
+//                }
+//            } FIXME
+        } for (var entry : board.getResidentialBuilding().entrySet()) {
             Building building = entry.getValue();
             Player owner = building.getOwner();
             if (building instanceof Settlement) {

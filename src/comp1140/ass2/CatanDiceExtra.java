@@ -2,11 +2,7 @@ package comp1140.ass2;
 
 import comp1140.ass2.game.*;
 
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,10 +10,6 @@ public class CatanDiceExtra {
     public static void main(String[] args) {
         System.out.println(isActionValid("X63bbmoolWK02R0105R0205R0509S02XR3237W01X00", "buildR3137"));
         GameInstance gameInstance = new GameInstance("X00WR0205XW00X00");
-        System.out.println(gameInstance.board.isCoastalAnd5RoadsAway(2,6, new Player("X",null,null,0)));
-        Map<Integer, Integer> test = Map.of(1,2);
-        System.out.println(test.get(2));
-
     }
 
     /**
@@ -61,8 +53,6 @@ public class CatanDiceExtra {
      * @param boardState
      * @return
      */
-
-
     public static boolean isValidRoad(String boardState) {
         boolean roadValid = true;
         long numberOfRoad = countRoad(boardState);
@@ -87,8 +77,7 @@ public class CatanDiceExtra {
 
     public static int countRoad(String boardState) {
         boardState = boardState.replaceAll("[X,W]\\d\\dR", "");
-        Long numberOfRoad = boardState.chars().filter(x -> x == 'R').count();
-        return numberOfRoad.intValue();
+        return (int) boardState.chars().filter(x -> x == 'R').count();
     }
     /**
      * Check if the string encoding of a player action is well-formed.
@@ -188,84 +177,61 @@ public class CatanDiceExtra {
      * @return true iff the action is executable, false otherwise.
      */
     public static boolean isActionValid(String boardState, String action) {
-        // FIXME: Task 7
-        // determine phase
-        boolean isRollPhase;
-        GameInstance gameInstance = new GameInstance(boardState);
-        Player currentPlayer = gameInstance.getCurrentPlayer();
-        var resourcesMap = gameInstance.getDiceResult();
+        if (!isActionWellFormed(action)) return false;
+        GameInstance game = new GameInstance(boardState);
+        Player player = game.getCurrentPlayer();
+        Map<Resource, Integer> resourcesMap = game.getDiceResult();
 
-        System.out.println(boardState);
-
-        if (gameInstance.getRollsDone() == 0 || gameInstance.getRollsDone() == 3){
-            isRollPhase = false;
-        } else {
-            isRollPhase = true;
-        }
-        if (isActionWellFormed(action)) {
-            if (isRollPhase) {
-                if (action.contains("keep")) {
-                    String regex = action.substring(4,action.length());
-                    return GameInstance.isResourcesSufficient(resourcesMap,GameInstance.stringResourcesToMap(regex));
+        if (action.startsWith("keep")) {
+            boolean isRollPhase = game.getRollsDone() != 0 && game.getRollsDone() != 3;
+            return isRollPhase &&
+                    GameInstance.isResourcesSufficient(resourcesMap, GameInstance.stringResourcesToMap(action.substring(4)));
+        } else if (action.startsWith("build")) {
+            String structureIdentifier = action.substring(5);
+            if (structureIdentifier.length() < 3) return false;
+            char typeOfBuilding = structureIdentifier.charAt(0);
+            int location = Integer.parseInt(structureIdentifier.substring(1,3));
+            if (typeOfBuilding == 'R') {
+                int firstPos = Integer.parseInt(structureIdentifier.substring(1,3));
+                int secondPos = Integer.parseInt(structureIdentifier.substring(3,5));
+                boolean valid = false;
+                if (game.getRollsDone() == 0) {
+                    valid = game.getBoard().isCoastalAnd5RoadsAway(firstPos, secondPos, player) &&
+                            game.getBoard().isRoadValid(firstPos, secondPos);
+                } else if (game.getBoard().isRoadBuildable(firstPos, secondPos, player)) {
+                    valid = GameInstance.isResourcesSufficient(resourcesMap, Road.COST);
                 }
-            } else {
-                if (action.contains("build")) { //is build phase
-                    String structureIdentifier = action.substring(5, action.length());
-                    char typeOfBuilding = structureIdentifier.charAt(0);
-                    if (typeOfBuilding == 'R') {
-                        int firstPos = Integer.parseInt(structureIdentifier.substring(1,3));
-                        int secondPos = Integer.parseInt(structureIdentifier.substring(3,5));
-                        if (gameInstance.getRollsDone() == 0) {
-                            if (gameInstance.board.isRoadValid(firstPos, secondPos))
-                                return gameInstance.board.isCoastalAnd5RoadsAway(firstPos, secondPos, currentPlayer);
-                        }
-
-                            if(gameInstance.board.isRoadBuildable(firstPos, secondPos, currentPlayer)) {
-                                if (GameInstance.isResourcesSufficient(resourcesMap, Road.cost)) {
-                                    return true;
-
-                            }}
-
-                    } else if (typeOfBuilding == 'C') {
-                        int location = Integer.parseInt(structureIdentifier.substring(1,2));
-                        if (gameInstance.board.canCastleBuild(location)) {
-                            if (GameInstance.isResourcesSufficient(resourcesMap, Castle.cost))
-                                return true;
-                        }
-
-                    } else {
-                        int location = Integer.parseInt(structureIdentifier.substring(1,3));
-                        if (typeOfBuilding == 'K') {
-                            if (gameInstance.board.canKnightBuild(location, currentPlayer )) {
-                                if (GameInstance.isResourcesSufficient(resourcesMap, Knight.cost))
-                                    return true;
-                            }
-                        } else if (typeOfBuilding == 'S') {
-                            if (gameInstance.board.canSettlementBuild(location, currentPlayer)) {
-                                if (GameInstance.isResourcesSufficient(resourcesMap, Settlement.cost))
-                                    return true;
-                            }
-                        } else if (typeOfBuilding == 'T') {
-                            if (gameInstance.board.canCityBuild(location, currentPlayer)) {
-                                if (GameInstance.isResourcesSufficient(resourcesMap, City.cost))
-                                    return true;
-                            }
-                        }
-
-                    }
-            } else if (action.contains("trade")) {
-                    String tradeList = action.substring(5, action.length());
-                    Map<Resource, Integer> payResources = Map.of(Resource.GOLD, 2 * tradeList.length());
-                    return GameInstance.isResourcesSufficient(resourcesMap, payResources);
-                } else if (action.contains("swap")) {
-                    assert action.length() == 6;
-                    Resource out = Resource.decodeChar(action.charAt(4));
-                    Resource in = Resource.decodeChar(action.charAt(5));
-                    if (GameInstance.isResourcesSufficient(resourcesMap, Map.of(out, 1))) {
-                        if (gameInstance.board.isKnightResourceAvailable(in, currentPlayer))
-                            return true;
-                    }
+                return valid;
+            } else if (typeOfBuilding == 'C') {
+                location = Integer.parseInt(structureIdentifier.substring(1,2));
+                if (game.getBoard().canCastleBuild(location)) {
+                    return GameInstance.isResourcesSufficient(resourcesMap, Castle.cost);
                 }
+            } else if (typeOfBuilding == 'K') {
+                if (game.getBoard().canKnightBuild(location, player )) {
+                    return GameInstance.isResourcesSufficient(resourcesMap, Knight.COST);
+                }
+            } else if (typeOfBuilding == 'S') {
+                if (game.getBoard().canSettlementBuild(location, player)) {
+                    return GameInstance.isResourcesSufficient(resourcesMap, Settlement.COST);
+                }
+            } else if (typeOfBuilding == 'T') {
+                if (game.getBoard().canCityBuild(location, player)) {
+                    return GameInstance.isResourcesSufficient(resourcesMap, City.COST);
+                }
+            }
+
+        } else if (action.contains("trade")) {
+            String tradeList = action.substring(5);
+            Map<Resource, Integer> payResources = Map.of(Resource.GOLD, 2 * tradeList.length());
+            return GameInstance.isResourcesSufficient(resourcesMap, payResources);
+        } else if (action.contains("swap")) {
+            assert action.length() == 6;
+            Resource out = Resource.decodeChar(action.charAt(4));
+            Resource in = Resource.decodeChar(action.charAt(5));
+            if (GameInstance.isResourcesSufficient(resourcesMap, Map.of(out, 1))) {
+                if (game.getBoard().isKnightResourceAvailable(in, player))
+                    return true;
             }
         }
         return false;
@@ -287,14 +253,15 @@ public class CatanDiceExtra {
      */
     public static int[] longestRoad(String boardState) {
         // FIXME: Task 8a
-        GameInstance gameInstance = new GameInstance(boardState);
-        Player w = null;
-        Player x = null;
-        for (var e : gameInstance.players) {
-            if (e.getName().equals("W")) w = e;
-            if (e.getName().equals("X")) x = e;
-        }
-        return gameInstance.board.countRoads(w,x);
+        return null;
+//        GameInstance gameInstance = new GameInstance(boardState);
+//        Player w = null;
+//        Player x = null;
+//        for (var e : gameInstance.players) {
+//            if (e.getName().equals("W")) w = e;
+//            if (e.getName().equals("X")) x = e;
+//        }
+//        return gameInstance.getBoard().countRoads(w,x);
     }
 
     /**
@@ -309,8 +276,14 @@ public class CatanDiceExtra {
      * @return array of army sizes, one per player.
      */
     public static int[] largestArmy(String boardState) {
-        // FIXME: Task 8b
-        return null;
+        GameInstance game = new GameInstance(boardState);
+        return game.getPlayers().stream()
+                .sorted(Comparator.comparing(Player::getName))
+                .mapToInt(player ->
+                (int) game.getBoard().getKnightBoard().values().stream()
+                        .filter(knight -> player.equals(knight.getOwner()))
+                        .count()
+        ).toArray();
     }
 
     /**

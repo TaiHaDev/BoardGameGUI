@@ -1,25 +1,27 @@
 package comp1140.ass2.game;
 
-import javafx.scene.paint.Color;
-
-import java.util.Date;
+import java.util.Map;
 
 abstract class Building {
-    static public Resource[] cost;
-    static public int point;
-    public Player owner;
-    public Building( Player owner) {
+
+    private int point;
+    private Player owner;
+
+    public Building() {
+
+    }
+
+    public Building(Player owner) {
         this.owner = owner;
     }
+
     /**
      * Returns the resource cost of the current building.
      *
      * @return an array of resources that a given player would
      * be required to have rolled to successfully place this building.
      */
-    Resource[] getCost() {
-        return cost;
-    }
+    public abstract Map<Resource, Integer> getCost();
 
     /**
      * Returns the number of points for the current building
