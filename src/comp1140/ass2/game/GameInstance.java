@@ -13,10 +13,7 @@ public class GameInstance {
     public CircularQueue<Player> players = new CircularQueue<>();
     private Map<Resource, Integer> diceResult = new HashMap<>();
 
-    public static void main(String[] args) {
-        var gameInstance = new GameInstance("X63bbmoolWK02R0105R0205R0509S02XR3237W01X00");
 
-    }
 
     public GameInstance(String encodedString) {
         char turn = encodedString.charAt(0);
