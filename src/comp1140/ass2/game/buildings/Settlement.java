@@ -6,10 +6,12 @@ import comp1140.ass2.game.helper.Resource;
 import java.util.Map;
 
 public class Settlement extends Building {
-    boolean upgradeable;
+
     public static Map<Resource, Integer> COST = Map.of(Resource.BRICK,1,
             Resource.LUMBER, 1, Resource.WOOL,1, Resource.GRAIN,1);
-    public static int point = 1;
+    public static int POINTS = 1;
+
+    private final boolean upgradeable;
 
     public Settlement(boolean upgradeable) {
         this.upgradeable = upgradeable;
@@ -29,13 +31,8 @@ public class Settlement extends Building {
         return "Settlement{" +
                 "isUpgradeable=" + upgradeable +
                 ", cost=" + COST +
-                ", point=" + point +
+                ", point=" + POINTS +
                 '}' + getOwner();
-    }
-
-    @Override
-    public Map<Resource, Integer> getCost() {
-        return COST;
     }
 
 }

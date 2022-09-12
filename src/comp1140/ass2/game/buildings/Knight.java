@@ -6,14 +6,16 @@ import comp1140.ass2.game.helper.Resource;
 import java.util.Arrays;
 import java.util.Map;
 
-public class Knight extends Building{
+public class Knight extends Building {
+
+    public static Map<Resource, Integer> COST = Map.of(Resource.ORE,1,
+            Resource.GRAIN, 1, Resource.WOOL,1);
+    public static int POINTS = 0;
+
 
     private Resource jokerResource;
     private boolean isJoker;
     private boolean wildCard;
-    public static Map<Resource, Integer> COST = Map.of(Resource.ORE,1,
-            Resource.GRAIN, 1, Resource.WOOL,1);
-    public static int point = 0;
 
     private int[] neighbours;
 
@@ -33,16 +35,6 @@ public class Knight extends Building{
         return neighbours;
     }
 
-    @Override
-    public Map<Resource, Integer> getCost() {
-        return null;
-    }
-
-    @Override
-    public int getPoints() {
-        return 0;
-    }
-
     public boolean isJoker() {
         return false;
     }
@@ -50,7 +42,6 @@ public class Knight extends Building{
     public void setJoker(boolean joker) {
         this.isJoker = joker;
     }
-
 
     public void setWildCard(boolean wildCard) {
         this.wildCard = wildCard;

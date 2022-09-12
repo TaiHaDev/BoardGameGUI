@@ -96,7 +96,7 @@ public class Board {
     public int upgradeToCity(int houseNumber, Player player) {
         Building house = residentialBuilding.getOrDefault(houseNumber,null);
         if (house instanceof Settlement settlement) {
-            if (settlement.upgradeable && house.getOwner() == player) {
+            if (settlement.isUpgradeable() && house.getOwner() == player) {
                 residentialBuilding.replace(houseNumber, new City(player));
                 return 1;
             }
@@ -157,7 +157,8 @@ public class Board {
 //    }
 
     /**
-     * determine if road is buildable with the conditions of being connected by another road and cannot build further if
+     * determine if road is buildable with the conditions of
+     * being connected by another road and cannot build further if
      * there is a settlement or a city in between
      * @param firstPos start position of the road
      * @param secondPos end position of the road
@@ -165,7 +166,18 @@ public class Board {
      * @return boolean value
      */
     public boolean isRoadBuildable(int firstPos, int secondPos, Player player) {
-        return true;
+        for (int n : new int[] { firstPos, secondPos }) {
+            Building house = residentialBuilding.get(n);
+            for (int node : getRoadBoard().getGraphMap().get(n)) {
+                Road road = new Road(n, node, player);
+                if (Arrays.asList(roads).contains(road) && player.equals(road.getOwner())) {
+                    if (house == null || player.equals(house.getOwner())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public boolean canKnightBuild(int position, Player player) {

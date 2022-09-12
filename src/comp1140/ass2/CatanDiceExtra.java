@@ -1,9 +1,9 @@
 package comp1140.ass2;
 
 import comp1140.ass2.game.*;
-import comp1140.ass2.game.board.GameGraph;
 import comp1140.ass2.game.board.Player;
 import comp1140.ass2.game.buildings.*;
+import comp1140.ass2.game.helper.DepthFirstSearch;
 import comp1140.ass2.game.helper.Resource;
 
 import java.util.*;
@@ -196,20 +196,22 @@ public class CatanDiceExtra {
                 int firstPos = Integer.parseInt(structureIdentifier.substring(1,3));
                 int secondPos = Integer.parseInt(structureIdentifier.substring(3,5));
                 boolean valid = false;
-                if (game.getRollsDone() == 0) {
-                    valid = game.getBoard().isCoastalAnd5RoadsAway(firstPos, secondPos, player) &&
-                            game.getBoard().isRoadValid(firstPos, secondPos);
-                } else if (game.getBoard().isRoadBuildable(firstPos, secondPos, player)) {
-                    valid = GameInstance.isResourcesSufficient(resourcesMap, Road.COST);
+                if (game.getRollsDone() == 0 &&
+                        game.getBoard().isCoastalAnd5RoadsAway(firstPos, secondPos, player) &&
+                        game.getBoard().isRoadValid(firstPos, secondPos)) {
+                    valid = true;
+                } else if (game.getBoard().isRoadBuildable(firstPos, secondPos, player) &&
+                        GameInstance.isResourcesSufficient(resourcesMap, Road.COST)) {
+                    valid = true;
                 }
                 return valid;
             } else if (typeOfBuilding == 'C') {
                 location = Integer.parseInt(structureIdentifier.substring(1,2));
                 if (game.getBoard().canCastleBuild(location)) {
-                    return GameInstance.isResourcesSufficient(resourcesMap, Castle.cost);
+                    return GameInstance.isResourcesSufficient(resourcesMap, Castle.COST);
                 }
             } else if (typeOfBuilding == 'K') {
-                if (game.getBoard().canKnightBuild(location, player )) {
+                if (game.getBoard().canKnightBuild(location, player)) {
                     return GameInstance.isResourcesSufficient(resourcesMap, Knight.COST);
                 }
             } else if (typeOfBuilding == 'S') {
@@ -238,8 +240,48 @@ public class CatanDiceExtra {
         return false;
     }
 
+    /**
+     * Helper function for longestRoad to tell us if a graph can
+     * be traced from start to finish without lifting your
+     * finger off the page. This is done by checking if the
+     * graph has an Eulerian trail.
+     *
+     * From Wikipedia:
+     * An undirected graph has an Eulerian trail if and only if
+     * exactly zero or two vertices have odd degree, and all of
+     * its vertices with nonzero degree belong to a single connected
+     * component.
+     *
+     * @param graph  the game graph from Board#getRoadBoard().getGameGraph() but
+     *               filtered to only include one player's points.
+     * @return true iff there exists an Eulerian trail through the graph
+     * of order 3.
+     */
+    private static boolean isGraphContiguous(Map<Integer, List<Integer>> graph) {
+        int oddDegreeVertices = 0;
+        for (List<Integer> paths : graph.values()) {
+            if (paths.size() % 2 == 1) {
+                oddDegreeVertices++;
+            }
+        }
+        return oddDegreeVertices == 0 || oddDegreeVertices == 2;
+    }
 
-
+    private static Map<Integer, List<Integer>> pathToGraph(List<Integer> path) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < path.size(); i++) {
+            int vertex = path.get(i);
+            List<Integer> connections = graph.getOrDefault(vertex, new ArrayList<>());
+            if (i > 0) {
+                connections.add(path.get(i - 1));
+            }
+            if (i < path.size() - 1) {
+                connections.add(path.get(i + 1));
+            }
+            graph.put(vertex, connections);
+        }
+        return graph;
+    }
 
     /**
      * Return an integer array containing the length of the longest contiguous
@@ -254,21 +296,46 @@ public class CatanDiceExtra {
      */
     public static int[] longestRoad(String boardState) {
         GameInstance game = new GameInstance(boardState);
-        Map<Player, Integer> longestRoad = new HashMap<>();
+        int[] longestRoad = new int[2];
         for (Player player : game.getPlayers()) {
-            int[][] matrix = new int[GameGraph.VERTICES][GameGraph.VERTICES];
+            // initialise a new graph that only contains the current player's
+            // owned roads.
+            Map<Integer, List<Integer>> graph = new HashMap<>();
+            Set<Road> ownedRoads = new HashSet<>();
             for (Road road : game.getBoard().getRoads()) {
                 if (player.equals(road.getOwner())) {
-                    matrix[road.getStart()][road.getEnd()] = 1;
-                    matrix[road.getEnd()][road.getStart()] = 1;
+                    ownedRoads.add(road);
                 }
             }
-            Map<Integer, Integer> minimumCost = new HashMap<>();
+            for (Road road : ownedRoads) {
+                List<Integer> values = graph.getOrDefault(road.getStart(), new ArrayList<>());
+                values.add(road.getEnd());
+                graph.put(road.getStart(), values);
+
+                values = graph.getOrDefault(road.getEnd(), new ArrayList<>());
+                values.add(road.getStart());
+                graph.put(road.getEnd(), values);
+            }
+
+            // create a list of every path existing in the player's graph
+            HashSet<List<Integer>> paths = new HashSet<>();
+            for (int start : graph.keySet()) {
+                for (int end : graph.keySet()) {
+                    if (start == end) continue;
+                    DepthFirstSearch dfs = new DepthFirstSearch(paths, graph);
+                    dfs.search(start, end);
+                }
+            }
+
+            int longestRoadLength = 0;
+            for (List<Integer> path : paths) {
+                if (isGraphContiguous(pathToGraph(path))) {
+                    longestRoadLength = Math.max(path.size() - 1, longestRoadLength);
+                }
+            }
+            longestRoad[player.getName().toCharArray()[0] - 'W'] = longestRoadLength;
         }
-        return longestRoad.entrySet().stream()
-                .sorted(Comparator.comparing(e -> e.getKey().getName()))
-                .mapToInt(Map.Entry::getValue)
-                .toArray();
+        return longestRoad;
     }
 
     /**

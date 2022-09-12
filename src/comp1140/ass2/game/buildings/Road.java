@@ -1,5 +1,6 @@
 package comp1140.ass2.game.buildings;
 
+import comp1140.ass2.game.board.Player;
 import comp1140.ass2.game.helper.Resource;
 
 import java.util.Map;
@@ -16,6 +17,12 @@ public class Road extends Building {
         this.end = end;
     }
 
+    public Road(int start, int end, Player owner) {
+        super(owner);
+        this.start = start;
+        this.end = end;
+    }
+
     public int getEnd() {
         return end;
     }
@@ -25,16 +32,11 @@ public class Road extends Building {
     }
 
     @Override
-    public Map<Resource, Integer> getCost() {
-        return COST;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (o instanceof Road road) {
             return road.getOwner() == this.getOwner() &&
-                    (road.getStart() == this.getStart() && road.getEnd() == this.getEnd()) ||
-                    (road.getStart() == this.getEnd() && road.getEnd() == this.getStart());
+                    ((road.getStart() == this.getStart() && road.getEnd() == this.getEnd()) ||
+                    (road.getStart() == this.getEnd() && road.getEnd() == this.getStart()));
         }
         return false;
     }

@@ -86,35 +86,4 @@ public class GameGraph {
         return graphMap;
     }
 
-    public static class Node {
-
-        private final int id;
-        private Player owner;
-
-        public Node(int id) {
-            this.id = id;
-        }
-
-        @Override
-        public String toString() {
-            return "Node{" +
-                    "id=" + id +
-                    ", owner=" + owner +
-                    '}';
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setOwner(Player owner) {
-            this.owner = owner;
-        }
-
-        public Player getOwner() {
-            return owner;
-        }
-
-    }
-
 }
