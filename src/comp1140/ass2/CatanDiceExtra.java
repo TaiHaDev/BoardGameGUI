@@ -254,16 +254,10 @@ public class CatanDiceExtra {
      *
      * @param graph  the game graph from Board#getRoadBoard().getGameGraph() but
      *               filtered to only include one player's points.
-     * @return true iff there exists an Eulerian trail through the graph
-     * of order 3.
+     * @return true iff the graph is an Eulerian trail
      */
-    private static boolean isGraphContiguous(Map<Integer, List<Integer>> graph) {
-        int oddDegreeVertices = 0;
-        for (List<Integer> paths : graph.values()) {
-            if (paths.size() % 2 == 1) {
-                oddDegreeVertices++;
-            }
-        }
+    private static boolean isEulerianTrail(Map<Integer, List<Integer>> graph) {
+        long oddDegreeVertices = graph.values().stream().map(List::size).filter(e -> e % 2 == 1).count();
         return oddDegreeVertices == 0 || oddDegreeVertices == 2;
     }
 
@@ -327,13 +321,12 @@ public class CatanDiceExtra {
                 }
             }
 
-            int longestRoadLength = 0;
-            for (List<Integer> path : paths) {
-                if (isGraphContiguous(pathToGraph(path))) {
-                    longestRoadLength = Math.max(path.size() - 1, longestRoadLength);
-                }
-            }
-            longestRoad[player.getName().toCharArray()[0] - 'W'] = longestRoadLength;
+            longestRoad[player.getName().toCharArray()[0] - 'W'] = paths.parallelStream()
+                    .filter(e -> isEulerianTrail(pathToGraph(e)))
+                    .mapToInt(List::size)
+                    .map(e -> Math.max(e - 1, 0))
+                    .max()
+                    .orElse(0);
         }
         return longestRoad;
     }

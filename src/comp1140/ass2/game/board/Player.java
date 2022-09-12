@@ -1,6 +1,5 @@
 package comp1140.ass2.game.board;
 
-import comp1140.ass2.game.buildings.Road;
 import javafx.scene.paint.Color;
 
 import java.util.Date;
@@ -8,53 +7,25 @@ import java.util.Objects;
 
 public class Player {
 
-    private String name;
+    private final String name;
     private Date birthday;
     private Color color;
     private int score;
 
-    public static void main(String[] args) {
-
-    }
-    /**
-     * The game 'tries' to claim the passed road and
-     * returns whether it worked (i.e., was the road
-     * already claimed?, etc.).
-     *
-     * The passed road's owner is updated to the
-     * current player. Colour handling is performed
-     * in the UI class if this function returns true.
-     *
-     * @param road to attempt to claim for the current
-     *             instance's player
-     * @return true iff the claim was successful
-     */
-    public boolean claimRoad(Road road) {
-        return false;
+    public Player(String name) {
+        this.name = name;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Date getBirthday() {
         return this.birthday;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
     public Color getColor() {
         return this.color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     @Override

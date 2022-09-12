@@ -40,8 +40,7 @@ public class GameInstance {
 
         for (int i = 0; i < 2; i++) {
             char id = encodedString.charAt(currentChar++);
-            Player player = new Player();
-            player.setName(String.valueOf(id));
+            Player player = new Player(String.valueOf(id));
             players.add(player);
             if (player.getName().equals(String.valueOf(turn))) {
                 while (players.peek() != player) {

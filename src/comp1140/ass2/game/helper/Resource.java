@@ -14,8 +14,9 @@ public enum Resource {
             case 'b' -> BRICK;
             case 'l' -> LUMBER;
             case 'g' -> GRAIN;
+            case 'o' -> ORE;
             case 'w' -> WOOL;
-            default -> ORE;
+            default -> throw new IllegalArgumentException("Character " + c + " does not map to a valid resource.");
         };
     }
 }
