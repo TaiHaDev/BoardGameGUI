@@ -239,7 +239,7 @@ public class CatanDiceExtra {
      * Helper function for longestRoad to tell us if a graph can
      * be traced from start to finish without lifting your
      * finger off the page. This is done by checking if the
-     * graph has an Eulerian trail.
+     * graph is an Eulerian trail.
      *
      * From Wikipedia:
      * An undirected graph has an Eulerian trail if and only if
