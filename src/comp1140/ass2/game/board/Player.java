@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.Random;
 
 public class Player {
 
@@ -14,6 +15,11 @@ public class Player {
 
     public Player(String name) {
         this.name = name;
+        Random rand = new Random();
+        int r = rand.nextInt(0, 256);
+        int g = rand.nextInt(0,256) ;
+        int b = rand.nextInt(0,256);
+        color = Color.rgb(r,g,b);
     }
 
     public String getName() {

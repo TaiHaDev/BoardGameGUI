@@ -2,6 +2,8 @@ package comp1140.ass2.gui;
 
 import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.game.GameInstance;
+import comp1140.ass2.game.buildings.Building;
+import comp1140.ass2.game.buildings.Castle;
 import comp1140.ass2.game.buildings.Road;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -12,9 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polyline;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -76,7 +76,7 @@ public class Game extends Application implements Initializable {
     public Rectangle r0812;
     public Rectangle r0205;
     public Rectangle r4246;
-    public Rectangle r4053;
+    public Rectangle r5053;
     public Rectangle r0004;
     public Rectangle r3035;
     public Rectangle r4146;
@@ -131,6 +131,29 @@ public class Game extends Application implements Initializable {
     public Polyline h53;
     public Polyline h51;
     public TextField textField;
+    public Ellipse k00;
+    public Ellipse k01;
+    public Ellipse k02;
+    public Ellipse k03;
+    public Ellipse k04;
+    public Ellipse k05;
+    public Ellipse k06;
+    public Ellipse k07;
+    public Ellipse k08;
+    public Ellipse k09;
+    public Ellipse k10;
+    public Ellipse k11;
+    public Ellipse k12;
+    public Ellipse k13;
+    public Ellipse k14;
+    public Ellipse k15;
+    public Ellipse k16;
+    public Ellipse k17;
+    public Ellipse k18;;
+    public Ellipse k19;
+
+
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -150,7 +173,7 @@ public class Game extends Application implements Initializable {
     }
 
     @FXML
-    public void input(ActionEvent event) {
+    public void input(ActionEvent event) throws NoSuchFieldException, IllegalAccessException {
         if (!CatanDiceExtra.isBoardStateWellFormed(textField.getText())) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -162,15 +185,44 @@ public class Game extends Application implements Initializable {
 
         GameInstance gameInstance = new GameInstance(textField.getText());
         System.out.println(textField.getText());
-
         for (Road road : gameInstance.getBoard().getRoads()) {
-            String a = String.valueOf(road.getStart());
-            String b = String.valueOf(road.getEnd());
-            Rectangle rectangle = (Rectangle) fxmlLoader.getNamespace().get("r" + a + b);
+            if (road.getOwner() == null) continue;
+            int start = road.getStart();
+            int end = road.getEnd();
+            String a = start < 10 ? "0" + start : String.valueOf(start);
+            String b = end < 10 ? "0" + end : String.valueOf(end);
+            System.out.println(a+b);
+            Rectangle rectangle = (Rectangle) getClass().getDeclaredField("r" + a + b).get(this);
+            rectangle.setFill(Color.RED);
+            rectangle.setFill(road.getOwner().getColor());
+
         }
 
-        System.out.println("test");
-    }
+        for (var house : gameInstance.getBoard().getResidentialBuilding().entrySet()) {
+            if (house.getValue().getOwner() != null) {
+                int ad = house.getKey();
+                String address = ad < 10 ? "0" + ad : String.valueOf(ad);
+                Polyline polyline = (Polyline) getClass().getDeclaredField("h" + address).get(this);
+                polyline.setFill(house.getValue().getOwner().getColor());
+            }
+        }
+        for (var knight : gameInstance.getBoard().getKnightBoard().entrySet()) {
+            if (knight.getValue().getOwner() != null) {
+                int ad = knight.getKey();
+                String address = ad < 10 ? "0" + ad : String.valueOf(ad);
+                Ellipse ellipse = (Ellipse) getClass().getDeclaredField("k" + address).get(this);
+                ellipse.setOpacity(1);
+                ellipse.setFill(knight.getValue().getOwner().getColor());
+            }
+        }
+        for (int i = 0; i < gameInstance.getBoard().getCastleBoard().length; i++) {
+            var castleBoard = gameInstance.getBoard().getCastleBoard();
+            if (castleBoard[i].getOwner() != null) {
+                Polyline polyline = (Polyline) getClass().getDeclaredField("c" + i).get(this);
+                polyline.setFill(castleBoard[i].getOwner().getColor());
+            }
+
+    }}
 
     @FXML
     public void changeColour() {
