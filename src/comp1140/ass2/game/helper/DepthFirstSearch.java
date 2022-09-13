@@ -16,22 +16,19 @@ public class DepthFirstSearch {
     }
 
     public void search(int start, int end) {
-        // if our new edge has already been used, abandon this path
-        if (currentPath.size() > 2) {
-            List<Road> edgesVisited = new ArrayList<>();
+        if (currentPath.size() > 1) {
+            List<Road> edges = new ArrayList<>();
             for (int i = 1; i < currentPath.size(); i++) {
-                Road road = new Road(currentPath.get(i - 1), currentPath.get(i));
-                if (edgesVisited.contains(road)) {
-                    return;
-                }
-                edgesVisited.add(road);
+                edges.add(new Road(currentPath.get(i), currentPath.get(i - 1)));
+            }
+            if (edges.contains(new Road(start, currentPath.get(currentPath.size() - 1)))) {
+                return;
             }
         }
 
         currentPath.addLast(start);
         if (start == end) {
-            List<Integer> copy = new ArrayList<>(currentPath);
-            paths.add(new ArrayList<>(copy));
+            paths.add(new ArrayList<>(currentPath));
             currentPath.removeLast();
             return;
         }

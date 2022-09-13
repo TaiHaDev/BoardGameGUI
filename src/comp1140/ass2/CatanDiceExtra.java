@@ -27,8 +27,6 @@ public class CatanDiceExtra {
      * a board state, false otherwise.
      */
     public static boolean isBoardStateWellFormed(String boardState) {
-        // FIXME: Task 3
-//         turn section
         String regex1 = "^(W|X)([3-6][1-3]|00)([b,g,l,m,o,w]{0}|[b,g,l,m,o,w]{2,6})(W(C[0-4])*(J(0[0-9]|1[0-9]))*" +
                 "(K(0[0-9]|1[0-9]))*(R(\\d\\d\\d\\d))*(S([0-4][0-9]|5[0-3]))*(T([0-4][0-9]|5[0-3]))*)(X(C[0-4])*" +
                 "(J(0[0-9]|1[0-9]))*(K(0[0-9]|1[0-9]))*(R(\\d\\d\\d\\d))*(S([0-4][0-9]|5[0-3]))*(T([0-4][0-9]|5[0-3]))*)" +
@@ -95,8 +93,7 @@ public class CatanDiceExtra {
      */
 
     public static boolean isActionWellFormed(String action) {
-        // FIXME: Task 4
-	    String regex = "^(keep[b,g,l,m,o,w]{0,6}|build(R([0-4][0-9]|5[0-3]){2}|K(0[0-9]|1[0-9])|S([0-4][0-9]|5[0-3])|" +
+        String regex = "^(keep[b,g,l,m,o,w]{0,6}|build(R([0-4][0-9]|5[0-3]){2}|K(0[0-9]|1[0-9])|S([0-4][0-9]|5[0-3])|" +
                 "T([0-4][0-9]|5[0-3])|C[0-4])|trade[b,g,l,m,o,w]{1,3}|swap[b,g,l,m,o,w][b,g,l,m,o,w])$";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(action);
@@ -130,7 +127,6 @@ public class CatanDiceExtra {
      * 'b', 'l', 'w', 'g', 'o', 'm'.
      */
     public static String rollDice(int numOfDice) {
-        // FIXME: Task 5
         char[] resources = new char[numOfDice];
         Random random = new Random();
         char[] resourcesList = new char[]{'b','l','w','g','o','m'};
@@ -233,8 +229,7 @@ public class CatanDiceExtra {
             Resource out = Resource.decodeChar(action.charAt(4));
             Resource in = Resource.decodeChar(action.charAt(5));
             if (GameInstance.isResourcesSufficient(resourcesMap, Map.of(out, 1))) {
-                if (game.getBoard().isKnightResourceAvailable(in, player))
-                    return true;
+                return game.getBoard().isKnightResourceAvailable(in, player);
             }
         }
         return false;
@@ -314,19 +309,21 @@ public class CatanDiceExtra {
             // create a list of every path existing in the player's graph
             HashSet<List<Integer>> paths = new HashSet<>();
             for (int start : graph.keySet()) {
+                if (graph.get(start).size() == 2) continue;
                 for (int end : graph.keySet()) {
-                    if (start == end) continue;
+                    if (graph.get(end).size() == 2 || start == end) continue;
                     DepthFirstSearch dfs = new DepthFirstSearch(paths, graph);
                     dfs.search(start, end);
                 }
             }
 
-            longestRoad[player.getName().toCharArray()[0] - 'W'] = paths.parallelStream()
-                    .filter(e -> isEulerianTrail(pathToGraph(e)))
-                    .mapToInt(List::size)
-                    .map(e -> Math.max(e - 1, 0))
-                    .max()
-                    .orElse(0);
+            int max = 0;
+            for (List<Integer> path : paths) {
+                if (isEulerianTrail(pathToGraph(path))) {
+                    max = Math.max(path.size() - 1, max);
+                }
+            }
+            longestRoad[player.getName().toCharArray()[0] - 'W'] = max;
         }
         return longestRoad;
     }
