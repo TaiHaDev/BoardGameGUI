@@ -2,26 +2,17 @@ package comp1140.ass2.gui;
 
 import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.game.GameInstance;
-import comp1140.ass2.game.Road;
+import comp1140.ass2.game.buildings.Road;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.CacheHint;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
-
-import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +142,7 @@ public class GameController implements Initializable {
         GameInstance gameInstance = new GameInstance(textField.getText());
         System.out.println(textField.getText());
 
-        for (Road road : gameInstance.getRoads()) {
+        for (Road road : gameInstance.getBoard().getRoads()) {
 //            getClass().getField(road.source)
         }
 
