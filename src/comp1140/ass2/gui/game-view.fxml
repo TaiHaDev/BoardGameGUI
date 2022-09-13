@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Polyline?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp1140.ass2.gui.GameController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp1140.ass2.gui.Game">
    <children>
       <Button layoutX="1111.0" layoutY="605.0" mnemonicParsing="false" text="swap" />
       <Button layoutX="1035.0" layoutY="605.0" mnemonicParsing="false" text="trade" />
