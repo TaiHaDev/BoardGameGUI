@@ -1,8 +1,9 @@
-package comp1140.ass2.game;
+package comp1140.ass2.game.helper;
 
 import java.util.LinkedList;
+import java.util.Queue;
 
-public class CircularQueue<T> extends LinkedList<T> {
+public class CircularQueue<T> extends LinkedList<T> implements Queue<T> {
 
     /**
      * Implements the circular queue data structure
@@ -13,7 +14,9 @@ public class CircularQueue<T> extends LinkedList<T> {
      */
     @Override
     public T pop() {
-        return null;
+        this.addLast(this.getFirst());
+        this.removeFirst();
+        return this.getFirst();
     }
 
 }
