@@ -15,6 +15,8 @@ public class GameInstance {
     private int diceCount;
     public CircularQueue<Player> players = new CircularQueue<>();
     private Map<Resource, Integer> diceResult = new HashMap<>();
+    private Player longestRoad;
+    private Player largestArmy;
 
     public GameInstance(String encodedString) {
         char turn = encodedString.charAt(0);
@@ -87,6 +89,22 @@ public class GameInstance {
                 }
             }
         }
+        for (int i = 0; i < players.size(); i++) {
+            final String playerId = String.valueOf(encodedString.charAt(currentChar++));
+            players.get(i).setScore(Integer.parseInt(String.valueOf(encodedString.charAt(currentChar++)) +
+                    encodedString.charAt(currentChar++)));
+
+            if (encodedString.length() > currentChar && encodedString.charAt(currentChar) == 'R') {
+                Optional<Player> player = players.stream().filter(e -> e.getName().equals(playerId)).findFirst();
+                player.ifPresent(this::setLongestRoad);
+                currentChar++;
+            }
+            if (encodedString.length() > currentChar && encodedString.charAt(currentChar) == 'A') {
+                Optional<Player> player = players.stream().filter(e -> e.getName().equals(playerId)).findFirst();
+                player.ifPresent(this::setLargestArmy);
+                currentChar++;
+            }
+        }
 
     }
 
@@ -116,57 +134,8 @@ public class GameInstance {
         return players.pop();
     }
 
-    /**
-     * The constructor should initialise the trivial
-     * variables to assign (round, dice count),
-     * and set up the board (roads) as per the game rules.
-     *
-     * The players are taken as an argument. It is
-     * assumed that sorting has already taken place.
-     *
-     * @param players  the initialised players list as input
-     *                 by users in the GUI
-     */
-    public GameInstance(CircularQueue<Player> players) {
-
-    }
-
-    /**
-     * This method is run after every time
-     * a road is claimed.
-     *
-     * This method returns the player
-     * who has the most knights.
-     * segment AND has at least three knights.
-     *
-     * It returns null if no players meet this
-     * requirement.
-     *
-     * @return player
-     */
-    public Player getLargestArmy() {
-        return null;
-    }
-
-    /**
-     * This method is run after every time
-     * a road is claimed.
-     *
-     * This method returns the player
-     * who has the most road pieces in a continuous
-     * segment AND has at least five roads.
-     *
-     * It returns null if no players meet this
-     * requirement.
-     *
-     * @return player
-     */
-    public Player getLongestRoad() {
-        return null;
-    }
-
     public int getDiceCount() {
-        return 0;
+        return diceCount;
     }
 
     public void setDiceCount(int diceCount) {
@@ -181,10 +150,6 @@ public class GameInstance {
         this.players = players;
     }
 
-    public void tradeGold() {
-
-    }
-
     /**
      * Generates a list of buildings that the given player can
      * build on their current turn.
@@ -195,7 +160,7 @@ public class GameInstance {
      * built by the current player.
      */
     public List<Building> availableToBuild(Player player) {
-        return null;
+        return null; // TODO
     }
 
     /**
@@ -209,7 +174,7 @@ public class GameInstance {
      *                   passed from the head of the player queue
      */
     public void chooseToBuild(List<Building> buildings, Player player) {
-        // modify board
+        // TODO
     }
 
     /**
@@ -224,10 +189,15 @@ public class GameInstance {
      *                         player wants to be rerolled.
      */
     public void rollDice(int... indicesToReroll) {
+        // TODO
     }
 
     public Map<Resource, Integer> getDiceResult() {
         return diceResult;
+    }
+
+    public void setRollsDone(int rollsDone) {
+        this.rollsDone = rollsDone;
     }
 
     public int getRollsDone() {
@@ -286,5 +256,21 @@ public class GameInstance {
 
     public void setDiceResult(Map<Resource, Integer> diceResult) {
         this.diceResult = diceResult;
+    }
+
+    public Player getLargestArmy() {
+        return largestArmy;
+    }
+
+    public void setLargestArmy(Player largestArmy) {
+        this.largestArmy = largestArmy;
+    }
+
+    public Player getLongestRoad() {
+        return longestRoad;
+    }
+
+    public void setLongestRoad(Player longestRoad) {
+        this.longestRoad = longestRoad;
     }
 }

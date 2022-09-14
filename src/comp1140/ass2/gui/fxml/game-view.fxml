@@ -11,318 +11,202 @@
 <?import javafx.scene.shape.Ellipse?>
 <?import javafx.scene.shape.Polyline?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0"
-            prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="comp1140.ass2.gui.Viewer">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp1140.ass2.gui.Viewer">
    <cursor>
-      <Cursor fx:constant="DEFAULT"/>
+      <Cursor fx:constant="DEFAULT" />
    </cursor>
-   <Button layoutX="1111.0" layoutY="605.0" mnemonicParsing="false" text="swap"/>
-   <Button layoutX="1035.0" layoutY="605.0" mnemonicParsing="false" text="trade"/>
-   <Label layoutX="83.0" layoutY="100.0" text="Player X"/>
-   <Label layoutX="87.0" layoutY="164.0" text="Player Y"/>
-   <Label layoutX="1012.0" layoutY="74.0" text="Dice Information"/>
-   <Label layoutX="1020.0" layoutY="285.0" text="buildings can built"/>
+   <Label layoutX="83.0" layoutY="100.0" text="Player X">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+   <Label layoutX="87.0" layoutY="164.0" text="Player Y">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+   <Label layoutX="1039.0" layoutY="24.0" text="Dice Information" underline="true">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
    <ImageView fitHeight="670.0" fitWidth="696.0" layoutX="263.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
-      <Image url="@../img/catan-dice-extra-map.png"/>
+      <Image url="@../img/catan-dice-extra-map.png" />
    </ImageView>
-   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="344.0" pickOnBounds="true"
-              preserveRatio="true">
-      <Image url="@../img/city.png"/>
+   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="344.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../img/city.png" />
    </ImageView>
-   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="468.0" pickOnBounds="true"
-              preserveRatio="true">
+   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="468.0" pickOnBounds="true" preserveRatio="true">
       <image>
-         <Image url="@../img/knight.png"/>
+         <Image url="@../img/knight.png" />
       </image>
    </ImageView>
-   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="530.0" pickOnBounds="true"
-              preserveRatio="true">
+   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="530.0" pickOnBounds="true" preserveRatio="true">
       <image>
-         <Image url="@../img/road.png"/>
+         <Image url="@../img/road.png" />
       </image>
    </ImageView>
-   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="406.0" pickOnBounds="true"
-              preserveRatio="true">
+   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="406.0" pickOnBounds="true" preserveRatio="true">
       <image>
-         <Image url="@../img/settlement.png"/>
+         <Image url="@../img/settlement.png" />
       </image>
    </ImageView>
    <ImageView fitHeight="53.0" fitWidth="54.0" layoutX="18.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
       <image>
-         <Image url="@../img/w1.png"/>
+         <Image url="@../img/w1.png" />
       </image>
    </ImageView>
    <ImageView fitHeight="53.0" fitWidth="61.0" layoutX="24.0" layoutY="146.0" pickOnBounds="true" preserveRatio="true">
       <image>
-         <Image url="@../img/w2.png"/>
+         <Image url="@../img/w2.png" />
       </image>
    </ImageView>
-   <TextField fx:id="textField" layoutX="29.0" layoutY="20.0" promptText="Enter Board State:"/>
-   <Rectangle fx:id="r0307" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="407.0" layoutY="92.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0408" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="544.0" layoutY="96.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0509" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="679.0" layoutY="97.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0610" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="805.0" layoutY="95.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1116" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="342.0" layoutY="218.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1217" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="475.0" layoutY="207.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1318" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="614.0" layoutY="208.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1419" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="742.0" layoutY="208.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1520" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="872.0" layoutY="215.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2127" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="276.0" layoutY="337.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2228" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="407.0" layoutY="332.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2329" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="538.0" layoutY="334.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2430" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="673.0" layoutY="331.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2531" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="809.0" layoutY="328.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2632" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="937.0" layoutY="332.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3338" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="344.0" layoutY="460.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3439" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="473.0" layoutY="458.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3540" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="604.0" layoutY="453.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3742" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="871.0" layoutY="450.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3641" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="747.0" layoutY="454.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4347" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="412.0" layoutY="569.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4448" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="541.0" layoutY="560.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4549" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="672.0" layoutY="559.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4650" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="806.0" layoutY="561.0"
-              stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Button layoutX="958.0" layoutY="605.0" mnemonicParsing="false" text="keep"/>
-   <Rectangle fx:id="r0003" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="433.0" layoutY="45.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4851" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="514.0" layoutY="621.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4952" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="645.0" layoutY="622.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3943" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="443.0" layoutY="508.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4044" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="579.0" layoutY="504.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4145" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="713.0" layoutY="504.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3136" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="787.0" layoutY="382.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3237" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="919.0" layoutY="386.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2025" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="836.0" layoutY="276.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1924" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="695.0" layoutY="285.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1823" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="567.0" layoutY="279.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2934" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="518.0" layoutY="390.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2833" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="372.0" layoutY="397.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1621" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="298.0" layoutY="286.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1722" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="433.0" layoutY="285.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0711" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="363.0" layoutY="172.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1014" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="762.0" layoutY="163.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0913" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="645.0" layoutY="156.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0812" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="507.0" layoutY="157.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0205" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="709.0" layoutY="43.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0104" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="570.0" layoutY="45.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4246" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="854.0" layoutY="499.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r5053" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="779.0" layoutY="620.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0004" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="516.0" layoutY="48.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3035" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="650.0" layoutY="386.0"
-              rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4146" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="769.0" layoutY="503.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3944" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="505.0" layoutY="509.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4953" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="704.0" layoutY="619.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4852" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="569.0" layoutY="621.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4751" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="439.0" layoutY="621.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3843" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="365.0" layoutY="504.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2733" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="306.0" layoutY="393.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2834" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="432.0" layoutY="391.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r4045" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="637.0" layoutY="504.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2935" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="565.0" layoutY="390.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3036" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="700.0" layoutY="386.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r3137" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="838.0" layoutY="385.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r2026" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="913.0" layoutY="276.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1925" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="786.0" layoutY="279.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1824" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="652.0" layoutY="282.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1723" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="521.0" layoutY="283.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1622" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="380.0" layoutY="281.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0712" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="449.0" layoutY="165.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0813" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="587.0" layoutY="157.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0914" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="712.0" layoutY="155.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r1015" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="850.0" layoutY="168.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0206" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="779.0" layoutY="43.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Rectangle fx:id="r0105" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="648.0" layoutY="44.0"
-              rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0"/>
-   <Polyline fx:id="h00" fill="#f2efef" layoutX="529.0" layoutY="-5.0"
-             points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE"/>
-   <Polyline fx:id="h02" fill="WHITE" layoutX="796.0" layoutY="-9.0"
-             points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE"/>
-   <Polyline fx:id="h08" fill="WHITE" layoutX="601.0" layoutY="106.0"
-             points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE"/>
-   <Polyline fx:id="h09" fill="WHITE" layoutX="730.0" layoutY="105.0"
-             points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE"/>
-   <Polyline fx:id="h16" fill="WHITE" layoutX="400.0" layoutY="226.0"
-             points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE"/>
-   <Polyline fx:id="h20" fill="WHITE" layoutX="927.0" layoutY="215.0"
-             points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE"/>
-   <Polyline fx:id="h37" fill="WHITE" layoutX="928.0" layoutY="369.0"
-             points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE"/>
-   <Polyline fx:id="h33" fill="WHITE" layoutX="392.0" layoutY="376.0"
-             points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE"/>
-   <Polyline fx:id="h44" fill="WHITE" layoutX="597.0" layoutY="484.0"
-             points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE"/>
-   <Polyline fx:id="h45" fill="WHITE" layoutX="727.0" layoutY="485.0"
-             points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE"/>
-   <Polyline fx:id="h51" fill="WHITE" layoutX="532.0" layoutY="608.0"
-             points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE"/>
-   <Polyline fx:id="h53" fill="WHITE" layoutX="797.0" layoutY="601.0"
-             points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE"/>
-   <Polyline fx:id="h01" fill="WHITE" layoutX="711.0" layoutY="7.0"
-             points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="h07" fill="WHITE" layoutX="503.0" layoutY="130.0"
-             points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="h10" fill="WHITE" layoutX="910.0" layoutY="127.0"
-             points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="h18" fill="WHITE" layoutX="708.0" layoutY="243.0"
-             points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="h17" fill="WHITE" layoutX="576.0" layoutY="245.0"
-             points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="h19" fill="WHITE" layoutX="842.0" layoutY="248.0"
-             points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="h34" fill="WHITE" layoutX="573.0" layoutY="399.0"
-             points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="h35" fill="WHITE" layoutX="705.0" layoutY="394.0"
-             points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="h36" fill="WHITE" layoutX="848.0" layoutY="395.0"
-             points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="h46" fill="WHITE" layoutX="914.0" layoutY="512.0"
-             points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="h43" fill="WHITE" layoutX="507.0" layoutY="512.0"
-             points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="h52" fill="WHITE" layoutX="705.0" layoutY="627.0"
-             points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0"
-             strokeType="INSIDE"/>
-   <Ellipse fx:id="k00" fill="WHITE" layoutX="484.0" layoutY="102.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="WHITE" strokeType="INSIDE"/>
-   <Ellipse fx:id="k01" fill="WHITE" layoutX="626.0" layoutY="93.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k02" fill="WHITE" layoutX="752.0" layoutY="94.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k03" fill="WHITE" layoutX="415.0" layoutY="217.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k04" fill="WHITE" layoutX="553.0" layoutY="218.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k06" fill="WHITE" layoutX="822.0" layoutY="219.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="WHITE" strokeType="INSIDE"/>
-   <Ellipse fx:id="k05" fill="WHITE" layoutX="688.0" layoutY="214.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k07" fill="WHITE" layoutX="358.0" layoutY="338.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k08" fill="WHITE" layoutX="484.0" layoutY="337.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k09" fill="WHITE" layoutX="594.0" layoutY="331.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k10" fill="WHITE" layoutX="634.0" layoutY="331.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k11" fill="WHITE" layoutX="761.0" layoutY="343.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k12" fill="WHITE" layoutX="890.0" layoutY="329.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k13" fill="WHITE" layoutX="424.0" layoutY="454.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k14" fill="WHITE" layoutX="557.0" layoutY="462.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k15" fill="WHITE" layoutX="684.0" layoutY="448.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k16" fill="WHITE" layoutX="814.0" layoutY="446.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k17" fill="WHITE" layoutX="487.0" layoutY="565.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k18" fill="WHITE" layoutX="620.0" layoutY="565.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Ellipse fx:id="k19" fill="WHITE" layoutX="755.0" layoutY="569.0" opacity="0.0" radiusX="9.0" radiusY="21.0"
-            stroke="BLACK" strokeType="INSIDE"/>
-   <Polyline fx:id="c2" fill="WHITE" layoutX="1113.0" layoutY="90.0"
-             points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="c1" fill="WHITE" layoutX="502.0" layoutY="97.0"
-             points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0"
-             smooth="false" stroke="WHITE" strokeType="INSIDE"/>
-   <Polyline fx:id="c4" fill="WHITE" layoutX="1122.0" layoutY="647.0"
-             points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0"
-             strokeType="INSIDE"/>
-   <Polyline fx:id="c3" fill="#fffbfb" layoutX="500.0" layoutY="655.0"
-             points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0"
-             strokeType="INSIDE"/>
-   <Button fx:id="displayStateButton" layoutX="194.0" layoutY="20.0" mnemonicParsing="false" prefHeight="26.0"
-           prefWidth="39.0" text="Go"/>
-   <Circle fx:id="playerXColor" fill="DODGERBLUE" layoutX="169.0" layoutY="111.0" radius="17.0" stroke="BLACK"
-           strokeType="INSIDE"/>
-   <Circle fx:id="playerYColor" fill="DODGERBLUE" layoutX="169.0" layoutY="172.0" radius="17.0" stroke="BLACK"
-           strokeType="INSIDE"/>
+   <TextField fx:id="textField" layoutX="29.0" layoutY="20.0" promptText="Enter Board State:" />
+   <Rectangle fx:id="r0307" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="407.0" layoutY="92.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0408" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="544.0" layoutY="96.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0509" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="679.0" layoutY="97.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0610" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="805.0" layoutY="95.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1116" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="342.0" layoutY="218.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1217" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="475.0" layoutY="207.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1318" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="614.0" layoutY="208.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1419" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="742.0" layoutY="208.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1520" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="872.0" layoutY="215.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2127" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="276.0" layoutY="337.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2228" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="407.0" layoutY="332.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2329" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="538.0" layoutY="334.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2430" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="673.0" layoutY="331.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2531" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="809.0" layoutY="328.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2632" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="937.0" layoutY="332.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3338" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="344.0" layoutY="460.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3439" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="473.0" layoutY="458.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3540" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="604.0" layoutY="453.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3742" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="871.0" layoutY="450.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3641" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="747.0" layoutY="454.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4347" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="412.0" layoutY="569.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4448" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="541.0" layoutY="560.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4549" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="672.0" layoutY="559.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4650" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="806.0" layoutY="561.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0003" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="433.0" layoutY="45.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4851" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="514.0" layoutY="621.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4952" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="645.0" layoutY="622.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3943" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="443.0" layoutY="508.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4044" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="579.0" layoutY="504.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4145" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="713.0" layoutY="504.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3136" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="787.0" layoutY="382.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3237" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="919.0" layoutY="386.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2025" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="836.0" layoutY="276.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1924" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="695.0" layoutY="285.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1823" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="567.0" layoutY="279.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2934" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="518.0" layoutY="390.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2833" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="372.0" layoutY="397.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1621" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="298.0" layoutY="286.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1722" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="433.0" layoutY="285.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0711" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="363.0" layoutY="172.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1014" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="762.0" layoutY="163.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0913" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="645.0" layoutY="156.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0812" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="507.0" layoutY="157.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0205" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="709.0" layoutY="43.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0104" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="570.0" layoutY="45.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4246" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="854.0" layoutY="499.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r5053" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="779.0" layoutY="620.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0004" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="516.0" layoutY="48.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3035" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="650.0" layoutY="386.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4146" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="769.0" layoutY="503.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3944" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="505.0" layoutY="509.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4953" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="704.0" layoutY="619.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4852" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="569.0" layoutY="621.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4751" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="439.0" layoutY="621.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3843" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="365.0" layoutY="504.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2733" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="306.0" layoutY="393.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2834" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="432.0" layoutY="391.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r4045" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="637.0" layoutY="504.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2935" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="565.0" layoutY="390.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3036" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="700.0" layoutY="386.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r3137" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="838.0" layoutY="385.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r2026" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="913.0" layoutY="276.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1925" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="786.0" layoutY="279.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1824" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="652.0" layoutY="282.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1723" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="521.0" layoutY="283.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1622" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="380.0" layoutY="281.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0712" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="449.0" layoutY="165.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0813" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="587.0" layoutY="157.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0914" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="712.0" layoutY="155.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r1015" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="850.0" layoutY="168.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0206" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="779.0" layoutY="43.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0105" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="648.0" layoutY="44.0" rotate="-60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Polyline fx:id="h00" fill="#f2efef" layoutX="529.0" layoutY="-5.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
+   <Polyline fx:id="h02" fill="WHITE" layoutX="796.0" layoutY="-9.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
+   <Polyline fx:id="h08" fill="WHITE" layoutX="601.0" layoutY="106.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
+   <Polyline fx:id="h09" fill="WHITE" layoutX="730.0" layoutY="105.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
+   <Polyline fx:id="h16" fill="WHITE" layoutX="400.0" layoutY="226.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
+   <Polyline fx:id="h20" fill="WHITE" layoutX="927.0" layoutY="215.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
+   <Polyline fx:id="h37" fill="WHITE" layoutX="928.0" layoutY="369.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
+   <Polyline fx:id="h33" fill="WHITE" layoutX="392.0" layoutY="376.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
+   <Polyline fx:id="h44" fill="WHITE" layoutX="597.0" layoutY="484.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
+   <Polyline fx:id="h45" fill="WHITE" layoutX="727.0" layoutY="485.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
+   <Polyline fx:id="h51" fill="WHITE" layoutX="532.0" layoutY="608.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
+   <Polyline fx:id="h53" fill="WHITE" layoutX="797.0" layoutY="601.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
+   <Polyline fx:id="h01" fill="WHITE" layoutX="711.0" layoutY="7.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h07" fill="WHITE" layoutX="503.0" layoutY="130.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h10" fill="WHITE" layoutX="910.0" layoutY="127.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h18" fill="WHITE" layoutX="708.0" layoutY="243.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h17" fill="WHITE" layoutX="576.0" layoutY="245.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h19" fill="WHITE" layoutX="842.0" layoutY="248.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h34" fill="WHITE" layoutX="573.0" layoutY="399.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h35" fill="WHITE" layoutX="705.0" layoutY="394.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h36" fill="WHITE" layoutX="848.0" layoutY="395.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h46" fill="WHITE" layoutX="914.0" layoutY="512.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h43" fill="WHITE" layoutX="507.0" layoutY="512.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h52" fill="WHITE" layoutX="705.0" layoutY="627.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Ellipse fx:id="k00" fill="WHITE" layoutX="484.0" layoutY="102.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="WHITE" strokeType="INSIDE" />
+   <Ellipse fx:id="k01" fill="WHITE" layoutX="626.0" layoutY="93.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k02" fill="WHITE" layoutX="752.0" layoutY="94.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k03" fill="WHITE" layoutX="415.0" layoutY="217.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k04" fill="WHITE" layoutX="553.0" layoutY="218.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k06" fill="WHITE" layoutX="822.0" layoutY="219.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="WHITE" strokeType="INSIDE" />
+   <Ellipse fx:id="k05" fill="WHITE" layoutX="688.0" layoutY="214.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k07" fill="WHITE" layoutX="358.0" layoutY="338.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k08" fill="WHITE" layoutX="484.0" layoutY="337.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k09" fill="WHITE" layoutX="594.0" layoutY="331.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k10" fill="WHITE" layoutX="634.0" layoutY="331.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k11" fill="WHITE" layoutX="761.0" layoutY="343.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k12" fill="WHITE" layoutX="890.0" layoutY="329.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k13" fill="WHITE" layoutX="424.0" layoutY="454.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k14" fill="WHITE" layoutX="557.0" layoutY="462.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k15" fill="WHITE" layoutX="684.0" layoutY="448.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k16" fill="WHITE" layoutX="814.0" layoutY="446.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k17" fill="WHITE" layoutX="487.0" layoutY="565.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k18" fill="WHITE" layoutX="620.0" layoutY="565.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k19" fill="WHITE" layoutX="755.0" layoutY="569.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Polyline fx:id="c2" fill="WHITE" layoutX="1113.0" layoutY="90.0" points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0" strokeType="INSIDE" />
+   <Polyline fx:id="c1" fill="WHITE" layoutX="502.0" layoutY="97.0" points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0" smooth="false" stroke="WHITE" strokeType="INSIDE" />
+   <Polyline fx:id="c4" fill="WHITE" layoutX="1122.0" layoutY="647.0" points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0" strokeType="INSIDE" />
+   <Polyline fx:id="c3" fill="#fffbfb" layoutX="500.0" layoutY="655.0" points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0" strokeType="INSIDE" />
+   <Button fx:id="displayStateButton" layoutX="194.0" layoutY="20.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="39.0" text="Go" />
+   <Circle fx:id="playerXColor" fill="DODGERBLUE" layoutX="169.0" layoutY="111.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+   <Circle fx:id="playerYColor" fill="DODGERBLUE" layoutX="169.0" layoutY="172.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+   <Text fx:id="turnText" layoutX="986.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Text>
+   <Text fx:id="resourceList" layoutX="999.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="184.53155517578125">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Text>
+   <Text fx:id="rolledResourceLabel" layoutX="986.0" layoutY="138.0" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rolled resources:">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Text>
+   <Label layoutX="1070.0" layoutY="264.0" text="Stats" underline="true">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Label>
+   <Text fx:id="statsFreeText" layoutX="986.0" layoutY="308.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+   <Text fx:id="diceCountText" layoutX="986.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" />
 
 
 </AnchorPane>

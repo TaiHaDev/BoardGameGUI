@@ -2,7 +2,10 @@ package comp1140.ass2.gui;
 
 import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.game.GameInstance;
+import comp1140.ass2.game.board.Player;
+import comp1140.ass2.game.buildings.Building;
 import comp1140.ass2.game.buildings.Castle;
+import comp1140.ass2.game.buildings.Knight;
 import comp1140.ass2.game.buildings.Road;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,11 +19,14 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Viewer extends Application implements Initializable {
 
@@ -153,6 +159,11 @@ public class Viewer extends Application implements Initializable {
     public Button displayStateButton;
     public Circle playerXColor;
     public Circle playerYColor;
+    public Text resourceList;
+    public Text rolledResourceLabel;
+    public Text turnText;
+    public Text statsFreeText;
+    public Text diceCountText;
 
 
     @Override
@@ -215,7 +226,7 @@ public class Viewer extends Application implements Initializable {
             polyline.setFill(Color.WHITE);
         }
     }
-
+    // X62bgllowWK00K01K03R0003R0004R0104R0307R0408R0711R0712R0812R1116R1217S00S01S07XJ12K02K04K05K06R0105R0206R0509R0610R0813R0913R0914R1014R1015R1318R1419R1520R2026S02S09S20T10W05RX07A
     public void displayState(String boardState) throws NoSuchFieldException, IllegalAccessException {
         if (!CatanDiceExtra.isBoardStateWellFormed(boardState)) {
             showError();
@@ -227,13 +238,15 @@ public class Viewer extends Application implements Initializable {
             gameInstance = new GameInstance(boardState);
         } catch (Exception exception) {
             showError();
+            exception.printStackTrace();
             return;
         }
         clearBoard(gameInstance);
-
         System.out.println(boardState);
-        gameInstance.getPlayers().forEach(player -> (player.getName().equals("X") ? playerXColor : playerYColor)
-                .setFill(player.getColor()));
+        gameInstance.getPlayers()
+                .forEach(player -> (player.getName().equals("X") ? playerXColor : playerYColor)
+                        .setFill(player.getColor()));
+
         for (Road road : gameInstance.getBoard().getRoads()) {
             if (road.getOwner() == null) continue;
             int start = road.getStart();
@@ -243,10 +256,9 @@ public class Viewer extends Application implements Initializable {
             System.out.println(a + b);
             Rectangle rectangle = (Rectangle) getClass().getDeclaredField("r" + a + b).get(this);
             rectangle.setFill(road.getOwner().getColor());
-
         }
 
-        for (var house : gameInstance.getBoard().getResidentialBuilding().entrySet()) {
+        for (Map.Entry<Integer, Building> house : gameInstance.getBoard().getResidentialBuilding().entrySet()) {
             if (house.getValue().getOwner() != null) {
                 int ad = house.getKey();
                 String address = ad < 10 ? "0" + ad : String.valueOf(ad);
@@ -254,7 +266,7 @@ public class Viewer extends Application implements Initializable {
                 polyline.setFill(house.getValue().getOwner().getColor());
             }
         }
-        for (var knight : gameInstance.getBoard().getKnightBoard().entrySet()) {
+        for (Map.Entry<Integer, Knight> knight : gameInstance.getBoard().getKnightBoard().entrySet()) {
             if (knight.getValue().getOwner() != null) {
                 int ad = knight.getKey();
                 String address = ad < 10 ? "0" + ad : String.valueOf(ad);
@@ -270,6 +282,51 @@ public class Viewer extends Application implements Initializable {
                 polyline.setFill(castleBoard[i].getOwner().getColor());
             }
         }
+        StringBuilder wallet = new StringBuilder();
+        gameInstance.getDiceResult().forEach((resource, n) -> wallet.append(" - ").append(n).append(" ")
+                .append(switch(resource) {
+                    case WOOL -> "wool";
+                    case GRAIN -> "grain";
+                    case GOLD -> "gold";
+                    case LUMBER -> "lumber";
+                    case BRICK -> "brick" + (n != 1 ? "s" : "");
+                    case ORE -> "ore" + (n != 1 ? "s" : "");
+                })
+                .append("\n"));
+        resourceList.setText(wallet.toString());
+        rolledResourceLabel.setOpacity(1);
+
+        if (gameInstance.getPlayers().size() > 0) {
+            turnText.setText("It is Player " + gameInstance.getPlayers().peek().getName() + "'s turn");
+        }
+
+        String dice = gameInstance.getDiceCount() == 1 ? "die" : "dice";
+        String rollsHave = " roll" + (gameInstance.getRollsDone() == 1 ? " has" : "s have");
+        diceCountText.setText("This turn, " + gameInstance.getRollsDone() + rollsHave + " been played, \nwith " + gameInstance.getDiceCount() + " " + dice + " available.");
+
+        statsFreeText.setText("");
+        List<Player> playersByScore = gameInstance.getPlayers().stream()
+                .sorted(Comparator.comparingInt(Player::getScore).reversed())
+                .collect(Collectors.toList());
+        int place = 0;
+        int currentScore = -1;
+        for (Player player : playersByScore) {
+            long count = playersByScore.stream().filter(e -> e.getScore() == player.getScore()).count();
+            if (currentScore != player.getScore()) {
+                place += count;
+            }
+            String placeString = (count > 1 ? "=" : "") + place;
+            currentScore = player.getScore();
+                    statsFreeText.setText(statsFreeText.getText() + placeString + ". Player " +
+                    player.getName() + ": " + player.getScore() +
+                    " point" + (player.getScore() == 1 ? "" : "s") + "\n");
+        }
+        statsFreeText.setText(statsFreeText.getText() + "\n");
+
+        if (gameInstance.getLongestRoad() != null)
+            statsFreeText.setText(statsFreeText.getText() + "Player " + gameInstance.getLongestRoad().getName() + " has the longest road!\n\n");
+        if (gameInstance.getLargestArmy() != null)
+            statsFreeText.setText(statsFreeText.getText() + "Player " + gameInstance.getLargestArmy().getName() + " has the largest army!");
     }
 
 }
