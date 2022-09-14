@@ -10,7 +10,7 @@ public class Player {
 
     private final String name;
     private Date birthday;
-    private Color color;
+    private final Color color;
     private int score;
 
     public Player(String name) {

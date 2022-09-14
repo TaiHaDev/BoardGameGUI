@@ -20,47 +20,47 @@
       <Label layoutX="1020.0" layoutY="285.0" text="buildings can built" />
       <ImageView fitHeight="674.0" fitWidth="811.0" layoutX="198.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@catan-dice-extra-map.png" />
+            <Image url="@../img/catan-dice-extra-map.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="344.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@city.png" />
+            <Image url="@../img/city.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="468.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@knight.png" />
+            <Image url="@../img/knight.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="530.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@road.png" />
+            <Image url="@../img/road.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="406.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@settlement.png" />
+            <Image url="@../img/settlement.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="73.0" fitWidth="28.0" layoutX="836.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@castle.png" />
+            <Image url="@../img/castle.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="73.0" fitWidth="28.0" layoutX="345.0" layoutY="542.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@castle.png" />
+            <Image url="@../img/castle.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="73.0" fitWidth="28.0" layoutX="836.0" layoutY="542.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@castle.png" />
+            <Image url="@../img/castle.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="73.0" fitWidth="28.0" layoutX="331.0" layoutY="91.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@castle.png" />
+            <Image url="@../img/castle.png" />
          </image>
       </ImageView>
       <Label layoutX="342.0" layoutY="107.0" text="2">
@@ -85,12 +85,12 @@
       </Label>
       <ImageView fitHeight="53.0" fitWidth="54.0" layoutX="18.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@w1.png" />
+            <Image url="@../img/w1.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="53.0" fitWidth="61.0" layoutX="24.0" layoutY="146.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@w2.png" />
+            <Image url="@../img/w2.png" />
          </image>
       </ImageView>
       <TextField layoutX="150.0" layoutY="17.0" />
