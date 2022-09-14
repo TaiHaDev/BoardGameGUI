@@ -23,6 +23,7 @@ class:
 method:
    - longestRoad (https://gitlab.cecs.anu.edu.au/u7499989/comp1140-ass2/-/blob/main/src/comp1140/ass2/CatanDiceExtra.java#L275-329)
    - largestArmy (https://gitlab.cecs.anu.edu.au/u7499989/comp1140-ass2/-/blob/main/src/comp1140/ass2/CatanDiceExtra.java#L331-351)
+   - isCoastalAnd5RoadsAway (https://gitlab.cecs.anu.edu.au/u7499989/comp1140-ass2/-/blob/main/src/comp1140/ass2/game/board/Board.java#L226-266)
 
 # sign *your* name and uid here
 name: Matthew Richards
