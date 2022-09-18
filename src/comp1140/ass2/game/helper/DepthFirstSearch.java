@@ -15,6 +15,13 @@ public class DepthFirstSearch {
         this.graph = graph;
     }
 
+    /**
+     * Adds all trails starting at `start` and ending at `end`
+     * on the `graph`, to the `paths` list passed into the constructor.
+     *
+     * @param start of the search
+     * @param end of the search
+     */
     public void search(int start, int end) {
         if (currentPath.size() > 1) {
             List<Road> edges = new ArrayList<>();
