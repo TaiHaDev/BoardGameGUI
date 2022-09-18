@@ -108,6 +108,24 @@ public class GameInstance {
 
     }
 
+    /**
+     * Converts the resources section of a valid board
+     * state to a map containing each present resource
+     * given as the enum type {@link Resource} as the key,
+     * and the number of those present in the string
+     * as the integer value.
+     *
+     * Example: 'mloo' returns (as a Map):
+     * {
+     *     "GOLD": 1,
+     *     "LUMBER": 1,
+     *     "ORE": 2
+     * }
+     *
+     * @param resources  from a vaild boardState
+     * @return a map containing each resource and its
+     *          count.
+     */
     public static Map<Resource, Integer> stringResourcesToMap(String resources) {
         Map<Resource, Integer> finalMap = new HashMap<>();
         for (char e : resources.toCharArray()) {
@@ -120,16 +138,40 @@ public class GameInstance {
         return finalMap;
     }
 
+    /**
+     * Returns whether for every entry in {@param requirements},
+     * the passed map {@param resources} has either the same amount
+     * of, or more, of that resource.
+     * The aim is to easily tell if a given player can 'afford' some
+     * building.
+     *
+     * @param resources    what a player has available
+     * @param requirement  what the player needs
+     * @return true iff it is affordable
+     */
     public static boolean isResourcesSufficient(Map<Resource, Integer> resources, Map<Resource, Integer> requirement)  {
         return requirement.keySet().stream()
                 .allMatch(resource -> resources.containsKey(resource) &&
                         resources.get(resource) >= requirement.get(resource));
     }
 
+    /**
+     * Gets the topmost player from the players circular
+     * queue.
+     *
+     * @return the current player to move
+     */
     public Player getCurrentPlayer() {
         return players.peek();
     }
 
+    /**
+     * Moves the current player to the back of the queue,
+     * and sets the current player to be the new first player
+     * in line.
+     *
+     * @return the player who is second in the queue to move.
+     */
     public Player nextPlayer() {
         return players.pop();
     }

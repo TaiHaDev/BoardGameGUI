@@ -31,6 +31,19 @@ public class Road extends Building {
         return start;
     }
 
+    /**
+     * Returns if this instance of the Road
+     * class is equal to another.
+     *
+     * As roads are symmetric, if the second
+     * object is another instance of a road,
+     * returns true if its start and end are
+     * swapped around (and the owner is the same).
+     *
+     * @param o  some given object to test its equivalence
+     * @return true iff o has the same start and
+     *          end (regardless of order), and has the same owner.
+     */
     @Override
     public boolean equals(Object o) {
         if (o instanceof Road road) {
