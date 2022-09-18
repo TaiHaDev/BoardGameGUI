@@ -44,6 +44,7 @@ public class Board {
         castleBoard[2] = new Castle(null);
         castleBoard[3] = new Castle(null);
     }
+
     public void initializeKnightBoard() {
         knightBoard.put(0,new Knight(null, Resource.WOOL,false, false, new int[] {0,3,4,7,8,12}));
         knightBoard.put(1,new Knight(null, Resource.GRAIN,false, false, new int[] {1,4,5,8,9,13}));
@@ -66,6 +67,7 @@ public class Board {
         knightBoard.put(18,new Knight(null, Resource.GRAIN,false, false, new int[] {40,44,45,48,49,52}));
         knightBoard.put(19,new Knight(null, Resource.WOOL,false, false, new int[] {41,45,46,49,40,53}));
     }
+    
     public void initializeResidentialBuilding() {
         residentialBuilding.put(0,new Settlement(null, false));
         residentialBuilding.put(1,new Settlement(null, true));
@@ -223,6 +225,18 @@ public class Board {
                 wildCardKnight1.getOwner().equals(player) && !wildCardKnight1.isJoker() || !wildCardKnight2.isJoker();
     }
 
+    /**
+     * Determines whether a hypothetical road starting
+     * at {@param firstPos} and ending at {@param secondPos} would
+     * lie on the edge of the map (i.e., coastal), and is also at
+     * least five roads away from all other player's (any player who
+     * is not {@param player}) roads.
+     *
+     * @param firstPos  the starting position of the road
+     * @param secondPos the end position of the road
+     * @param player    the player who would be building this road
+     * @return true iff the road is coastal and 5 roads away from all other players' roads.
+     */
     public boolean isCoastalAnd5RoadsAway(int firstPos, int secondPos, Player player) {
         boolean isRoadCoastal = coastalIndex.contains(firstPos) && coastalIndex.contains(secondPos);
         boolean isRoadStartAndEndAdjacent = roadBoard.getAdjacencyMatrix()[firstPos][secondPos] == 1;
