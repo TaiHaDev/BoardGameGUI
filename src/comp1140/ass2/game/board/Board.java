@@ -66,6 +66,7 @@ public class Board {
         knightBoard.put(18,new Knight(null, Resource.GRAIN,false, false, new int[] {40,44,45,48,49,52}));
         knightBoard.put(19,new Knight(null, Resource.WOOL,false, false, new int[] {41,45,46,49,40,53}));
     }
+    
     public void initializeResidentialBuilding() {
         residentialBuilding.put(0,new Settlement(null, false));
         residentialBuilding.put(1,new Settlement(null, true));
