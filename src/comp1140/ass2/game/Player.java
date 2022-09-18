@@ -1,4 +1,4 @@
-package comp1140.ass2.game.board;
+package comp1140.ass2.game;
 
 import javafx.scene.paint.Color;
 
