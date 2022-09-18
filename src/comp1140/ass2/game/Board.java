@@ -1,8 +1,4 @@
-package comp1140.ass2.game.board;
-
-import comp1140.ass2.game.helper.Resource;
-import comp1140.ass2.game.buildings.Road;
-import comp1140.ass2.game.buildings.*;
+package comp1140.ass2.game;
 
 import java.util.*;
 

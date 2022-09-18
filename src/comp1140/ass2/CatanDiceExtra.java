@@ -1,10 +1,9 @@
 package comp1140.ass2;
 
 import comp1140.ass2.game.*;
-import comp1140.ass2.game.board.Player;
-import comp1140.ass2.game.buildings.*;
-import comp1140.ass2.game.helper.DepthFirstSearch;
-import comp1140.ass2.game.helper.Resource;
+import comp1140.ass2.game.Player;
+import comp1140.ass2.game.DepthFirstSearch;
+import comp1140.ass2.game.Resource;
 
 import java.util.*;
 import java.util.regex.Matcher;
