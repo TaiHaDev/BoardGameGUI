@@ -1,22 +1,31 @@
 package comp1140.ass2.game;
 
 public enum Resource {
-    GOLD,
-    BRICK,
-    LUMBER,
-    GRAIN,
-    WOOL,
-    ORE;
+
+    GOLD('m'),
+    BRICK('b'),
+    LUMBER('l'),
+    GRAIN('g'),
+    WOOL('w'),
+    ORE('o');
+    
+    private final char id;
+
+    Resource(char id) {
+        this.id = id;
+    }
+    
+    public char getId() {
+        return this.id;
+    }
 
     public static Resource decodeChar(char c) {
-        return switch (c) {
-            case 'm' -> GOLD;
-            case 'b' -> BRICK;
-            case 'l' -> LUMBER;
-            case 'g' -> GRAIN;
-            case 'o' -> ORE;
-            case 'w' -> WOOL;
-            default -> throw new IllegalArgumentException("Character " + c + " does not map to a valid resource.");
-        };
+        for (Resource resource : Resource.values()) {
+            if (c == resource.getId()) {
+                return resource;
+            }
+        }
+        return null;
     }
+    
 }

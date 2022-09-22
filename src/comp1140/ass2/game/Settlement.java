@@ -2,7 +2,7 @@ package comp1140.ass2.game;
 
 import java.util.Map;
 
-public class Settlement extends Building {
+public class Settlement extends OwnableBuilding {
 
     public static Map<Resource, Integer> COST = Map.of(Resource.BRICK,1,
             Resource.LUMBER, 1, Resource.WOOL,1, Resource.GRAIN,1);

@@ -19,16 +19,8 @@ public class GameInstance {
         HashMap<Resource, Integer> resources = new HashMap<>();
         int currentChar = 3;
         for (char c : encodedString.substring(currentChar).toCharArray()) {
-            if (!Arrays.asList('b', 'g', 'l', 'm', 'o', 'w').contains(c)) break;
-            Resource resource = switch (c) {
-                case 'b' -> Resource.BRICK;
-                case 'g' -> Resource.GRAIN;
-                case 'l' -> Resource.LUMBER;
-                case 'm' -> Resource.GOLD;
-                case 'o' -> Resource.ORE;
-                case 'w' -> Resource.WOOL;
-                default -> throw new IllegalStateException("Unexpected value: " + c);
-            };
+            Resource resource = Resource.decodeChar(c);
+            if (resource == null) break;
             resources.put(resource, 1 + resources.getOrDefault(resource, 0));
             currentChar++;
         }
@@ -195,7 +187,7 @@ public class GameInstance {
      * @return the buildings that can be affordably and physically
      * built by the current player.
      */
-    public List<Building> availableToBuild(Player player) {
+    public List<OwnableBuilding> availableToBuild(Player player) {
         return null; // TODO
     }
 
@@ -209,7 +201,7 @@ public class GameInstance {
      * @param player     the current player -- intended to be
      *                   passed from the head of the player queue
      */
-    public void chooseToBuild(List<Building> buildings, Player player) {
+    public void chooseToBuild(List<OwnableBuilding> buildings, Player player) {
         // TODO
     }
 
@@ -267,7 +259,7 @@ public class GameInstance {
 //                }
 //            } FIXME
         } for (var entry : board.getResidentialBuilding().entrySet()) {
-            Building building = entry.getValue();
+            OwnableBuilding building = entry.getValue();
             Player owner = building.getOwner();
             if (building instanceof Settlement) {
                 if (owner != null && owner.equals(player)){

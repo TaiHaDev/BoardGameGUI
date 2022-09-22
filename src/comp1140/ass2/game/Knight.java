@@ -3,7 +3,7 @@ package comp1140.ass2.game;
 import java.util.Arrays;
 import java.util.Map;
 
-public class Knight extends Building {
+public class Knight extends OwnableBuilding {
 
     public static Map<Resource, Integer> COST = Map.of(Resource.ORE,1,
             Resource.GRAIN, 1, Resource.WOOL,1);
@@ -33,7 +33,7 @@ public class Knight extends Building {
     }
 
     public boolean isJoker() {
-        return false;
+        return this.isJoker;
     }
 
     public void setJoker(boolean joker) {

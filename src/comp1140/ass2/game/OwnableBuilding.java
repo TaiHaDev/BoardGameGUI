@@ -1,12 +1,12 @@
 package comp1140.ass2.game;
 
-public abstract class Building {
+public abstract class OwnableBuilding {
 
     private Player owner;
 
-    public Building() { }
+    public OwnableBuilding() { }
 
-    public Building(Player owner) {
+    public OwnableBuilding(Player owner) {
         this.owner = owner;
     }
 
