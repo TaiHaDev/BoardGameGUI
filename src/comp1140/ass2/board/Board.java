@@ -1,4 +1,8 @@
-package comp1140.ass2.game;
+package comp1140.ass2.board;
+
+import comp1140.ass2.gameobjects.Player;
+import comp1140.ass2.gameobjects.buildings.*;
+import comp1140.ass2.helpers.Resource;
 
 import java.util.*;
 
@@ -10,7 +14,7 @@ public class Board {
     private final Road[] roads = new Road[GameGraph.EDGES];
 
     private final List<Integer> coastalIndex = List.of(0,4,1,5,2,6,10,15,20,26,32,37,42,46,50,53,49,52,48,51,47,43,38,33,27,21,16,11,7,3);
-    private final Map<Integer, OwnableBuilding> residentialBuilding = new HashMap<>();
+    private final Map<Integer, Building> residentialBuilding = new HashMap<>();
 
     public Board () {
         initializeCastleBoard();
@@ -92,7 +96,7 @@ public class Board {
     }
 
     public int upgradeToCity(int houseNumber, Player player) {
-        OwnableBuilding house = residentialBuilding.getOrDefault(houseNumber,null);
+        Building house = residentialBuilding.getOrDefault(houseNumber,null);
         if (house instanceof Settlement settlement) {
             if (settlement.isUpgradeable() && house.getOwner() == player) {
                 residentialBuilding.replace(houseNumber, new City(player));
@@ -103,7 +107,7 @@ public class Board {
     }
 
     public int upgradeToSettlement(int houseNumber, Player player) {
-        OwnableBuilding house = residentialBuilding.get(houseNumber);
+        Building house = residentialBuilding.get(houseNumber);
         if (house instanceof Settlement) {
             if (house.getOwner() == null) {
                 System.out.println("yes");
@@ -165,7 +169,7 @@ public class Board {
      */
     public boolean isRoadBuildable(int firstPos, int secondPos, Player player) {
         for (int n : new int[] { firstPos, secondPos }) {
-            OwnableBuilding house = residentialBuilding.get(n);
+            Building house = residentialBuilding.get(n);
             for (int node : getRoadBoard().getGraphMap().get(n)) {
                 Road road = new Road(n, node, player);
                 if (Arrays.asList(roads).contains(road) && player.equals(road.getOwner())) {
@@ -295,7 +299,7 @@ public class Board {
         return coastalIndex;
     }
 
-    public Map<Integer, OwnableBuilding> getResidentialBuilding() {
+    public Map<Integer, Building> getResidentialBuilding() {
         return residentialBuilding;
     }
 

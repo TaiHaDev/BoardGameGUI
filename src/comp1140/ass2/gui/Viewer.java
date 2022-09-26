@@ -1,12 +1,12 @@
 package comp1140.ass2.gui;
 
 import comp1140.ass2.CatanDiceExtra;
-import comp1140.ass2.game.GameInstance;
-import comp1140.ass2.game.Player;
-import comp1140.ass2.game.OwnableBuilding;
-import comp1140.ass2.game.Castle;
-import comp1140.ass2.game.Knight;
-import comp1140.ass2.game.Road;
+import comp1140.ass2.gameobjects.GameInstance;
+import comp1140.ass2.gameobjects.Player;
+import comp1140.ass2.gameobjects.buildings.Building;
+import comp1140.ass2.gameobjects.buildings.Castle;
+import comp1140.ass2.gameobjects.buildings.Knight;
+import comp1140.ass2.gameobjects.buildings.Road;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -257,7 +257,7 @@ public class Viewer extends Application implements Initializable {
             rectangle.setFill(road.getOwner().getColor());
         }
 
-        for (Map.Entry<Integer, OwnableBuilding> house : gameInstance.getBoard().getResidentialBuilding().entrySet()) {
+        for (Map.Entry<Integer, Building> house : gameInstance.getBoard().getResidentialBuilding().entrySet()) {
             if (house.getValue().getOwner() != null) {
                 int ad = house.getKey();
                 String address = ad < 10 ? "0" + ad : String.valueOf(ad);

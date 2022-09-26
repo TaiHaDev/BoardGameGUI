@@ -1,13 +1,16 @@
 package comp1140.ass2;
 
-import comp1140.ass2.game.*;
-import comp1140.ass2.game.Player;
-import comp1140.ass2.game.DepthFirstSearch;
-import comp1140.ass2.game.Resource;
+import comp1140.ass2.gameobjects.GameInstance;
+import comp1140.ass2.gameobjects.Player;
+import comp1140.ass2.gameobjects.buildings.*;
+import comp1140.ass2.helpers.DepthFirstSearch;
+import comp1140.ass2.helpers.Resource;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class CatanDiceExtra {
 
@@ -128,9 +131,8 @@ public class CatanDiceExtra {
     public static String rollDice(int numOfDice) {
         char[] resources = new char[numOfDice];
         Random random = new Random();
-        char[] resourcesList = new char[]{'b','l','w','g','o','m'};
         for (int i = 0; i < numOfDice; i++) {
-            resources[i] = resourcesList[random.nextInt(resourcesList.length)];
+            resources[i] = Resource.values()[random.nextInt(Resource.values().length)].getId();
         }
         Arrays.sort(resources);
         return new String(resources);

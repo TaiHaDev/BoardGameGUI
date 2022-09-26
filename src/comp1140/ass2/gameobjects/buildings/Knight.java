@@ -1,14 +1,16 @@
-package comp1140.ass2.game;
+package comp1140.ass2.gameobjects.buildings;
+
+import comp1140.ass2.gameobjects.Player;
+import comp1140.ass2.helpers.Resource;
 
 import java.util.Arrays;
 import java.util.Map;
 
-public class Knight extends OwnableBuilding {
+public class Knight extends Building {
 
     public static Map<Resource, Integer> COST = Map.of(Resource.ORE,1,
             Resource.GRAIN, 1, Resource.WOOL,1);
     public static int POINTS = 0;
-
 
     private Resource jokerResource;
     private boolean isJoker;

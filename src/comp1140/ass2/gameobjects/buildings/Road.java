@@ -1,8 +1,11 @@
-package comp1140.ass2.game;
+package comp1140.ass2.gameobjects.buildings;
+
+import comp1140.ass2.gameobjects.Player;
+import comp1140.ass2.helpers.Resource;
 
 import java.util.Map;
 
-public class Road extends OwnableBuilding {
+public class Road extends Building {
 
     public static final Map<Resource, Integer> COST = Map.of(Resource.BRICK,1, Resource.LUMBER, 1);
 

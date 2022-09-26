@@ -1,12 +1,14 @@
-package comp1140.ass2.game;
+package comp1140.ass2.gameobjects.buildings;
 
-public abstract class OwnableBuilding {
+import comp1140.ass2.gameobjects.Player;
+
+public abstract class Building {
 
     private Player owner;
 
-    public OwnableBuilding() { }
+    public Building() { }
 
-    public OwnableBuilding(Player owner) {
+    public Building(Player owner) {
         this.owner = owner;
     }
 
@@ -17,6 +19,5 @@ public abstract class OwnableBuilding {
     public Player getOwner() {
         return owner;
     }
-
 
 }
