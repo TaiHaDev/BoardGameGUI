@@ -238,7 +238,7 @@ public class Board {
         boolean isRoadStartAndEndAdjacent = roadBoard.getAdjacencyMatrix()[firstPos][secondPos] == 1;
         boolean isRoad5RoadsAwayFromPrevious = true;
 
-        int[][] adjacencyMatrixWithFiveSteps = Matrices.pow(getRoadBoard().getAdjacencyMatrix(), 3);
+        int[][] adjacencyMatrixWithFiveSteps = Matrices.pow(getRoadBoard().getAdjacencyMatrix(), 4);
         for (Road road : roads) {
             if (!(player.equals(road.getOwner()) || road.getOwner() == null) &&
                     (adjacencyMatrixWithFiveSteps[firstPos][road.getStart()] > 0 ||
