@@ -53,7 +53,9 @@ public class GameInstance {
                     this.getBoard().getCastleBoard()[position] = castle;
                 } else if (c == 'J' || c == 'K') {
                     int position = Integer.parseInt(encodedString.substring(currentChar++, ++currentChar));
-                    this.getBoard().getKnightBoard().get(position).setOwner(player);
+                    Knight knight = this.getBoard().getKnightBoard().get(position);
+                    knight.setOwner(player);
+                    knight.setJoker(c!='J');
                 } else if (c == 'R') {
                     int position1 = Integer.parseInt(encodedString.substring(currentChar++, ++currentChar));
                     int position2 = Integer.parseInt(encodedString.substring(currentChar++, ++currentChar));
