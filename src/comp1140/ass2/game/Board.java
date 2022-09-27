@@ -238,29 +238,7 @@ public class Board {
         boolean isRoadStartAndEndAdjacent = roadBoard.getAdjacencyMatrix()[firstPos][secondPos] == 1;
         boolean isRoad5RoadsAwayFromPrevious = true;
 
-        // We perform matrix multiplication on our adjacency matrix to construct a new matrix
-        // that shows us what points can be reached within five steps.
-        int[][] adjacencyMatrixWithFiveSteps = new int[GameGraph.VERTICES][GameGraph.VERTICES];
-        for (int i = 0; i < adjacencyMatrixWithFiveSteps.length; i++) {
-            for (int j = 0; j < adjacencyMatrixWithFiveSteps[i].length; j++) {
-                adjacencyMatrixWithFiveSteps[i][j] = roadBoard.getAdjacencyMatrix()[i][j];
-            }
-        }
-
-        for (int index = 0; index < 3; index++) {
-            int[][] temp = new int[GameGraph.VERTICES][GameGraph.VERTICES];
-            for (int i = 0; i < adjacencyMatrixWithFiveSteps.length; i++) {
-                for (int j = 0; j < adjacencyMatrixWithFiveSteps[i].length; j++) {
-                    int sum = 0;
-                    for (int k = 0; k < roadBoard.getAdjacencyMatrix().length; k++) {
-                        sum += adjacencyMatrixWithFiveSteps[i][k] * roadBoard.getAdjacencyMatrix()[k][j];
-                    }
-                    temp[i][j] = sum;
-                }
-            }
-            adjacencyMatrixWithFiveSteps = temp;
-        }
-
+        int[][] adjacencyMatrixWithFiveSteps = Matrices.pow(getRoadBoard().getAdjacencyMatrix(), 3);
         for (Road road : roads) {
             if (!(player.equals(road.getOwner()) || road.getOwner() == null) &&
                     (adjacencyMatrixWithFiveSteps[firstPos][road.getStart()] > 0 ||
