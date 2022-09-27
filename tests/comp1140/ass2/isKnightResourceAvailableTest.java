@@ -22,7 +22,7 @@ public class isKnightResourceAvailableTest {
         Assertions.assertEquals(expected, actual);
     }
     @Test
-    public void testResourceNotAvailable1() {
+    public void test_all_knight_owner_is_null() {
         GameInstance emptyGameInstance = new GameInstance(new Player[]{new Player("p1"), new Player("p2")});
         for (var resource : resources) {
             for (var player : emptyGameInstance.getPlayers())
@@ -31,7 +31,7 @@ public class isKnightResourceAvailableTest {
     }
 
     @Test
-    public void testResourceNotAvailable2() {
+    public void test_knight_for_wool_resource_is_not_available() {
         GameInstance resourceAvailable = new GameInstance(new Player[]{new Player("p1"), new Player("p2")});
         Map<Integer, Knight> knightBoard = resourceAvailable.getBoard().getKnightBoard();
         Player player = resourceAvailable.getCurrentPlayer();
@@ -41,7 +41,7 @@ public class isKnightResourceAvailableTest {
     }
 
     @Test
-    public void testResourceAlreadyUsed() {
+    public void test_knight_for_wool_is_available_but_used() {
         GameInstance resourceAvailable = new GameInstance(new Player[]{new Player("p1"), new Player("p2")});
         Map<Integer, Knight> knightBoard = resourceAvailable.getBoard().getKnightBoard();
         Player player = resourceAvailable.getCurrentPlayer();
@@ -52,7 +52,7 @@ public class isKnightResourceAvailableTest {
         testIsKnightResourceAvailable(resourceAvailable.getBoard(), Resource.WOOL, player, false);
     }
     @Test
-    public void testResourceAvailable1() {
+    public void test_resource_is_available() {
         GameInstance resourceAvailable = new GameInstance(new Player[]{new Player("p1"), new Player("p2")});
         Map<Integer, Knight> knightBoard = resourceAvailable.getBoard().getKnightBoard();
         Player player = resourceAvailable.getCurrentPlayer();
@@ -63,7 +63,7 @@ public class isKnightResourceAvailableTest {
         }
     }
     @Test
-    public void testWildCardKnight() {
+    public void test_functionality_of_wildcard_knight() {
         GameInstance resourceAvailable = new GameInstance(new Player[]{new Player("p1"), new Player("p2")});
         Map<Integer, Knight> knightBoard = resourceAvailable.getBoard().getKnightBoard();
         Player player = resourceAvailable.getCurrentPlayer();
