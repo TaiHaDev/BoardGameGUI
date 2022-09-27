@@ -30,6 +30,23 @@ public class GraphTheoryAlgorithmsTests {
     }
 
     @Test
+    public void the_longest_path_of_an_eulerian_trail_has_the_length_of_the_trail_itself() {
+        Set<List<Integer>> paths = new HashSet<>();
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        graph.put(0, List.of(4, 1));
+        graph.put(1, List.of(0, 2));
+        graph.put(2, List.of(1, 3));
+        graph.put(3, List.of(2, 4));
+        graph.put(4, List.of(3, 0));
+        DepthFirstSearch dfs = new DepthFirstSearch(paths, graph);
+        dfs.search(0, 4);
+
+        paths.stream()
+                .max(Comparator.comparingInt(List::size))
+                .ifPresentOrElse(path -> Assertions.assertEquals(5, path.size()), Assertions::fail);
+    }
+
+    @Test
     public void search_does_not_get_stuck_on_cycles() {
         Set<List<Integer>> paths = new HashSet<>();
         Map<Integer, List<Integer>> graph = new HashMap<>();
