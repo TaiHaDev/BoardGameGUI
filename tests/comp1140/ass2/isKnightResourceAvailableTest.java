@@ -1,10 +1,10 @@
 package comp1140.ass2;
 
 import comp1140.ass2.game.GameInstance;
-import comp1140.ass2.game.board.Board;
-import comp1140.ass2.game.board.Player;
-import comp1140.ass2.game.buildings.Knight;
-import comp1140.ass2.game.helper.Resource;
+import comp1140.ass2.game.Board;
+import comp1140.ass2.game.Player;
+import comp1140.ass2.game.Knight;
+import comp1140.ass2.game.Resource;
 import comp1140.ass2.gui.Game;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

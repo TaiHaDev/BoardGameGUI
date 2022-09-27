@@ -3,7 +3,6 @@ package comp1140.ass2.game;
 import java.util.*;
 
 public class GameInstance {
-
     private final Board board = new Board();
     private int rollsDone;
     private int diceCount;
