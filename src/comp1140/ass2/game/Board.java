@@ -162,6 +162,7 @@ public class Board {
      * @return boolean value
      */
     public boolean isRoadBuildable(int firstPos, int secondPos, Player player) {
+        if (!Arrays.asList(roads).contains(new Road(firstPos, secondPos))) return false;
         for (int n : new int[] { firstPos, secondPos }) {
             Building house = residentialBuilding.get(n);
             for (int node : getRoadBoard().getGraphMap().get(n)) {
