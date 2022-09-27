@@ -7,6 +7,7 @@ import comp1140.ass2.game.Knight;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.gui.Game;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -16,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 @Timeout(value = 500, unit = TimeUnit.MILLISECONDS)
 public class isKnightResourceAvailableTest {
     Resource[] resources = {Resource.WOOL, Resource.GRAIN, Resource.BRICK, Resource.GOLD, Resource.LUMBER, Resource.ORE};
-
     private void testIsKnightResourceAvailable(Board board,Resource neededResource, Player player, boolean expected) {
         boolean actual = board.isKnightResourceAvailable(neededResource, player);
         Assertions.assertEquals(expected, actual);
