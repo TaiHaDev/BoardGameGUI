@@ -1,11 +1,5 @@
 package comp1140.ass2.game;
 
-import comp1140.ass2.game.board.Board;
-import comp1140.ass2.game.board.Player;
-import comp1140.ass2.game.buildings.*;
-import comp1140.ass2.game.helper.CircularQueue;
-import comp1140.ass2.game.helper.Resource;
-
 import java.util.*;
 
 public class GameInstance {

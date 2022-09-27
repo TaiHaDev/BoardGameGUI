@@ -1,4 +1,4 @@
-package comp1140.ass2.game.helper;
+package comp1140.ass2.game;
 
 public enum Resource {
     GOLD,

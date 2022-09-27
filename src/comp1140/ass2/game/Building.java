@@ -1,6 +1,4 @@
-package comp1140.ass2.game.buildings;
-
-import comp1140.ass2.game.board.Player;
+package comp1140.ass2.game;
 
 public abstract class Building {
 

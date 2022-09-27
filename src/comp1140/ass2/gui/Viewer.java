@@ -2,11 +2,11 @@ package comp1140.ass2.gui;
 
 import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.game.GameInstance;
-import comp1140.ass2.game.board.Player;
-import comp1140.ass2.game.buildings.Building;
-import comp1140.ass2.game.buildings.Castle;
-import comp1140.ass2.game.buildings.Knight;
-import comp1140.ass2.game.buildings.Road;
+import comp1140.ass2.game.Player;
+import comp1140.ass2.game.Building;
+import comp1140.ass2.game.Castle;
+import comp1140.ass2.game.Knight;
+import comp1140.ass2.game.Road;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,7 +25,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Viewer extends Application implements Initializable {
