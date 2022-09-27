@@ -36,7 +36,7 @@ public class Knight extends Building {
     }
 
     public boolean isJoker() {
-        return false;
+        return isJoker;
     }
 
     public void setJoker(boolean joker) {

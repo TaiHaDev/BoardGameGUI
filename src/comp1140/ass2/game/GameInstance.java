@@ -17,7 +17,9 @@ public class GameInstance {
     private Map<Resource, Integer> diceResult = new HashMap<>();
     private Player longestRoad;
     private Player largestArmy;
-
+    public GameInstance(Player[] players) {
+        this.players.addAll(Arrays.asList(players));
+    }
     public GameInstance(String encodedString) {
         char turn = encodedString.charAt(0);
         this.diceCount = Integer.parseInt(encodedString.substring(1, 2));
@@ -244,52 +246,6 @@ public class GameInstance {
 
     public int getRollsDone() {
         return rollsDone;
-    }
-
-    public String toString(Player player) {
-        StringBuilder outputString = new StringBuilder();
-        if (player.equals(getCurrentPlayer())) {
-            outputString.append("Player ").append(player).append(" can roll ").append(diceCount).append(" dices ").append("with ").append
-                            (3 - rollsDone).append(" re roll trial(s) left, ").append(" the current resources are ").
-                    append(diceResult.toString()).append(" and posses properties: \n");
-        } else {
-            outputString.append("Player ").append(player).append(" have properties: \n");
-        }
-        for (var e : board.getCastleBoard()) {
-            if (e.getOwner() != null && e.getOwner().equals(player)) {
-                outputString.append("Castle number ").append(Arrays.asList(board.getCastleBoard()).indexOf(e)).append(", ");
-            }
-        }
-        for (var e : board.getKnightBoard().entrySet()) {
-            Knight knight = e.getValue();
-            if (knight.getOwner() != null && knight.getOwner().equals(player)) {
-                outputString.append("Knight number ").append(e.getKey()).append(", ");
-            }
-        }
-        for (int i = 0; i < 54; i++) {
-//            for (Road road : board.getRoads()) {
-//                if (player.equals(road.getOwner())) {
-//                    outputString.append(" Road start ").append(i).append(road.getStart()).append(", ");
-//                }
-//            } FIXME
-        } for (var entry : board.getResidentialBuilding().entrySet()) {
-            Building building = entry.getValue();
-            Player owner = building.getOwner();
-            if (building instanceof Settlement) {
-                if (owner != null && owner.equals(player)){
-                    outputString.append("Settlement number " + entry.getKey()).append(", ");
-                }
-            } else {
-                if (owner != null && owner.equals(player)) {
-                    outputString.append("House number " + entry.getKey()).append(", ");
-                }
-            }
-        }
-        outputString.append("\n");
-        outputString.append("With a total point of ").append(player.getScore()).append("\n\n\n");
-
-
-        return outputString.toString();
     }
 
     public Board getBoard() {

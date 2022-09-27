@@ -10,7 +10,7 @@ public class Board {
 
     private Map<Integer, Knight> knightBoard = new HashMap<>();
     private final Castle[] castleBoard = new Castle[4];
-    private final GameGraph roadBoard;
+    private final GameGraph roadBoard = new GameGraph();
     private final Road[] roads = new Road[GameGraph.EDGES];
 
     private final List<Integer> coastalIndex = List.of(0,4,1,5,2,6,10,15,20,26,32,37,42,46,50,53,49,52,48,51,47,43,38,33,27,21,16,11,7,3);
@@ -21,7 +21,6 @@ public class Board {
         initializeKnightBoard();
         initializeResidentialBuilding();
 
-        roadBoard = new GameGraph();
         int i = 0;
         for (Map.Entry<Integer, List<Integer>> entry : roadBoard.getGraphMap().entrySet()) {
             int from = entry.getKey();
@@ -33,7 +32,6 @@ public class Board {
             }
         }
     }
-
     public GameGraph getRoadBoard() {
         return roadBoard;
     }
@@ -222,7 +220,7 @@ public class Board {
         Knight wildCardKnight1 = knightBoard.get(9);
         Knight wildCardKnight2 = knightBoard.get(10);
         return wildCardKnight1.getOwner() != null && wildCardKnight2.getOwner() != null &&
-                wildCardKnight1.getOwner().equals(player) && !wildCardKnight1.isJoker() || !wildCardKnight2.isJoker();
+                wildCardKnight1.getOwner().equals(player) && (!wildCardKnight1.isJoker() || !wildCardKnight2.isJoker());
     }
 
     /**
