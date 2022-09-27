@@ -10,6 +10,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CatanDiceExtra {
+    public static void main(String[] args) {
+        System.out.println(isActionValid("X63bgglowWR0004R0104R0408S00XJ06R1520W01X00","swapow"));
+    }
 
 
     /**

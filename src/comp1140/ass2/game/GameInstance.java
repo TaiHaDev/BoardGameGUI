@@ -52,12 +52,11 @@ public class GameInstance {
                     Castle castle = new Castle(player);
                     this.getBoard().getCastleBoard()[position] = castle;
                 } else if (c == 'J' || c == 'K') {
-                    Knight knight = new Knight(player);
-                    knight.setJoker(c == 'J');
                     // increment before current parameter because String#substring's
                     // upper bound is exclusive
                     int position = Integer.parseInt(encodedString.substring(currentChar++, ++currentChar));
-                    this.getBoard().getKnightBoard().put(position, knight);
+                    this.getBoard().getKnightBoard().get(position).setOwner(player);
+
                 } else if (c == 'R') {
                     int position1 = Integer.parseInt(encodedString.substring(currentChar++, ++currentChar));
                     int position2 = Integer.parseInt(encodedString.substring(currentChar++, ++currentChar));
