@@ -1,7 +1,7 @@
 package comp1140.ass2;
 
-import comp1140.ass2.game.CircularQueue;
-import comp1140.ass2.game.Player;
+import comp1140.ass2.gameobjects.Player;
+import comp1140.ass2.helpers.CircularQueue;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -26,12 +26,12 @@ public class CircularQueueTests {
         queue.add(new Player("Player 2"));
         queue.add(new Player("Player 3"));
 
-        Assertions.assertEquals("Player 1", queue.peek().getName());
-        Assertions.assertEquals("Player 2", queue.pop().getName());
-        Assertions.assertEquals("Player 3", queue.pop().getName());
-        Assertions.assertEquals("Player 1", queue.pop().getName());
-        Assertions.assertEquals("Player 2", queue.pop().getName());
-        Assertions.assertEquals("Player 3", queue.pop().getName());
+        Assertions.assertEquals("Player 1", queue.peek().getUniqueId());
+        Assertions.assertEquals("Player 2", queue.pop().getUniqueId());
+        Assertions.assertEquals("Player 3", queue.pop().getUniqueId());
+        Assertions.assertEquals("Player 1", queue.pop().getUniqueId());
+        Assertions.assertEquals("Player 2", queue.pop().getUniqueId());
+        Assertions.assertEquals("Player 3", queue.pop().getUniqueId());
     }
 
 }

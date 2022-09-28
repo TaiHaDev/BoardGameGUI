@@ -1,7 +1,8 @@
 package comp1140.ass2;
 
-import comp1140.ass2.game.Board;
-import comp1140.ass2.game.Player;
+import comp1140.ass2.board.Board;
+import comp1140.ass2.gameobjects.GameInstance;
+import comp1140.ass2.gameobjects.Player;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
