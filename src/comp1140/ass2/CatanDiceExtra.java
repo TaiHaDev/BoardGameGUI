@@ -7,10 +7,8 @@ import comp1140.ass2.helpers.DepthFirstSearch;
 import comp1140.ass2.helpers.Resource;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public class CatanDiceExtra {
 
@@ -324,7 +322,7 @@ public class CatanDiceExtra {
                     max = Math.max(path.size() - 1, max);
                 }
             }
-            longestRoad[player.getName().toCharArray()[0] - 'W'] = max;
+            longestRoad[player.getUniqueId().toCharArray()[0] - 'W'] = max;
         }
         return longestRoad;
     }
@@ -343,7 +341,7 @@ public class CatanDiceExtra {
     public static int[] largestArmy(String boardState) {
         GameInstance game = new GameInstance(boardState);
         return game.getPlayers().stream()
-                .sorted(Comparator.comparing(Player::getName))
+                .sorted(Comparator.comparing(Player::getUniqueId))
                 .mapToInt(player ->
                         (int) game.getBoard().getKnightBoard().values().stream()
                                 .filter(knight -> player.equals(knight.getOwner()))

@@ -16,16 +16,19 @@ public record BoardStateHandler(GameInstance game) implements ChainableHandler<S
         char playerChar = encodedString.charAt(0);
         while ('W' <= encodedString.charAt(currentChar) && encodedString.charAt(currentChar) <= 'Z') {
             final int finalChar = currentChar;
-            if (game.getPlayers().stream().noneMatch(p -> p.getName().equals(String.valueOf(encodedString.charAt(finalChar))))) {
+            if (game.getPlayers().stream().noneMatch(p -> p.getUniqueId().equals(String.valueOf(encodedString.charAt(finalChar))))) {
                 game.getPlayers().addLast(new Player(String.valueOf(encodedString.charAt(currentChar))));
             }
+
             int end = encodedString.indexOf(playerChar + 1) > 0 ? encodedString.indexOf(++playerChar) : encodedString.indexOf('W', encodedString.indexOf('W') + 1);
             Matcher matcher = Pattern.compile("[A-V][0-9]*").matcher(encodedString.substring(currentChar, end));
             currentChar++;
             while (matcher.find()) {
                 String structure = matcher.group(0);
-                game.getPlayers().stream().filter(p -> p.getName().equals(String.valueOf(encodedString.charAt(finalChar))))
-                        .findAny().ifPresent(player ->
+                game.getPlayers().stream()
+                        .filter(p -> p.getUniqueId().equals(String.valueOf(encodedString.charAt(finalChar))))
+                        .findAny()
+                        .ifPresent(player ->
                                 new BuilderFactory(game, player)
                                         .getBuilderById(structure.charAt(0))
                                         .build(structure.substring(1)));
@@ -35,7 +38,6 @@ public record BoardStateHandler(GameInstance game) implements ChainableHandler<S
                 break;
             }
         }
-        Math.pow(1, 2);
         return encodedString.substring(currentChar);
     }
 

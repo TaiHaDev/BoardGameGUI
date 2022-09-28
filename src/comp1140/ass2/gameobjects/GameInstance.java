@@ -25,12 +25,26 @@ public class GameInstance {
     private Player longestRoad;
     private Player largestArmy;
 
+    /**
+     * Passes the {@param encodedString} through the board reader pipeline.
+     * Once the first handler has read what it is interested in from the string,
+     * it passes what it didn't use to the next handler. Thus, the individual
+     * handler classes do not hardcode the order at which they are used.
+     *
+     * This solution means handlers can be added (even conditionally), removed, or
+     * re-ordered later at will without having to modify the handler functions themselves.
+     *
+     * The aim here is to keep the board state reader open for extension, without
+     * needing to worry about breaking already-working code.
+     *
+     * @param encodedString  the encoded string describing the board
+     */
     public GameInstance(String encodedString) {
-        Pipeline<String> boardStatePipeline = new Pipeline<>(new TurnStateHandler(this))
+        Pipeline<String> stateReaderPipeline = new Pipeline<>(new TurnStateHandler(this))
                 .addHandler(new BoardStateHandler(this))
                 .addHandler(new ScoreStateHandler(this));
 
-        boardStatePipeline.execute(encodedString);
+        stateReaderPipeline.execute(encodedString);
     }
 
     /**

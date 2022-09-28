@@ -12,7 +12,7 @@ public record ScoreStateHandler(GameInstance game) implements ChainableHandler<S
             String name = String.valueOf(encodedString.charAt(currentChar++));
             int score = Integer.parseInt(String.valueOf(encodedString.charAt(currentChar++)) + encodedString.charAt(currentChar++));
             game.getPlayers().stream()
-                    .filter(e -> e.getName().equals(name))
+                    .filter(e -> e.getUniqueId().equals(name))
                     .findFirst()
                     .ifPresent(p -> p.setScore(score));
         }

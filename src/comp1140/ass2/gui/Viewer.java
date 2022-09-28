@@ -243,7 +243,7 @@ public class Viewer extends Application implements Initializable {
         clearBoard(gameInstance);
         System.out.println(boardState);
         gameInstance.getPlayers()
-                .forEach(player -> (player.getName().equals("X") ? playerXColor : playerYColor)
+                .forEach(player -> (player.getUniqueId().equals("X") ? playerXColor : playerYColor)
                         .setFill(player.getColor()));
 
         for (Road road : gameInstance.getBoard().getRoads()) {
@@ -296,7 +296,7 @@ public class Viewer extends Application implements Initializable {
         rolledResourceLabel.setOpacity(1);
 
         if (gameInstance.getPlayers().size() > 0) {
-            turnText.setText("It is Player " + gameInstance.getPlayers().peek().getName() + "'s turn");
+            turnText.setText("It is Player " + gameInstance.getPlayers().peek().getUniqueId() + "'s turn");
         }
 
         String dice = gameInstance.getDiceCount() == 1 ? "die" : "dice";
@@ -317,15 +317,15 @@ public class Viewer extends Application implements Initializable {
             String placeString = (count > 1 ? "=" : "") + place;
             currentScore = player.getScore();
                     statsFreeText.setText(statsFreeText.getText() + placeString + ". Player " +
-                    player.getName() + ": " + player.getScore() +
+                    player.getUniqueId() + ": " + player.getScore() +
                     " point" + (player.getScore() == 1 ? "" : "s") + "\n");
         }
         statsFreeText.setText(statsFreeText.getText() + "\n");
 
         if (gameInstance.getLongestRoad() != null)
-            statsFreeText.setText(statsFreeText.getText() + "Player " + gameInstance.getLongestRoad().getName() + " has the longest road!\n\n");
+            statsFreeText.setText(statsFreeText.getText() + "Player " + gameInstance.getLongestRoad().getUniqueId() + " has the longest road!\n\n");
         if (gameInstance.getLargestArmy() != null)
-            statsFreeText.setText(statsFreeText.getText() + "Player " + gameInstance.getLargestArmy().getName() + " has the largest army!");
+            statsFreeText.setText(statsFreeText.getText() + "Player " + gameInstance.getLargestArmy().getUniqueId() + " has the largest army!");
     }
 
 }

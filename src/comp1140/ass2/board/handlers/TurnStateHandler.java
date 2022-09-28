@@ -13,9 +13,10 @@ public record TurnStateHandler(GameInstance game) implements ChainableHandler<St
         game.setRollsDone(Integer.parseInt(encodedString.substring(2, 3)));
         game.getPlayers().add(new Player(String.valueOf(turn)));
 
-        game.setDiceResult(GameInstance.stringResourcesToMap(encodedString.substring(3, 3 + game.getDiceCount())));
+        int end = 1 + encodedString.substring(1).indexOf('W');
+        game.setDiceResult(GameInstance.stringResourcesToMap(encodedString.substring(3, end)));
 
-        return encodedString.substring(3 + game.getRollsDone());
+        return encodedString.substring(end);
     }
 
 }
