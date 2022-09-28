@@ -19,4 +19,19 @@ public class CircularQueueTests {
         Assertions.assertEquals(2, queue.size());
     }
 
+    @Test
+    public void test_the_queue_moves_elements_circularly() {
+        CircularQueue<Player> queue = new CircularQueue<>();
+        queue.add(new Player("Player 1"));
+        queue.add(new Player("Player 2"));
+        queue.add(new Player("Player 3"));
+
+        Assertions.assertEquals("Player 1", queue.peek().getName());
+        Assertions.assertEquals("Player 2", queue.pop().getName());
+        Assertions.assertEquals("Player 3", queue.pop().getName());
+        Assertions.assertEquals("Player 1", queue.pop().getName());
+        Assertions.assertEquals("Player 2", queue.pop().getName());
+        Assertions.assertEquals("Player 3", queue.pop().getName());
+    }
+
 }
