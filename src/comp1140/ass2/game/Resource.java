@@ -1,7 +1,6 @@
 package comp1140.ass2.game;
 
 public enum Resource {
-
     GOLD('m'),
     BRICK('b'),
     LUMBER('l'),
@@ -9,23 +8,22 @@ public enum Resource {
     WOOL('w'),
     ORE('o');
 
-    private final char id;
+    private final char c;
 
-    Resource(char id) {
-        this.id = id;
+    Resource(char c) {
+        this.c = c;
     }
 
     public char getId() {
-        return this.id;
+        return this.c;
     }
 
     public static Resource decodeChar(char c) {
-        for (Resource resource : Resource.values()) {
-            if (c == resource.getId()) {
-                return resource;
+        for (var value : Resource.values()) {
+            if (value.c == c) {
+                return value;
             }
         }
-        return null;
+        throw new IllegalArgumentException("invalid resource");
     }
-
 }
