@@ -1,17 +1,16 @@
 package comp1140.ass2;
 
+import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
 import comp1140.ass2.gameobjects.buildings.*;
 import comp1140.ass2.helpers.DepthFirstSearch;
-import comp1140.ass2.helpers.Resource;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CatanDiceExtra {
-
 
     /**
      * Check if the string encoding of a board state is well-formed.
@@ -250,12 +249,12 @@ public class CatanDiceExtra {
      *               filtered to only include one player's points.
      * @return true iff the graph is an Eulerian trail
      */
-    private static boolean isEulerianTrail(Map<Integer, List<Integer>> graph) {
+    public static boolean isEulerianTrail(Map<Integer, List<Integer>> graph) {
         long oddDegreeVertices = graph.values().stream().map(List::size).filter(e -> e % 2 == 1).count();
         return oddDegreeVertices == 0 || oddDegreeVertices == 2;
     }
 
-    private static Map<Integer, List<Integer>> pathToGraph(List<Integer> path) {
+    public static Map<Integer, List<Integer>> pathToGraph(List<Integer> path) {
         Map<Integer, List<Integer>> graph = new HashMap<>();
         for (int i = 0; i < path.size(); i++) {
             int vertex = path.get(i);

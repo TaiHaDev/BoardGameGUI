@@ -1,8 +1,9 @@
 package comp1140.ass2.board;
 
+import comp1140.ass2.game.Matrices;
+import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.Player;
 import comp1140.ass2.gameobjects.buildings.*;
-import comp1140.ass2.helpers.Resource;
 
 import java.util.*;
 
@@ -10,7 +11,7 @@ public class Board {
 
     private Map<Integer, Knight> knightBoard = new HashMap<>();
     private final Castle[] castleBoard = new Castle[4];
-    private final GameGraph roadBoard;
+    private final GameGraph roadBoard = new GameGraph();
     private final Road[] roads = new Road[GameGraph.EDGES];
 
     private final List<Integer> coastalIndex = List.of(0,4,1,5,2,6,10,15,20,26,32,37,42,46,50,53,49,52,48,51,47,43,38,33,27,21,16,11,7,3);
@@ -21,7 +22,6 @@ public class Board {
         initializeKnightBoard();
         initializeResidentialBuilding();
 
-        roadBoard = new GameGraph();
         int i = 0;
         for (Map.Entry<Integer, List<Integer>> entry : roadBoard.getGraphMap().entrySet()) {
             int from = entry.getKey();
@@ -33,7 +33,6 @@ public class Board {
             }
         }
     }
-
     public GameGraph getRoadBoard() {
         return roadBoard;
     }
@@ -168,6 +167,7 @@ public class Board {
      * @return boolean value
      */
     public boolean isRoadBuildable(int firstPos, int secondPos, Player player) {
+        if (!Arrays.asList(roads).contains(new Road(firstPos, secondPos))) return false;
         for (int n : new int[] { firstPos, secondPos }) {
             Building house = residentialBuilding.get(n);
             for (int node : getRoadBoard().getGraphMap().get(n)) {
@@ -221,8 +221,9 @@ public class Board {
         }
         Knight wildCardKnight1 = knightBoard.get(9);
         Knight wildCardKnight2 = knightBoard.get(10);
-        return wildCardKnight1.getOwner() != null && wildCardKnight2.getOwner() != null &&
-                wildCardKnight1.getOwner().equals(player) && !wildCardKnight1.isJoker() || !wildCardKnight2.isJoker();
+        return (wildCardKnight1.getOwner() != null || wildCardKnight2.getOwner() != null) &&
+                ((wildCardKnight1.getOwner().equals(player) && !wildCardKnight1.isJoker()) ||
+                (wildCardKnight2.getOwner().equals(player) && !wildCardKnight2.isJoker()));
     }
 
     /**
@@ -241,30 +242,7 @@ public class Board {
         boolean isRoadCoastal = coastalIndex.contains(firstPos) && coastalIndex.contains(secondPos);
         boolean isRoadStartAndEndAdjacent = roadBoard.getAdjacencyMatrix()[firstPos][secondPos] == 1;
         boolean isRoad5RoadsAwayFromPrevious = true;
-
-        // We perform matrix multiplication on our adjacency matrix to construct a new matrix
-        // that shows us what points can be reached within five steps.
-        int[][] adjacencyMatrixWithFiveSteps = new int[GameGraph.VERTICES][GameGraph.VERTICES];
-        for (int i = 0; i < adjacencyMatrixWithFiveSteps.length; i++) {
-            for (int j = 0; j < adjacencyMatrixWithFiveSteps[i].length; j++) {
-                adjacencyMatrixWithFiveSteps[i][j] = roadBoard.getAdjacencyMatrix()[i][j];
-            }
-        }
-
-        for (int index = 0; index < 3; index++) {
-            int[][] temp = new int[GameGraph.VERTICES][GameGraph.VERTICES];
-            for (int i = 0; i < adjacencyMatrixWithFiveSteps.length; i++) {
-                for (int j = 0; j < adjacencyMatrixWithFiveSteps[i].length; j++) {
-                    int sum = 0;
-                    for (int k = 0; k < roadBoard.getAdjacencyMatrix().length; k++) {
-                        sum += adjacencyMatrixWithFiveSteps[i][k] * roadBoard.getAdjacencyMatrix()[k][j];
-                    }
-                    temp[i][j] = sum;
-                }
-            }
-            adjacencyMatrixWithFiveSteps = temp;
-        }
-
+        int[][] adjacencyMatrixWithFiveSteps = Matrices.pow(getRoadBoard().getAdjacencyMatrix(), 4);
         for (Road road : roads) {
             if (!(player.equals(road.getOwner()) || road.getOwner() == null) &&
                     (adjacencyMatrixWithFiveSteps[firstPos][road.getStart()] > 0 ||

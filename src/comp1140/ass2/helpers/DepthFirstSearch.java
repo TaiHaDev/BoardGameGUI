@@ -6,11 +6,11 @@ import java.util.*;
 
 public class DepthFirstSearch {
 
-    private final HashSet<List<Integer>> paths;
+    private final Set<List<Integer>> paths;
     private final LinkedList<Integer> currentPath = new LinkedList<>();
     private final Map<Integer, List<Integer>> graph;
 
-    public DepthFirstSearch(HashSet<List<Integer>> paths, Map<Integer, List<Integer>> graph) {
+    public DepthFirstSearch(Set<List<Integer>> paths, Map<Integer, List<Integer>> graph) {
         this.paths = paths;
         this.graph = graph;
     }

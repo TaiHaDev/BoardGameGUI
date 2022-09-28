@@ -1,7 +1,7 @@
 package comp1140.ass2.gameobjects.buildings;
 
+import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.Player;
-import comp1140.ass2.helpers.Resource;
 
 import java.util.Map;
 
@@ -10,7 +10,6 @@ public class Settlement extends Building {
     public static Map<Resource, Integer> COST = Map.of(Resource.BRICK,1,
             Resource.LUMBER, 1, Resource.WOOL,1, Resource.GRAIN,1);
     public static int POINTS = 1;
-
     private final boolean upgradeable;
 
     public Settlement(boolean upgradeable) {

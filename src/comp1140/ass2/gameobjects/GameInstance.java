@@ -5,10 +5,11 @@ import comp1140.ass2.board.handlers.BoardStateHandler;
 import comp1140.ass2.board.handlers.ScoreStateHandler;
 import comp1140.ass2.board.handlers.TurnStateHandler;
 import comp1140.ass2.board.pipeline.Pipeline;
+import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.buildings.Building;
 import comp1140.ass2.helpers.CircularQueue;
-import comp1140.ass2.helpers.Resource;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,17 @@ public class GameInstance {
                 .addHandler(new ScoreStateHandler(this));
 
         stateReaderPipeline.execute(encodedString);
+    }
+
+    /**
+     * Alternative constructor for easy test-writing.
+     *
+     * @param players  a list of players to initialise
+     *                 the game with.
+     */
+    @Deprecated
+    public GameInstance(Player[] players) {
+        this.players.addAll(Arrays.asList(players));
     }
 
     /**
