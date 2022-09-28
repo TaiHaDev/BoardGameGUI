@@ -237,7 +237,6 @@ public class Board {
         boolean isRoadCoastal = coastalIndex.contains(firstPos) && coastalIndex.contains(secondPos);
         boolean isRoadStartAndEndAdjacent = roadBoard.getAdjacencyMatrix()[firstPos][secondPos] == 1;
         boolean isRoad5RoadsAwayFromPrevious = true;
-
         int[][] adjacencyMatrixWithFiveSteps = Matrices.pow(getRoadBoard().getAdjacencyMatrix(), 4);
         for (Road road : roads) {
             if (!(player.equals(road.getOwner()) || road.getOwner() == null) &&

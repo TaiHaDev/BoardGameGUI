@@ -48,7 +48,6 @@ public class isKnightResourceAvailableTest {
         Knight currentKnight = knightBoard.get(0);
         currentKnight.setOwner(player);
         currentKnight.setJoker(true);
-        System.out.println(knightBoard.get(0));
         testIsKnightResourceAvailable(resourceAvailable.getBoard(), Resource.WOOL, player, false);
     }
     @Test
@@ -73,4 +72,5 @@ public class isKnightResourceAvailableTest {
             testIsKnightResourceAvailable(resourceAvailable.getBoard(), resource, player, true);
         }
     }
+
 }
