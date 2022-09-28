@@ -1,12 +1,12 @@
 package comp1140.ass2.gameobjects;
 
 import comp1140.ass2.board.Board;
-import comp1140.ass2.board.handlers.BoardStateHandler;
-import comp1140.ass2.board.handlers.ScoreStateHandler;
-import comp1140.ass2.board.handlers.TurnStateHandler;
-import comp1140.ass2.board.pipeline.Pipeline;
+import comp1140.ass2.handlers.BoardStateHandler;
+import comp1140.ass2.handlers.ScoreStateHandler;
+import comp1140.ass2.handlers.TurnStateHandler;
+import comp1140.ass2.pipeline.Pipeline;
 import comp1140.ass2.game.Resource;
-import comp1140.ass2.gameobjects.buildings.Building;
+import comp1140.ass2.buildings.Building;
 import comp1140.ass2.helpers.CircularQueue;
 
 import java.util.Arrays;

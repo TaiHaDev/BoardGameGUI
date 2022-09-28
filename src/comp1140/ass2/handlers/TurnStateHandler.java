@@ -1,7 +1,7 @@
-package comp1140.ass2.board.handlers;
+package comp1140.ass2.handlers;
 
 import comp1140.ass2.gameobjects.GameInstance;
-import comp1140.ass2.board.pipeline.ChainableHandler;
+import comp1140.ass2.pipeline.ChainableHandler;
 import comp1140.ass2.gameobjects.Player;
 
 public record TurnStateHandler(GameInstance game) implements ChainableHandler<String> {

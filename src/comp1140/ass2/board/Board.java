@@ -3,7 +3,7 @@ package comp1140.ass2.board;
 import comp1140.ass2.game.Matrices;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.Player;
-import comp1140.ass2.gameobjects.buildings.*;
+import comp1140.ass2.buildings.*;
 
 import java.util.*;
 

@@ -3,7 +3,7 @@ package comp1140.ass2;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
-import comp1140.ass2.gameobjects.buildings.*;
+import comp1140.ass2.buildings.*;
 import comp1140.ass2.helpers.DepthFirstSearch;
 
 import java.util.*;

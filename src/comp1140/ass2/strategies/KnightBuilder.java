@@ -1,8 +1,8 @@
-package comp1140.ass2.gameobjects.strategies;
+package comp1140.ass2.strategies;
 
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
-import comp1140.ass2.gameobjects.buildings.Knight;
+import comp1140.ass2.buildings.Knight;
 
 public record KnightBuilder(GameInstance game, Player player) implements BuilderStrategy {
     @Override

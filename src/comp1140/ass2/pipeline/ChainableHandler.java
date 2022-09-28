@@ -1,4 +1,4 @@
-package comp1140.ass2.board.pipeline;
+package comp1140.ass2.pipeline;
 
 @FunctionalInterface
 public interface ChainableHandler<T> {

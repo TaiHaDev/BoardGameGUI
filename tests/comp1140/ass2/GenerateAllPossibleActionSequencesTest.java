@@ -1,6 +1,7 @@
 package comp1140.ass2;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -11,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import static comp1140.ass2.CatanDiceExtra.generateAllPossibleActionSequences;
 
+@Disabled
 @Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
 public class GenerateAllPossibleActionSequencesTest {
     private void testGenerateAllPossibleActions(String boardState,String[][] expected) {

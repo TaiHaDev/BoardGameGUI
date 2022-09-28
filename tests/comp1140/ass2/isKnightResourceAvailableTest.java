@@ -4,7 +4,7 @@ import comp1140.ass2.board.Board;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
-import comp1140.ass2.gameobjects.buildings.Knight;
+import comp1140.ass2.buildings.Knight;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
