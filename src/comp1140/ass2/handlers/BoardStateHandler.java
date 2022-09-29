@@ -1,9 +1,9 @@
 package comp1140.ass2.handlers;
 
+import comp1140.ass2.actionstrategies.ActionFactory;
 import comp1140.ass2.pipeline.ChainableHandler;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
-import comp1140.ass2.strategies.BuilderFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,20 +25,16 @@ public record BoardStateHandler(GameInstance game) implements ChainableHandler<S
             currentChar++;
             while (matcher.find()) {
                 String structure = matcher.group(0);
-                game.getPlayers().stream()
-                        .filter(p -> p.getUniqueId().equals(String.valueOf(encodedString.charAt(finalChar))))
-                        .findAny()
-                        .ifPresent(player ->
-                                new BuilderFactory(game, player)
-                                        .getBuilderById(structure.charAt(0))
-                                        .build(structure.substring(1)));
+                game.getPlayers().stream().filter(e -> e.getUniqueId().equals(String.valueOf(encodedString.charAt(finalChar)))).findAny().ifPresent(player ->
+                        ActionFactory.of(game, player).getActionByName(ActionFactory.ActionType.BUILD).apply(structure)
+                );
                 currentChar += structure.length();
             }
             if (encodedString.indexOf(playerChar) == -1) {
                 break;
             }
         }
-        return encodedString.substring(currentChar);
+        return encodedString.substring(currentChar - 1);
     }
 
 }

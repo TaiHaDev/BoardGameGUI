@@ -1,20 +1,18 @@
 package comp1140.ass2.gameobjects;
 
 import comp1140.ass2.board.Board;
+import comp1140.ass2.buildings.*;
 import comp1140.ass2.handlers.BoardStateHandler;
 import comp1140.ass2.handlers.ScoreStateHandler;
 import comp1140.ass2.handlers.TurnStateHandler;
 import comp1140.ass2.pipeline.Pipeline;
 import comp1140.ass2.game.Resource;
-import comp1140.ass2.buildings.Building;
 import comp1140.ass2.helpers.CircularQueue;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GameInstance {
 
@@ -210,4 +208,61 @@ public class GameInstance {
     public void setLongestRoad(Player longestRoad) {
         this.longestRoad = longestRoad;
     }
+
+    /**
+     * Converts a GameInstance object to a valid encoded string.
+     *
+     * This is **only** to meet testing requirements, and converting GameInstances
+     * to strings then back again is unsafe in general.
+     *
+     * @return the encoded string representing the current object
+     */
+    @Deprecated
+    public String getAsEncodedString() {
+        StringBuilder state = new StringBuilder()
+                .append(this.getCurrentPlayer().getUniqueId())
+                .append(this.getDiceCount())
+                .append(this.getRollsDone())
+                .append(this.getDiceResult().entrySet().stream()
+                        .flatMap(entry -> Stream.generate(entry::getKey).limit(entry.getValue()))
+                        .map(Resource::getId)
+                        .map(String::valueOf)
+                        .sorted()
+                        .reduce("", (a, b) -> a + b));
+        this.getPlayers().stream().sorted(Comparator.comparing(Player::getUniqueId)).forEach(player -> {
+            state.append(player.getUniqueId());
+            for (int i = 0; i < this.getBoard().getCastleBoard().length; i++) {
+                if (player.equals(this.getBoard().getCastleBoard()[i].getOwner())) {
+                    state.append("C").append(i);
+                }
+            }
+            state.append(this.getBoard().getKnightBoard().entrySet().stream()
+                    .filter(entry -> player.equals(entry.getValue().getOwner()))
+                    .map(entry -> (entry.getValue().isJoker() ? "J" : "K") + (entry.getKey() < 10 ? "0" : "") + entry.getKey())
+                    .sorted()
+                    .reduce("", (a, b) -> a + b));
+            Road[] roads = this.getBoard().getRoads();
+            for (Road road : roads) {
+                if (player.equals(road.getOwner())) {
+                    state.append("R")
+                            .append(road.getStart() < 10 ? 0 : "")
+                            .append(road.getStart())
+                            .append(road.getEnd() < 10 ? 0 : "")
+                            .append(road.getEnd());
+                }
+            }
+            state.append(this.getBoard().getResidentialBuilding().entrySet().stream()
+                    .filter(entry -> player.equals(entry.getValue().getOwner()))
+                    .map(entry -> (entry.getValue() instanceof Settlement ? "S" : "T") + (entry.getKey() < 10 ? "0" : "") + entry.getKey())
+                    .sorted()
+                    .reduce("", (a, b) -> a + b));
+        });
+        this.getPlayers().stream().sorted(Comparator.comparing(Player::getUniqueId)).forEach(player -> state.append(player.getUniqueId())
+                .append(player.getScore() < 10 ? 0 : "")
+                .append(player.getScore())
+                .append(player.equals(this.getLongestRoad()) ? "R" : "")
+                .append(player.equals(this.getLargestArmy()) ? "A" : ""));
+        return state.toString();
+    }
+
 }

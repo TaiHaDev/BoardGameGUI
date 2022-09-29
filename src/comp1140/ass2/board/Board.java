@@ -214,7 +214,7 @@ public class Board {
 
     public boolean isKnightResourceAvailable(Resource neededResource, Player player) {
         for (Knight knight : knightBoard.values()) {
-            if (!knight.isJoker() && knight.getOwner() != null &&
+            if (knight.getOwner() != null &&
                     knight.getOwner().equals(player) && knight.getJokerResource() == neededResource) {
                 return true;
             }

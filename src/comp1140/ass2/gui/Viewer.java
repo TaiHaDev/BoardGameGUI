@@ -1,12 +1,9 @@
 package comp1140.ass2.gui;
 
 import comp1140.ass2.CatanDiceExtra;
+import comp1140.ass2.buildings.*;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
-import comp1140.ass2.buildings.Building;
-import comp1140.ass2.buildings.Castle;
-import comp1140.ass2.buildings.Knight;
-import comp1140.ass2.buildings.Road;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
