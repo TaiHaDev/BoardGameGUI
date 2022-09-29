@@ -9,6 +9,7 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
 
     @Override
     public boolean isApplicable(String argument) {
+        // TODO refactor this
         if (argument.length() < 3) return false;
         char typeOfBuilding = argument.charAt(0);
         int location = Integer.parseInt(argument.substring(1,3));
@@ -48,7 +49,7 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
 
     @Override
     public void apply(String argument) {
-        new BuilderFactory(game, player)
+        BuilderFactory.of(game, player)
                 .getBuilderById(argument.charAt(0))
                 .build(argument.substring(1));
     }

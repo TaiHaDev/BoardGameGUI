@@ -12,13 +12,17 @@ public class BuilderFactory {
     private final CityBuilder cityBuilder;
     private final SettlementBuilder settlementBuilder;
 
-    public BuilderFactory(GameInstance game, Player player) {
+    private BuilderFactory(GameInstance game, Player player) {
         settlementBuilder = new SettlementBuilder(game, player);
         cityBuilder = new CityBuilder(game, player);
         roadBuilder = new RoadBuilder(game, player);
         knightBuilder = new KnightBuilder(game, player, false);
         jokerBuilder = new KnightBuilder(game, player, true);
         castleBuilder = new CastleBuilder(game, player);
+    }
+
+    public static BuilderFactory of(GameInstance game, Player player) {
+        return new BuilderFactory(game, player);
     }
 
     public BuilderStrategy getBuilderById(char id) {
