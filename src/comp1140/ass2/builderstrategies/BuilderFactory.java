@@ -16,8 +16,8 @@ public class BuilderFactory {
         settlementBuilder = new SettlementBuilder(game, player);
         cityBuilder = new CityBuilder(game, player);
         roadBuilder = new RoadBuilder(game, player);
-        knightBuilder = new KnightBuilder(game, player, false);
-        jokerBuilder = new KnightBuilder(game, player, true);
+        knightBuilder = new KnightBuilder(game, player, true);
+        jokerBuilder = new KnightBuilder(game, player, false);
         castleBuilder = new CastleBuilder(game, player);
     }
 

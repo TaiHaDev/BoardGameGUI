@@ -98,6 +98,50 @@ public class GameInstance {
                         resources.get(resource) >= requirement.get(resource));
     }
 
+
+    public void checkAndUpdateLongestRoad() {
+        Player player = Board.hasLongestRoad(this);
+        if (player == null) return;
+        if (longestRoad == null) {
+            player.setScore(player.getScore() + 2);
+            longestRoad = player;
+        } else if (!longestRoad.equals(player)) {
+            longestRoad.setScore(longestRoad.getScore() - 2);
+            player.setScore(player.getScore() + 2);
+            longestRoad = player;
+        }
+    }
+
+    public void checkAndUpdateLargestArmy() {
+        Player player = Board.hasLargestArmy(this);
+        if (player == null) return;
+        if (largestArmy == null) {
+            player.setScore(player.getScore() + 1);
+            largestArmy = player;
+        } else if (!largestArmy.equals(player)) {
+            player.setScore(player.getScore() + 2);
+            largestArmy.setScore(largestArmy.getScore() - 2);
+            largestArmy = player;
+        }
+    }
+    /**
+     * mutate the diceResult map as it is used to build buildings.
+     * this function will be used in buildAction classes.
+     * @param buildingCost
+     */
+    public void useResources(Map<Resource, Integer> buildingCost) {
+        if (buildingCost.equals(Castle.COST))
+            diceResult.keySet()
+                    .stream()
+                    .filter(k -> diceResult.get(k) == 6)
+                    .findFirst()
+                    .ifPresent(resource -> diceResult.put(resource, 0));
+        for (var entry : buildingCost.entrySet()) {
+            diceResult.put(entry.getKey(), diceResult.get(entry.getKey()) - entry.getValue());
+        }
+
+    }
+
     /**
      * Gets the topmost player from the players circular
      * queue.
@@ -238,7 +282,7 @@ public class GameInstance {
             }
             state.append(this.getBoard().getKnightBoard().entrySet().stream()
                     .filter(entry -> player.equals(entry.getValue().getOwner()))
-                    .map(entry -> (entry.getValue().isJoker() ? "J" : "K") + (entry.getKey() < 10 ? "0" : "") + entry.getKey())
+                    .map(entry -> (entry.getValue().isJoker() ? "K" : "J") + (entry.getKey() < 10 ? "0" : "") + entry.getKey())
                     .sorted()
                     .reduce("", (a, b) -> a + b));
             Road[] roads = this.getBoard().getRoads();

@@ -25,5 +25,11 @@ public record SwapAction(GameInstance game, Player player) implements ActionStra
         Resource in = Resource.decodeChar(argument.charAt(1));
         game.getDiceResult().put(out, game.getDiceResult().get(out) - 1);
         game.getDiceResult().put(in, game.getDiceResult().getOrDefault(in, 0) + 1);
-    }
-}
+        game.getBoard()
+                .getKnightBoard()
+                .values()
+                .stream()
+                .filter(knight -> (knight.getJokerResource() == in || knight.getJokerResource() == null)
+                        && !knight.isJoker()
+                        && player.equals(knight.getOwner())).findFirst().ifPresent(knight -> knight.setJoker(true));
+}}

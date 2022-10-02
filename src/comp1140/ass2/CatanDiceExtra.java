@@ -1,5 +1,6 @@
 package comp1140.ass2;
 
+import comp1140.ass2.actionstrategies.ActionStrategy;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
@@ -328,9 +329,7 @@ public class CatanDiceExtra {
         Arrays.stream(ActionFactory.ActionType.values())
                 .filter(e -> action.startsWith(e.getName()))
                 .findFirst()
-                .ifPresent(type -> ActionFactory.of(game, game.getCurrentPlayer())
-                        .getActionByName(type)
-                        .apply(action.substring(type.getName().length())));
+                .ifPresent(type -> ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(type).apply(action.substring(type.getName().length())));
         return game.getAsEncodedString();
     }
 

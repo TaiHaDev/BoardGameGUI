@@ -43,8 +43,11 @@ public class ApplyActionTest {
 
     @Test
     public void testNonKeepActions() {
-        for (String[] step : ExampleGames.FULL_GAME1_WITH_NON_KEEP_ACTIONS)
+        for (String[] step : ExampleGames.FULL_GAME1_WITH_NON_KEEP_ACTIONS) {
+            System.out.println(step[2]);
             testNonKeepAction(step[2], step[0], step[1]);
+        }
+
         for (String[] step : ExampleGames.FULL_GAME2_WITH_NON_KEEP_ACTIONS)
             testNonKeepAction(step[2], step[0], step[1]);
         for (String[] step : ExampleGames.FULL_GAME3_WITH_NON_KEEP_ACTIONS)

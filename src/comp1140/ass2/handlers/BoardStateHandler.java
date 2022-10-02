@@ -1,6 +1,7 @@
 package comp1140.ass2.handlers;
 
 import comp1140.ass2.actionstrategies.ActionFactory;
+import comp1140.ass2.builderstrategies.BuilderFactory;
 import comp1140.ass2.pipeline.ChainableHandler;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
@@ -19,14 +20,15 @@ public record BoardStateHandler(GameInstance game) implements ChainableHandler<S
             if (game.getPlayers().stream().noneMatch(p -> p.getUniqueId().equals(String.valueOf(encodedString.charAt(finalChar))))) {
                 game.getPlayers().addLast(new Player(String.valueOf(encodedString.charAt(currentChar))));
             }
-
             int end = encodedString.indexOf(playerChar + 1) > 0 ? encodedString.indexOf(++playerChar) : encodedString.indexOf('W', encodedString.indexOf('W') + 1);
             Matcher matcher = Pattern.compile("[A-V][0-9]*").matcher(encodedString.substring(currentChar, end));
             currentChar++;
             while (matcher.find()) {
                 String structure = matcher.group(0);
                 game.getPlayers().stream().filter(e -> e.getUniqueId().equals(String.valueOf(encodedString.charAt(finalChar)))).findAny().ifPresent(player ->
-                        ActionFactory.of(game, player).getActionByName(ActionFactory.ActionType.BUILD).apply(structure)
+                        BuilderFactory.of(game, player)
+                                .getBuilderById(structure.charAt(0))
+                                .build(structure.substring(1))
                 );
                 currentChar += structure.length();
             }

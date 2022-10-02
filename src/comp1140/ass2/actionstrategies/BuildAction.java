@@ -1,5 +1,6 @@
 package comp1140.ass2.actionstrategies;
 
+import comp1140.ass2.board.Board;
 import comp1140.ass2.builderstrategies.BuilderFactory;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.gameobjects.GameInstance;
@@ -31,7 +32,7 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
             if (game.getBoard().canCastleBuild(location)) {
                 return GameInstance.isResourcesSufficient(game.getDiceResult(), Castle.COST);
             }
-        } else if (typeOfBuilding == 'K') {
+        } else if (typeOfBuilding == 'K' || typeOfBuilding == 'J') {
             if (game.getBoard().canKnightBuild(location, player)) {
                 return GameInstance.isResourcesSufficient(game.getDiceResult(), Knight.COST);
             }
@@ -49,8 +50,32 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
 
     @Override
     public void apply(String argument) {
+        char buildingType = argument.charAt(0) == 'K' ? 'J' : argument.charAt(0);
         BuilderFactory.of(game, player)
-                .getBuilderById(argument.charAt(0))
+                .getBuilderById(buildingType)
                 .build(argument.substring(1));
+        Player currentPlayer = game.getCurrentPlayer();
+        if (buildingType == 'R') {
+            game.useResources(Road.COST);
+            game.checkAndUpdateLongestRoad();
+        }
+        else if (buildingType == 'C') {
+            game.useResources(Castle.COST);
+            currentPlayer.setScore(currentPlayer.getScore() + 2);
+
+        }
+        else if (buildingType == 'S') {
+            game.useResources(Settlement.COST);
+            currentPlayer.setScore(currentPlayer.getScore() + 1);
+        }
+        else if (buildingType == 'T') {
+            game.useResources(City.COST);
+            currentPlayer.setScore(currentPlayer.getScore() + 1);
+        }
+        else if (buildingType == 'J') {
+            game.useResources(Knight.COST);
+            game.checkAndUpdateLargestArmy();
+        };
+
     }
 }
