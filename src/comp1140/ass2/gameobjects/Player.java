@@ -1,4 +1,4 @@
-package comp1140.ass2.game;
+package comp1140.ass2.gameobjects;
 
 import javafx.scene.paint.Color;
 
@@ -8,13 +8,13 @@ import java.util.Random;
 
 public class Player {
 
-    private final String name;
+    private final String uniqueId;
     private Date birthday;
     private final Color color;
     private int score;
 
     public Player(String name) {
-        this.name = name;
+        this.uniqueId = name;
         Random rand = new Random();
         int r = rand.nextInt(0, 256);
         int g = rand.nextInt(0,256) ;
@@ -22,8 +22,8 @@ public class Player {
         color = Color.rgb(r,g,b);
     }
 
-    public String getName() {
-        return name;
+    public String getUniqueId() {
+        return uniqueId;
     }
 
     public Date getBirthday() {
@@ -39,14 +39,14 @@ public class Player {
         if (this == o) return true;
         if (!(o instanceof Player player)) return false;
         return score == player.score &&
-                Objects.equals(getName(), player.getName()) &&
+                Objects.equals(getUniqueId(), player.getUniqueId()) &&
                 Objects.equals(getBirthday(), player.getBirthday()) &&
                 Objects.equals(getColor(), player.getColor());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getBirthday(), getColor(), score);
+        return Objects.hash(getUniqueId(), getBirthday(), getColor(), score);
     }
 
     public int getScore() {
@@ -59,6 +59,6 @@ public class Player {
 
     @Override
     public String toString() {
-        return name;
+        return uniqueId;
     }
 }

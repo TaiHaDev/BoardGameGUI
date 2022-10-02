@@ -1,19 +1,16 @@
 package comp1140.ass2;
 
-import comp1140.ass2.game.*;
-import comp1140.ass2.game.Player;
-import comp1140.ass2.game.DepthFirstSearch;
 import comp1140.ass2.game.Resource;
+import comp1140.ass2.gameobjects.GameInstance;
+import comp1140.ass2.gameobjects.Player;
+import comp1140.ass2.buildings.*;
+import comp1140.ass2.helpers.DepthFirstSearch;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CatanDiceExtra {
-    public static void main(String[] args) {
-        System.out.println(isActionValid("X63bgglowWR0004R0104R0408S00XJ06R1520W01X00","swapow"));
-    }
-
 
     /**
      * Check if the string encoding of a board state is well-formed.
@@ -131,9 +128,8 @@ public class CatanDiceExtra {
     public static String rollDice(int numOfDice) {
         char[] resources = new char[numOfDice];
         Random random = new Random();
-        char[] resourcesList = new char[]{'b','l','w','g','o','m'};
         for (int i = 0; i < numOfDice; i++) {
-            resources[i] = resourcesList[random.nextInt(resourcesList.length)];
+            resources[i] = Resource.values()[random.nextInt(Resource.values().length)].getId();
         }
         Arrays.sort(resources);
         return new String(resources);
@@ -325,7 +321,7 @@ public class CatanDiceExtra {
                     max = Math.max(path.size() - 1, max);
                 }
             }
-            longestRoad[player.getName().toCharArray()[0] - 'W'] = max;
+            longestRoad[player.getUniqueId().toCharArray()[0] - 'W'] = max;
         }
         return longestRoad;
     }
@@ -344,7 +340,7 @@ public class CatanDiceExtra {
     public static int[] largestArmy(String boardState) {
         GameInstance game = new GameInstance(boardState);
         return game.getPlayers().stream()
-                .sorted(Comparator.comparing(Player::getName))
+                .sorted(Comparator.comparing(Player::getUniqueId))
                 .mapToInt(player ->
                         (int) game.getBoard().getKnightBoard().values().stream()
                                 .filter(knight -> player.equals(knight.getOwner()))

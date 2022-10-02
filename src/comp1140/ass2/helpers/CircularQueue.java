@@ -1,4 +1,4 @@
-package comp1140.ass2.game;
+package comp1140.ass2.helpers;
 
 import java.util.LinkedList;
 import java.util.Queue;

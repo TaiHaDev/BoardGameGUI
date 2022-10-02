@@ -1,4 +1,6 @@
-package comp1140.ass2.game;
+package comp1140.ass2.buildings;
+
+import comp1140.ass2.gameobjects.Player;
 
 public abstract class Building {
 
@@ -17,6 +19,5 @@ public abstract class Building {
     public Player getOwner() {
         return owner;
     }
-
 
 }

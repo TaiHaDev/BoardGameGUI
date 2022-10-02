@@ -7,11 +7,17 @@ public enum Resource {
     GRAIN('g'),
     WOOL('w'),
     ORE('o');
-    private char c;
+
+    private final char c;
 
     Resource(char c) {
         this.c = c;
     }
+
+    public char getId() {
+        return this.c;
+    }
+
     public static Resource decodeChar(char c) {
         for (var value : Resource.values()) {
             if (value.c == c) {

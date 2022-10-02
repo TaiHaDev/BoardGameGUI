@@ -1,6 +1,6 @@
 package comp1140.ass2;
 
-import comp1140.ass2.game.DepthFirstSearch;
+import comp1140.ass2.helpers.DepthFirstSearch;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
