@@ -214,7 +214,7 @@ public class Board {
 
     public boolean isKnightResourceAvailable(Resource neededResource, Player player) {
         for (Knight knight : knightBoard.values()) {
-            if (knight.getOwner() != null &&
+            if (!knight.isJoker() && knight.getOwner() != null &&
                     knight.getOwner().equals(player) && knight.getJokerResource() == neededResource) {
                 return true;
             }
@@ -223,7 +223,7 @@ public class Board {
         Knight wildCardKnight2 = knightBoard.get(10);
         return (wildCardKnight1.getOwner() != null || wildCardKnight2.getOwner() != null) &&
                 ((wildCardKnight1.getOwner().equals(player) && !wildCardKnight1.isJoker()) ||
-                (wildCardKnight2.getOwner().equals(player) && !wildCardKnight2.isJoker()));
+                        (wildCardKnight2.getOwner().equals(player) && !wildCardKnight2.isJoker()));
     }
 
     /**
