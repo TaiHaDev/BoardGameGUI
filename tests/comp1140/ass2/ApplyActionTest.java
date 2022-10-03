@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 import static comp1140.ass2.CatanDiceExtra.applyAction;
 
-@Disabled
 @Timeout(value = 2000, unit = TimeUnit.MILLISECONDS)
 public class ApplyActionTest {
     private void testNonKeepAction(String expected, String boardState, String action) {
@@ -44,8 +43,11 @@ public class ApplyActionTest {
 
     @Test
     public void testNonKeepActions() {
-        for (String[] step : ExampleGames.FULL_GAME1_WITH_NON_KEEP_ACTIONS)
+        for (String[] step : ExampleGames.FULL_GAME1_WITH_NON_KEEP_ACTIONS) {
+            System.out.println(step[2]);
             testNonKeepAction(step[2], step[0], step[1]);
+        }
+
         for (String[] step : ExampleGames.FULL_GAME2_WITH_NON_KEEP_ACTIONS)
             testNonKeepAction(step[2], step[0], step[1]);
         for (String[] step : ExampleGames.FULL_GAME3_WITH_NON_KEEP_ACTIONS)

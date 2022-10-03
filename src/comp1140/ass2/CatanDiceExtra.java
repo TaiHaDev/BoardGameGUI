@@ -1,10 +1,12 @@
 package comp1140.ass2;
 
+import comp1140.ass2.actionstrategies.ActionStrategy;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.helpers.DepthFirstSearch;
+import comp1140.ass2.actionstrategies.ActionFactory;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -172,65 +174,12 @@ public class CatanDiceExtra {
      * @return true iff the action is executable, false otherwise.
      */
     public static boolean isActionValid(String boardState, String action) {
-        if (!isActionWellFormed(action)) return false;
         GameInstance game = new GameInstance(boardState);
-        Player player = game.getCurrentPlayer();
-        Map<Resource, Integer> resourcesMap = game.getDiceResult();
-
-        if (action.startsWith("keep")) {
-            boolean isRollPhase = game.getRollsDone() != 0 && game.getRollsDone() != 3;
-            return isRollPhase &&
-                    GameInstance.isResourcesSufficient(resourcesMap, GameInstance.stringResourcesToMap(action.substring(4)));
-        } else if (action.startsWith("build")) {
-            String structureIdentifier = action.substring(5);
-            if (structureIdentifier.length() < 3) return false;
-            char typeOfBuilding = structureIdentifier.charAt(0);
-            int location = Integer.parseInt(structureIdentifier.substring(1,3));
-            if (typeOfBuilding == 'R') {
-                int firstPos = Integer.parseInt(structureIdentifier.substring(1,3));
-                int secondPos = Integer.parseInt(structureIdentifier.substring(3,5));
-                boolean valid = false;
-                if (game.getRollsDone() == 0 &&
-                        game.getBoard().isCoastalAnd5RoadsAway(firstPos, secondPos, player) &&
-                        game.getBoard().isRoadValid(firstPos, secondPos)) {
-                    valid = true;
-                } else if (game.getBoard().isRoadBuildable(firstPos, secondPos, player) &&
-                        GameInstance.isResourcesSufficient(resourcesMap, Road.COST)) {
-                    valid = true;
-                }
-                return valid;
-            } else if (typeOfBuilding == 'C') {
-                location = Integer.parseInt(structureIdentifier.substring(1,2));
-                if (game.getBoard().canCastleBuild(location)) {
-                    return GameInstance.isResourcesSufficient(resourcesMap, Castle.COST);
-                }
-            } else if (typeOfBuilding == 'K') {
-                if (game.getBoard().canKnightBuild(location, player)) {
-                    return GameInstance.isResourcesSufficient(resourcesMap, Knight.COST);
-                }
-            } else if (typeOfBuilding == 'S') {
-                if (game.getBoard().canSettlementBuild(location, player)) {
-                    return GameInstance.isResourcesSufficient(resourcesMap, Settlement.COST);
-                }
-            } else if (typeOfBuilding == 'T') {
-                if (game.getBoard().canCityBuild(location, player)) {
-                    return GameInstance.isResourcesSufficient(resourcesMap, City.COST);
-                }
-            }
-
-        } else if (action.contains("trade")) {
-            String tradeList = action.substring(5);
-            Map<Resource, Integer> payResources = Map.of(Resource.GOLD, 2 * tradeList.length());
-            return GameInstance.isResourcesSufficient(resourcesMap, payResources);
-        } else if (action.contains("swap")) {
-            assert action.length() == 6;
-            Resource out = Resource.decodeChar(action.charAt(4));
-            Resource in = Resource.decodeChar(action.charAt(5));
-            if (GameInstance.isResourcesSufficient(resourcesMap, Map.of(out, 1))) {
-                return game.getBoard().isKnightResourceAvailable(in, player);
-            }
-        }
-        return false;
+        Optional<ActionFactory.ActionType> type = Arrays.stream(ActionFactory.ActionType.values()).filter(e -> action.startsWith(e.getName())).findFirst();
+        return type.isPresent() &&
+                ActionFactory.of(game, game.getCurrentPlayer())
+                        .getActionByName(type.get())
+                        .isApplicable(action.substring(type.get().getName().length()));
     }
 
     /**
@@ -376,8 +325,12 @@ public class CatanDiceExtra {
      * @return string representation of the updated board state.
      */
     public static String applyAction(String boardState, String action) {
-        // FIXME: Task 9
-        return null;
+        GameInstance game = new GameInstance(boardState);
+        Arrays.stream(ActionFactory.ActionType.values())
+                .filter(e -> action.startsWith(e.getName()))
+                .findFirst()
+                .ifPresent(type -> ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(type).apply(action.substring(type.getName().length())));
+        return game.getAsEncodedString();
     }
 
     /**

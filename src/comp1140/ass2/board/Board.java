@@ -2,10 +2,15 @@ package comp1140.ass2.board;
 
 import comp1140.ass2.game.Matrices;
 import comp1140.ass2.game.Resource;
+import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
 import comp1140.ass2.buildings.*;
+import comp1140.ass2.helpers.DepthFirstSearch;
 
 import java.util.*;
+
+import static comp1140.ass2.CatanDiceExtra.isEulerianTrail;
+import static comp1140.ass2.CatanDiceExtra.pathToGraph;
 
 public class Board {
 
@@ -214,16 +219,14 @@ public class Board {
 
     public boolean isKnightResourceAvailable(Resource neededResource, Player player) {
         for (Knight knight : knightBoard.values()) {
-            if (!knight.isJoker() && knight.getOwner() != null &&
-                    knight.getOwner().equals(player) && knight.getJokerResource() == neededResource) {
+            if (!knight.isJoker() && player.equals(knight.getOwner()) && knight.getJokerResource() == neededResource) {
                 return true;
             }
         }
         Knight wildCardKnight1 = knightBoard.get(9);
         Knight wildCardKnight2 = knightBoard.get(10);
-        return (wildCardKnight1.getOwner() != null || wildCardKnight2.getOwner() != null) &&
-                ((wildCardKnight1.getOwner().equals(player) && !wildCardKnight1.isJoker()) ||
-                (wildCardKnight2.getOwner().equals(player) && !wildCardKnight2.isJoker()));
+        return (player.equals(wildCardKnight1.getOwner()) && !wildCardKnight1.isJoker()) ||
+                        (player.equals(wildCardKnight2.getOwner()) && !wildCardKnight2.isJoker());
     }
 
     /**
@@ -255,6 +258,84 @@ public class Board {
         }
 
         return isRoadCoastal && isRoadStartAndEndAdjacent && isRoad5RoadsAwayFromPrevious;
+    }
+
+    public static Player hasLongestRoad(GameInstance game) {
+        HashMap<Player, Integer> playersAndTheirLongestRoad = new HashMap<>();
+        for (Player player : game.getPlayers()) {
+            // initialise a new graph that only contains the current player's
+            // owned roads.
+            Map<Integer, List<Integer>> graph = new HashMap<>();
+            Set<Road> ownedRoads = new HashSet<>();
+            for (Road road : game.getBoard().getRoads()) {
+                if (player.equals(road.getOwner())) {
+                    ownedRoads.add(road);
+                }
+            }
+            for (Road road : ownedRoads) {
+                List<Integer> values = graph.getOrDefault(road.getStart(), new ArrayList<>());
+                values.add(road.getEnd());
+                graph.put(road.getStart(), values);
+
+                values = graph.getOrDefault(road.getEnd(), new ArrayList<>());
+                values.add(road.getStart());
+                graph.put(road.getEnd(), values);
+            }
+
+            // create a list of every path existing in the player's graph
+            HashSet<List<Integer>> paths = new HashSet<>();
+            for (int start : graph.keySet()) {
+                if (graph.get(start).size() == 2) continue;
+                for (int end : graph.keySet()) {
+                    if (graph.get(end).size() == 2 || start == end) continue;
+                    DepthFirstSearch dfs = new DepthFirstSearch(paths, graph);
+                    dfs.search(start, end);
+                }
+            }
+
+            int max = 0;
+
+            for (List<Integer> path : paths) {
+                if (isEulerianTrail(pathToGraph(path))) {
+                    max = Math.max(path.size() - 1, max);
+                }
+            }
+            playersAndTheirLongestRoad.put(player, max);
+        }
+        Player p = null;
+        int max = 0;
+        for (var entry : playersAndTheirLongestRoad.entrySet()) {
+            if (entry.getValue() > max) {
+                max = entry.getValue();
+                p = entry.getKey();
+            } else if (entry.getValue() == max) return null;
+        }
+        if(playersAndTheirLongestRoad.get(p) > 4) return p;
+        return null;
+    }
+
+    public static Player hasLargestArmy(GameInstance game) {
+        HashMap<Player, Integer> playersAndTheirKnightCount = new HashMap();
+        game.getPlayers()
+                .stream()
+                .forEach(
+                        player -> playersAndTheirKnightCount.put(player,(int) game
+                                .getBoard()
+                                .getKnightBoard()
+                                .values()
+                                .stream()
+                                .filter(knight -> player.equals(knight.getOwner())).count()));
+        if (playersAndTheirKnightCount.isEmpty()) return null;
+        Player p = null;
+        int max = 0;
+        for (var entry : playersAndTheirKnightCount.entrySet()) {
+            if (entry.getValue() > max) {
+                max = entry.getValue();
+                p = entry.getKey();
+            } else if (entry.getValue() == max) return null;
+        }
+        if(playersAndTheirKnightCount.get(p) > 2) return p;
+        return null;
     }
 
     public Map<Integer, Knight> getKnightBoard() {
