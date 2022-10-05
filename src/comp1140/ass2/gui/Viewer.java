@@ -161,6 +161,9 @@ public class Viewer extends Application implements Initializable {
     public Text statsFreeText;
     public Text diceCountText;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage stage) throws IOException {
