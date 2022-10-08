@@ -215,7 +215,6 @@ public class Game extends Application implements Initializable {
     public Button rollDicesButton;
 
     public static void main(String[] args) {
-        Image image = new Image("file:/gui/img/w1.png");
         launch(args);
     }
     @Override
@@ -270,11 +269,6 @@ public class Game extends Application implements Initializable {
             Player currentPlayer = players[i - 1];
             Label label = (Label) getClass().getDeclaredField(playerName + i).get(this);
             label.setText(currentPlayer.getUniqueId());
-            RotateTransition rt = new RotateTransition(Duration.millis(3000), label);
-            rt.setByAngle(30);
-            rt.setCycleCount(4);
-            rt.setAutoReverse(true);
-            rt.play();
             Circle color = (Circle) getClass().getDeclaredField(playerColor + i).get(this);
             color.setFill(currentPlayer.getColor());
         }
