@@ -360,7 +360,6 @@ public class Game extends Application implements Initializable {
                                     .toList());
                     setupPane.setVisible(false);
                     renderPlayerStatus();
-                    showError();
                     startGame();
                 }
             } catch (Exception ignored) {
@@ -493,7 +492,7 @@ public class Game extends Application implements Initializable {
                             game.setRollsDone();
                         }
                         else starterRoadsCount++;
-                    } else {
+                    } else if (game.getRollsDone() == 4) {
                         roadShape.setFill(game.getCurrentPlayer().getColor());
                         renderGameInfo();
                     }
@@ -504,7 +503,7 @@ public class Game extends Application implements Initializable {
     }
     public void setEventHandlerForCastle() throws NoSuchFieldException, IllegalAccessException {
         Castle[] castlesBoard = game.getBoard().getCastleBoard();
-        for (int i = 0; i < castlesBoard.length; i++) {
+        for (int i = 1; i <= castlesBoard.length; i++) {
             Polyline castleShape = (Polyline) getClass().getDeclaredField("c" + i).get(this);
             ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.BUILD);
             String argument = "R" + i;
@@ -591,8 +590,8 @@ public class Game extends Application implements Initializable {
                     actionStrategy.apply(argument);
                     houseShape.setFill(game.getCurrentPlayer().getColor());
                     renderGameInfo();
+                    houseShape.setOnMouseClicked(null);
                 }
-                houseShape.setOnMouseClicked(null);
             });
         }
     }
