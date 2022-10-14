@@ -19,4 +19,11 @@ public class CircularQueue<T> extends LinkedList<T> implements Queue<T> {
         return this.getFirst();
     }
 
+    @Override
+    public T poll() {
+        T current = this.getFirst();
+        this.removeFirst();
+        this.addLast(current);
+        return current;
+    }
 }

@@ -9,12 +9,15 @@ import comp1140.ass2.pipeline.Pipeline;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.helpers.CircularQueue;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GameInstance {
+
+    public static GameInstance game; // singleton
 
     private final Board board = new Board();
     private int rollsDone;
@@ -23,6 +26,17 @@ public class GameInstance {
     private Map<Resource, Integer> diceResult = new HashMap<>();
     private Player longestRoad;
     private Player largestArmy;
+
+
+    private GameInstance() {
+    }
+
+    public static GameInstance getInstance() {
+        if (game == null) {
+            game = new GameInstance();
+        }
+        return game;
+    }
 
     /**
      * Passes the {@param encodedString} through the board reader pipeline.
@@ -171,6 +185,11 @@ public class GameInstance {
         this.diceCount = diceCount;
     }
 
+    public void setDiceCount() {
+        if (diceCount == 0) diceCount = 3;
+        else if (diceCount < 6) diceCount++;
+    }
+
     public CircularQueue<Player> getPlayers() {
         return players;
     }
@@ -224,6 +243,11 @@ public class GameInstance {
     public void setRollsDone(int rollsDone) {
         this.rollsDone = rollsDone;
     }
+    public void setRollsDone() throws RuntimeException {
+        if (rollsDone > 3) rollsDone = 1;
+        else if (rollsDone == 0) rollsDone = 1;
+        else rollsDone++;
+    }
 
     public int getRollsDone() {
         return rollsDone;
@@ -235,6 +259,18 @@ public class GameInstance {
 
     public void setDiceResult(Map<Resource, Integer> diceResult) {
         this.diceResult = diceResult;
+    }
+
+    public void emptyDiceResult() {
+        this.diceResult = new HashMap<>();
+    }
+
+    public String diceResultToString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Resource resource : diceResult.keySet()) {
+            stringBuilder.append(String.valueOf(resource.getId()).repeat(Math.max(0, diceResult.get(resource))));
+        }
+        return stringBuilder.toString();
     }
 
     public Player getLargestArmy() {
