@@ -11,6 +11,9 @@ import comp1140.ass2.actionstrategies.ActionFactory;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class CatanDiceExtra {
 
@@ -111,7 +114,7 @@ public class CatanDiceExtra {
         }
         return b;
     }
-
+//authort
     public static boolean isSorted(String str) {
         char[] charList = str.toCharArray();
         Arrays.sort(charList);
@@ -135,6 +138,7 @@ public class CatanDiceExtra {
         }
         Arrays.sort(resources);
         return new String(resources);
+
     }
 
     /**

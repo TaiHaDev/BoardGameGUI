@@ -180,6 +180,7 @@ public class Viewer extends Application implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         displayStateButton.setOnAction(event -> {
             try {
                 displayState(textField.getText());
@@ -190,7 +191,7 @@ public class Viewer extends Application implements Initializable {
         });
     }
 
-    private void showError() {
+    public static void showError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText("Malformed board state");
