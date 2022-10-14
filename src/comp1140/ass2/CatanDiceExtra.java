@@ -8,6 +8,7 @@ import comp1140.ass2.buildings.*;
 import comp1140.ass2.helpers.DepthFirstSearch;
 import comp1140.ass2.actionstrategies.ActionFactory;
 
+import javax.swing.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -349,8 +350,15 @@ public class CatanDiceExtra {
      * @return true if the sequence is executable, false otherwise.
      */
     public static boolean isActionSequenceValid(String boardState, String[] actionSequence) {
-        // FIXME: Task 10a
-        return false;
+        GameInstance game = new GameInstance(boardState);
+        for (String action : actionSequence) {
+            if (isActionValid(game.getAsEncodedString(), action)) {
+                game = new GameInstance(applyAction(game.getAsEncodedString(), action));
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -369,8 +377,13 @@ public class CatanDiceExtra {
      * @return string representation of the new board state
      */
     public static String applyActionSequence(String boardState, String[] actionSequence) {
-        // FIXME: Task 10b
-        return null;
+        String game = boardState;
+        for (String action : actionSequence) {
+            game = applyAction(game, action);
+        }
+        GameInstance gameInstance = new GameInstance(game);
+        gameInstance.nextPlayer();
+        return gameInstance.getAsEncodedString();
     }
 
     /**
@@ -415,9 +428,112 @@ public class CatanDiceExtra {
      * @param boardState: string representation of the current board state.
      * @return array of possible action sequences.
      */
+    public static List<String> generateAllPossibleActions(String boardState) {
+        GameInstance game = new GameInstance(boardState);
+        ActionFactory factory = ActionFactory.of(game, game.getCurrentPlayer());
+
+        List<String> actions = new ArrayList<>();
+
+        // KEEP
+        String resources = diceResultMapToString(game.getDiceResult());
+        Stack<String> potentialKeeps = new Stack<>();
+        potentialKeeps.push(resources);
+        List<String> argsVisited = new ArrayList<>();
+        while (!potentialKeeps.isEmpty()) {
+            String args = potentialKeeps.pop();
+            if (args.isEmpty()) continue;
+            if (factory.getActionByName(ActionFactory.ActionType.KEEP).isApplicable(args)) {
+                actions.add("keep" + args);
+            }
+            for (int i = 1; i < args.length(); i++) {
+                String arg = args.substring(0, i - 1) + args.substring(i);
+                if (!argsVisited.contains(arg)) {
+                    potentialKeeps.push(arg);
+                    argsVisited.add(arg);
+                }
+            }
+        }
+
+        // BUILD
+        for (int i = 0; i < 54; i++) {
+            for (int j = 0; j < 53; j++) {
+                String first = i >= 10 ? String.valueOf(i) : "0" + i;
+                String second = j >= 10 ? String.valueOf(j) : "0" + j;
+                if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('R' + first + second)) {
+                    actions.add("buildR" + first + second);
+                }
+            }
+        }
+        for (int i = 0; i < 20; i++) {
+            String param = i >= 10 ? String.valueOf(i) : "0" + i;
+            if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('K' + param)) {
+                actions.add("buildK" + param);
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable("C" + i)) {
+                actions.add("buildC" + i);
+            }
+        }
+        for (int i = 0; i < 54; i++) {
+            String param = i >= 10 ? String.valueOf(i) : "0" + i;
+            if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('T' + param)) {
+                actions.add("buildT" + param);
+            } else if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('S' + param)) {
+                actions.add("buildS" + param);
+            }
+        }
+
+        // SWAP
+        for (Resource a : Resource.values()) {
+            for (Resource b : Resource.values()) {
+                if (factory.getActionByName(ActionFactory.ActionType.SWAP).isApplicable(a.getId() + String.valueOf(b.getId()))) {
+                    actions.add("swap" + a.getId() + b.getId());
+                }
+            }
+        }
+
+        // TRADE
+        Stack<String> potentialTrades = new Stack<>();
+        potentialTrades.push(resources);
+        argsVisited = new ArrayList<>();
+        while (!potentialTrades.isEmpty()) {
+            String args = potentialTrades.pop();
+            if (args.isEmpty()) continue;
+            if (factory.getActionByName(ActionFactory.ActionType.TRADE).isApplicable(args)) {
+                actions.add("trade" + args);
+            }
+            for (int i = 1; i < args.length(); i++) {
+                String arg = args.substring(0, i - 1) + args.substring(i);
+                if (!argsVisited.contains(arg)) {
+                    potentialTrades.push(arg);
+                    argsVisited.add(arg);
+                }
+            }
+        }
+
+        return actions;
+    }
+
     public static String[][] generateAllPossibleActionSequences(String boardState) {
-        // FIXME: Task 12
-        return null;
+        List<String[]> actionSequences = new ArrayList<>();
+        Stack<List<String>> stack = new Stack<>();
+
+        List<String> list = new ArrayList<>();
+        list.add(boardState);
+
+        stack.push(list);
+        while (!stack.isEmpty()) {
+            List<String> sequence = stack.pop();
+            for (String nextInSequence : generateAllPossibleActions(applyActionSequence(boardState, sequence.toArray(String[]::new)))) {
+                sequence.add(nextInSequence);
+                actionSequences.add(sequence.toArray(String[]::new));
+                stack.push(new ArrayList<>(sequence));
+                sequence.remove(nextInSequence);
+            }
+        }
+        
+        return actionSequences.toArray(String[][]::new);
     }
 
     /**
@@ -437,5 +553,14 @@ public class CatanDiceExtra {
         // FIXME: Task 13
         // FIXME: Task 14 Implement a "smart" generateAction()
         return null;
+    }
+
+    public static String diceResultMapToString(Map<Resource, Integer> diceResult) {
+        return diceResult.entrySet().stream()
+                .flatMap(entry -> Stream.generate(entry::getKey).limit(entry.getValue()))
+                .map(Resource::getId)
+                .map(String::valueOf)
+                .sorted()
+                .reduce("", (a, b) -> a + b);
     }
 }

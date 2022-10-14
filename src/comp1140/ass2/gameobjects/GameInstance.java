@@ -1,5 +1,6 @@
 package comp1140.ass2.gameobjects;
 
+import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.board.Board;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.handlers.BoardStateHandler;
@@ -151,7 +152,7 @@ public class GameInstance {
                     .findFirst()
                     .ifPresent(resource -> diceResult.put(resource, 0));
         for (var entry : buildingCost.entrySet()) {
-            diceResult.put(entry.getKey(), diceResult.get(entry.getKey()) - entry.getValue());
+            diceResult.put(entry.getKey(), diceResult.getOrDefault(entry.getKey(), 0) - entry.getValue());
         }
 
     }
@@ -303,12 +304,7 @@ public class GameInstance {
                 .append(this.getCurrentPlayer().getUniqueId())
                 .append(this.getDiceCount())
                 .append(this.getRollsDone())
-                .append(this.getDiceResult().entrySet().stream()
-                        .flatMap(entry -> Stream.generate(entry::getKey).limit(entry.getValue()))
-                        .map(Resource::getId)
-                        .map(String::valueOf)
-                        .sorted()
-                        .reduce("", (a, b) -> a + b));
+                .append(CatanDiceExtra.diceResultMapToString(this.getDiceResult()));
         this.getPlayers().stream().sorted(Comparator.comparing(Player::getUniqueId)).forEach(player -> {
             state.append(player.getUniqueId());
             for (int i = 0; i < this.getBoard().getCastleBoard().length; i++) {

@@ -23,7 +23,5 @@ public record TradeAction(GameInstance game, Player player) implements ActionStr
             Resource resource = Resource.decodeChar(argument.charAt(i));
             game.getDiceResult().put(resource, game.getDiceResult().getOrDefault(resource, 0) + 1);
         }
-
-
     }
 }

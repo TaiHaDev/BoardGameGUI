@@ -190,8 +190,7 @@ public class Board {
     public boolean canKnightBuild(int position, Player player) {
         boolean canKnightBuild = false;
         for (int neighbourIndex : knightBoard.get(position).getNeighbours()) {
-            if (Arrays.stream(roads).anyMatch(road -> road.getStart() == neighbourIndex || road.getEnd() == neighbourIndex)
-                    || player.equals(residentialBuilding.get(neighbourIndex).getOwner())) {
+            if (Arrays.stream(roads).filter(road -> player.equals(road.getOwner())).anyMatch(road -> road.getStart() == neighbourIndex || road.getEnd() == neighbourIndex)) {
                 canKnightBuild = true;
             }
         }
@@ -212,6 +211,7 @@ public class Board {
     }
 
     public boolean canCityBuild(int location, Player player) {
+        if (!residentialBuilding.containsKey(location)) return false;
         Player owner = residentialBuilding.get(location).getOwner();
         Settlement settlement = (Settlement) residentialBuilding.get(location);
         return owner == player && settlement.isUpgradeable();
