@@ -1,6 +1,7 @@
 package comp1140.ass2.game;
 
 public enum Resource {
+
     GOLD('m'),
     BRICK('b'),
     LUMBER('l'),
@@ -26,4 +27,6 @@ public enum Resource {
         }
         throw new IllegalArgumentException("invalid resource");
     }
+
+
 }

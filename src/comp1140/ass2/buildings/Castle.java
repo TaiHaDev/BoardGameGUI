@@ -4,7 +4,7 @@ import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.Player;
 
 import java.util.Map;
-
+// author: blah,w
 public class Castle extends Building {
 
     public static Map<Resource, Integer> COST = Map.of(Resource.ORE,6,

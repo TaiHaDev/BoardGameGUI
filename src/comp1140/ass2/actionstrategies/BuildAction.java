@@ -1,13 +1,21 @@
 package comp1140.ass2.actionstrategies;
 
+import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.board.Board;
 import comp1140.ass2.builderstrategies.BuilderFactory;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
 
-public record BuildAction(GameInstance game, Player player) implements ActionStrategy {
+import java.util.List;
 
+public record BuildAction(GameInstance game, Player player) implements ActionStrategy {
+    public static void main(String[] args) {
+        GameInstance game = GameInstance.getInstance();
+        game.getPlayers().addAll(List.of(new Player("T"), new Player("M")));
+        System.out.println(ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.BUILD).isApplicable("R0003"));
+
+    }
     @Override
     public boolean isApplicable(String argument) {
         // TODO refactor this
@@ -18,7 +26,7 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
             int firstPos = Integer.parseInt(argument.substring(1,3));
             int secondPos = Integer.parseInt(argument.substring(3,5));
             boolean valid = false;
-            if (game.getRollsDone() == 0 &&
+            if (game.getDiceCount() == 0 &&
                     game.getBoard().isCoastalAnd5RoadsAway(firstPos, secondPos, player) &&
                     game.getBoard().isRoadValid(firstPos, secondPos)) {
                 valid = true;
@@ -32,7 +40,7 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
             if (game.getBoard().canCastleBuild(location)) {
                 return GameInstance.isResourcesSufficient(game.getDiceResult(), Castle.COST);
             }
-        } else if (typeOfBuilding == 'K' || typeOfBuilding == 'J') {
+        } else if (typeOfBuilding == 'K') {
             if (game.getBoard().canKnightBuild(location, player)) {
                 return GameInstance.isResourcesSufficient(game.getDiceResult(), Knight.COST);
             }
@@ -54,6 +62,7 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
         BuilderFactory.of(game, player)
                 .getBuilderById(buildingType)
                 .build(argument.substring(1));
+        if (game.getDiceCount() == 0) return;
         Player currentPlayer = game.getCurrentPlayer();
         if (buildingType == 'R') {
             game.useResources(Road.COST);

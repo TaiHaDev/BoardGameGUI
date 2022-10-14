@@ -19,5 +19,6 @@ public record TurnStateHandler(GameInstance game) implements ChainableHandler<St
         return encodedString.substring(end);
     }
 
+
 }
 
