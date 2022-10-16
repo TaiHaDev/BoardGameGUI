@@ -4,10 +4,13 @@ import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.board.Board;
 import comp1140.ass2.builderstrategies.BuilderFactory;
 import comp1140.ass2.buildings.*;
+import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 public record BuildAction(GameInstance game, Player player) implements ActionStrategy {
     public static void main(String[] args) {
@@ -36,7 +39,7 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
         } else if (typeOfBuilding == 'C') {
             int location = Integer.parseInt(argument.substring(1,2));
             if (game.getBoard().canCastleBuild(location)) {
-                return GameInstance.isResourcesSufficient(game.getDiceResult(), Castle.COST);
+                return Stream.of(Resource.values()).anyMatch(resource -> GameInstance.isResourcesSufficient(game.getDiceResult(), Map.of(resource, 6)));
             }
         } else if (typeOfBuilding == 'K') {
             int location = Integer.parseInt(argument.substring(1,3));

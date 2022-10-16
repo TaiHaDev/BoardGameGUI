@@ -454,62 +454,62 @@ public class CatanDiceExtra {
                 }
             }
             actions.add("keep"); // you'll always be able to keep nothing given it is the roll phase
-        }
-
-        // BUILD
-        for (int i = 0; i < 54; i++) {
-            for (int j = i; j < 54; j++) {
-                String first = i >= 10 ? String.valueOf(i) : "0" + i;
-                String second = j >= 10 ? String.valueOf(j) : "0" + j;
-                if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('R' + first + second)) {
-                    actions.add("buildR" + first + second);
+        } else {
+            // BUILD
+            for (int i = 0; i < 54; i++) {
+                for (int j = i; j < 54; j++) {
+                    String first = i >= 10 ? String.valueOf(i) : "0" + i;
+                    String second = j >= 10 ? String.valueOf(j) : "0" + j;
+                    if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('R' + first + second)) {
+                        actions.add("buildR" + first + second);
+                    }
                 }
             }
-        }
-        for (int i = 0; i < 20; i++) {
-            String param = i >= 10 ? String.valueOf(i) : "0" + i;
-            if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('K' + param)) {
-                actions.add("buildK" + param);
-            }
-        }
-        for (int i = 0; i < 4; i++) {
-            if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable("C" + i)) {
-                actions.add("buildC" + i);
-            }
-        }
-        for (int i = 0; i < 54; i++) {
-            String param = i >= 10 ? String.valueOf(i) : "0" + i;
-            if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('T' + param)) {
-                actions.add("buildT" + param);
-            } else if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('S' + param)) {
-                actions.add("buildS" + param);
-            }
-        }
-
-        // SWAP
-        for (Resource a : Resource.values()) {
-            for (Resource b : Resource.values()) {
-                if (factory.getActionByName(ActionFactory.ActionType.SWAP).isApplicable(a.getId() + String.valueOf(b.getId()))) {
-                    actions.add("swap" + a.getId() + b.getId());
+            for (int i = 0; i < 20; i++) {
+                String param = i >= 10 ? String.valueOf(i) : "0" + i;
+                if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('K' + param)) {
+                    actions.add("buildK" + param);
                 }
             }
-        }
-
-        // TRADE
-        Stack<String> potentialTrades = new Stack<>();
-        potentialTrades.push(resources);
-        List<String> argsVisited = new ArrayList<>();
-        while (!potentialTrades.isEmpty()) {
-            String args = potentialTrades.pop();
-            if (args.isEmpty()) continue;
-            if (factory.getActionByName(ActionFactory.ActionType.TRADE).isApplicable(args)) {
-                actions.add("trade" + args);
+            for (int i = 0; i < 4; i++) {
+                if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable("C" + i)) {
+                    actions.add("buildC" + i);
+                }
             }
-            for (int i = 1; i < args.length(); i++) {
-                String arg = args.substring(0, i - 1) + args.substring(i);
-                if (!argsVisited.contains(arg)) {
-                    potentialTrades.push(arg);
-                    argsVisited.add(arg);
+            for (int i = 0; i < 54; i++) {
+                String param = i >= 10 ? String.valueOf(i) : "0" + i;
+                if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('T' + param)) {
+                    actions.add("buildT" + param);
+                } else if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('S' + param)) {
+                    actions.add("buildS" + param);
+                }
+            }
+
+            // SWAP
+            for (Resource a : Resource.values()) {
+                for (Resource b : Resource.values()) {
+                    if (factory.getActionByName(ActionFactory.ActionType.SWAP).isApplicable(a.getId() + String.valueOf(b.getId()))) {
+                        actions.add("swap" + a.getId() + b.getId());
+                    }
+                }
+            }
+
+            // TRADE
+            Stack<String> potentialTrades = new Stack<>();
+            potentialTrades.push(resources);
+            List<String> argsVisited = new ArrayList<>();
+            while (!potentialTrades.isEmpty()) {
+                String args = potentialTrades.pop();
+                if (args.isEmpty()) continue;
+                if (factory.getActionByName(ActionFactory.ActionType.TRADE).isApplicable(args)) {
+                    actions.add("trade" + args);
+                }
+                for (int i = 1; i < args.length(); i++) {
+                    String arg = args.substring(0, i - 1) + args.substring(i);
+                    if (!argsVisited.contains(arg)) {
+                        potentialTrades.push(arg);
+                        argsVisited.add(arg);
+                    }
                 }
             }
         }
@@ -556,7 +556,6 @@ public class CatanDiceExtra {
 
     public static String diceResultMapToString(Map<Resource, Integer> diceResult) {
         return diceResult.entrySet().stream()
-                .filter(e -> e.getValue() >= 0)
                 .flatMap(entry -> Stream.generate(entry::getKey).limit(entry.getValue()))
                 .map(Resource::getId)
                 .map(String::valueOf)
