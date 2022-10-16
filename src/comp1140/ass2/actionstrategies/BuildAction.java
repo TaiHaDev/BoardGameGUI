@@ -19,9 +19,7 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
     @Override
     public boolean isApplicable(String argument) {
         // TODO refactor this
-        if (argument.length() < 3) return false;
         char typeOfBuilding = argument.charAt(0);
-        int location = Integer.parseInt(argument.substring(1,3));
         if (typeOfBuilding == 'R') {
             int firstPos = Integer.parseInt(argument.substring(1,3));
             int secondPos = Integer.parseInt(argument.substring(3,5));
@@ -36,19 +34,22 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
             }
             return valid;
         } else if (typeOfBuilding == 'C') {
-            location = Integer.parseInt(argument.substring(1,2));
+            int location = Integer.parseInt(argument.substring(1,2));
             if (game.getBoard().canCastleBuild(location)) {
                 return GameInstance.isResourcesSufficient(game.getDiceResult(), Castle.COST);
             }
         } else if (typeOfBuilding == 'K') {
+            int location = Integer.parseInt(argument.substring(1,3));
             if (game.getBoard().canKnightBuild(location, player)) {
                 return GameInstance.isResourcesSufficient(game.getDiceResult(), Knight.COST);
             }
         } else if (typeOfBuilding == 'S') {
+            int location = Integer.parseInt(argument.substring(1,3));
             if (game.getBoard().canSettlementBuild(location, player)) {
                 return GameInstance.isResourcesSufficient(game.getDiceResult(), Settlement.COST);
             }
         } else if (typeOfBuilding == 'T') {
+            int location = Integer.parseInt(argument.substring(1,3));
             if (game.getBoard().canCityBuild(location, player)) {
                 return GameInstance.isResourcesSufficient(game.getDiceResult(), City.COST);
             }

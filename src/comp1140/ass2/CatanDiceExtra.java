@@ -377,13 +377,12 @@ public class CatanDiceExtra {
      * @return string representation of the new board state
      */
     public static String applyActionSequence(String boardState, String[] actionSequence) {
-        String game = boardState;
+        GameInstance game = new GameInstance(boardState);
         for (String action : actionSequence) {
-            game = applyAction(game, action);
+            game = new GameInstance(applyAction(game.getAsEncodedString(), action));
         }
-        GameInstance gameInstance = new GameInstance(game);
-        gameInstance.nextPlayer();
-        return gameInstance.getAsEncodedString();
+        game.nextPlayer();
+        return game.getAsEncodedString();
     }
 
     /**
@@ -436,27 +435,30 @@ public class CatanDiceExtra {
 
         // KEEP
         String resources = diceResultMapToString(game.getDiceResult());
-        Stack<String> potentialKeeps = new Stack<>();
-        potentialKeeps.push(resources);
-        List<String> argsVisited = new ArrayList<>();
-        while (!potentialKeeps.isEmpty()) {
-            String args = potentialKeeps.pop();
-            if (args.isEmpty()) continue;
-            if (factory.getActionByName(ActionFactory.ActionType.KEEP).isApplicable(args)) {
-                actions.add("keep" + args);
-            }
-            for (int i = 1; i < args.length(); i++) {
-                String arg = args.substring(0, i - 1) + args.substring(i);
-                if (!argsVisited.contains(arg)) {
-                    potentialKeeps.push(arg);
-                    argsVisited.add(arg);
+        if (game.getRollsDone() != 0 && game.getRollsDone() != 3) { // is this it?
+            Stack<String> potentialKeeps = new Stack<>();
+            potentialKeeps.push(resources);
+            List<String> argsVisited = new ArrayList<>();
+            while (!potentialKeeps.isEmpty()) {
+                String args = potentialKeeps.pop();
+                if (args.isEmpty()) continue;
+                if (factory.getActionByName(ActionFactory.ActionType.KEEP).isApplicable(args)) {
+                    actions.add("keep" + args);
+                }
+                for (int i = 1; i < args.length(); i++) {
+                    String arg = args.substring(0, i - 1) + args.substring(i);
+                    if (!argsVisited.contains(arg)) {
+                        potentialKeeps.push(arg);
+                        argsVisited.add(arg);
+                    }
                 }
             }
+            actions.add("keep"); // you'll always be able to keep nothing given it is the roll phase
         }
 
         // BUILD
         for (int i = 0; i < 54; i++) {
-            for (int j = 0; j < 53; j++) {
+            for (int j = i; j < 54; j++) {
                 String first = i >= 10 ? String.valueOf(i) : "0" + i;
                 String second = j >= 10 ? String.valueOf(j) : "0" + j;
                 if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('R' + first + second)) {
@@ -496,7 +498,7 @@ public class CatanDiceExtra {
         // TRADE
         Stack<String> potentialTrades = new Stack<>();
         potentialTrades.push(resources);
-        argsVisited = new ArrayList<>();
+        List<String> argsVisited = new ArrayList<>();
         while (!potentialTrades.isEmpty()) {
             String args = potentialTrades.pop();
             if (args.isEmpty()) continue;
@@ -516,24 +518,21 @@ public class CatanDiceExtra {
     }
 
     public static String[][] generateAllPossibleActionSequences(String boardState) {
-        List<String[]> actionSequences = new ArrayList<>();
-        Stack<List<String>> stack = new Stack<>();
-
-        List<String> list = new ArrayList<>();
-        list.add(boardState);
-
-        stack.push(list);
-        while (!stack.isEmpty()) {
-            List<String> sequence = stack.pop();
-            for (String nextInSequence : generateAllPossibleActions(applyActionSequence(boardState, sequence.toArray(String[]::new)))) {
-                sequence.add(nextInSequence);
-                actionSequences.add(sequence.toArray(String[]::new));
-                stack.push(new ArrayList<>(sequence));
-                sequence.remove(nextInSequence);
-            }
+        List<String[]> list = new ArrayList<>();
+        Stack<String[]> sequences = new Stack<>();
+        sequences.addAll(generateAllPossibleActions(boardState).stream().map(e -> new String[] { e }).collect(Collectors.toList()));
+        while (!sequences.isEmpty()) {
+            String[] sequence = sequences.pop();
+            list.add(sequence);
+            generateAllPossibleActions(applyActionSequence(boardState, sequence)).forEach(a -> {
+                String[] nextSequence = new String[sequence.length + 1];
+                System.arraycopy(sequence, 0, nextSequence, 0, sequence.length);
+                nextSequence[nextSequence.length - 1] = a;
+                sequences.push(nextSequence);
+            });
         }
-        
-        return actionSequences.toArray(String[][]::new);
+        list.add(new String[] {}); // doing nothing is always an option
+        return list.toArray(String[][]::new);
     }
 
     /**
@@ -557,10 +556,12 @@ public class CatanDiceExtra {
 
     public static String diceResultMapToString(Map<Resource, Integer> diceResult) {
         return diceResult.entrySet().stream()
+                .filter(e -> e.getValue() >= 0)
                 .flatMap(entry -> Stream.generate(entry::getKey).limit(entry.getValue()))
                 .map(Resource::getId)
                 .map(String::valueOf)
                 .sorted()
                 .reduce("", (a, b) -> a + b);
     }
+
 }
