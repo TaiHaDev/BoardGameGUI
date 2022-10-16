@@ -455,7 +455,7 @@ public class CatanDiceExtra {
                 if (factory.getActionByName(ActionType.KEEP).isApplicable(args)) {
                     actions.add("keep" + args);
                 }
-                for (int i = 1; i < args.length(); i++) {
+                for (int i = 1; i <= args.length(); i++) {
                     String arg = args.substring(0, i - 1) + args.substring(i);
                     if (!argsVisited.contains(arg)) {
                         potentialKeeps.push(arg);
@@ -530,18 +530,20 @@ public class CatanDiceExtra {
     public static String[][] generateAllPossibleActionSequences(String boardState) {
         List<String[]> list = new ArrayList<>();
         Stack<String[]> sequences = new Stack<>();
+        if (boardState.charAt(2) == '3' || boardState.charAt(2) == '0') list.add(new String[] {});
         sequences.addAll(generateAllPossibleActions(boardState).stream().map(e -> new String[] { e }).collect(Collectors.toList()));
         while (!sequences.isEmpty()) {
             String[] sequence = sequences.pop();
             list.add(sequence);
             generateAllPossibleActions(applyActionSequenceUtil(boardState, sequence)).forEach(a -> {
-                String[] nextSequence = new String[sequence.length + 1];
-                System.arraycopy(sequence, 0, nextSequence, 0, sequence.length);
-                nextSequence[nextSequence.length - 1] = a;
-                sequences.push(nextSequence);
+                if (!a.startsWith("keep")) {
+                    String[] nextSequence = new String[sequence.length + 1];
+                    System.arraycopy(sequence, 0, nextSequence, 0, sequence.length);
+                    nextSequence[nextSequence.length - 1] = a;
+                    sequences.push(nextSequence);
+                }
             });
         }
-        list.add(new String[] {}); // doing nothing is always an option
         return list.toArray(String[][]::new);
     }
 

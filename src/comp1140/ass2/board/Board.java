@@ -219,7 +219,9 @@ public class Board {
     public boolean canCityBuild(int location, Player player) {
         if (!residentialBuilding.containsKey(location)) return false;
         Player owner = residentialBuilding.get(location).getOwner();
-        Settlement settlement = (Settlement) residentialBuilding.get(location);
+        if (!(residentialBuilding.get(location) instanceof Settlement settlement)) {
+            return false;
+        }
         return owner == player && settlement.isUpgradeable();
     }
 
