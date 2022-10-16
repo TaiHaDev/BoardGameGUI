@@ -7,6 +7,7 @@ import comp1140.ass2.gameobjects.Player;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.helpers.DepthFirstSearch;
 import comp1140.ass2.actionstrategies.ActionFactory;
+import comp1140.ass2.actionstrategies.ActionFactory.ActionType;
 
 import javax.swing.*;
 import java.util.*;
@@ -180,7 +181,7 @@ public class CatanDiceExtra {
      */
     public static boolean isActionValid(String boardState, String action) {
         GameInstance game = new GameInstance(boardState);
-        Optional<ActionFactory.ActionType> type = Arrays.stream(ActionFactory.ActionType.values()).filter(e -> action.startsWith(e.getName())).findFirst();
+        Optional<ActionType> type = Arrays.stream(ActionType.values()).filter(e -> action.startsWith(e.getName())).findFirst();
         return type.isPresent() &&
                 ActionFactory.of(game, game.getCurrentPlayer())
                         .getActionByName(type.get())
@@ -331,7 +332,7 @@ public class CatanDiceExtra {
      */
     public static String applyAction(String boardState, String action) {
         GameInstance game = new GameInstance(boardState);
-        Arrays.stream(ActionFactory.ActionType.values())
+        Arrays.stream(ActionType.values())
                 .filter(e -> action.startsWith(e.getName()))
                 .findFirst()
                 .ifPresent(type -> ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(type).apply(action.substring(type.getName().length())));
@@ -382,6 +383,15 @@ public class CatanDiceExtra {
             game = new GameInstance(applyAction(game.getAsEncodedString(), action));
         }
         game.nextPlayer();
+        return game.getAsEncodedString();
+    }
+
+    // apply action sequence wihtout going ot the next player
+    private static String applyActionSequenceUtil(String boardState, String[] actionSequence) {
+        GameInstance game = new GameInstance(boardState);
+        for (String action : actionSequence) {
+            game = new GameInstance(applyAction(game.getAsEncodedString(), action));
+        }
         return game.getAsEncodedString();
     }
 
@@ -442,7 +452,7 @@ public class CatanDiceExtra {
             while (!potentialKeeps.isEmpty()) {
                 String args = potentialKeeps.pop();
                 if (args.isEmpty()) continue;
-                if (factory.getActionByName(ActionFactory.ActionType.KEEP).isApplicable(args)) {
+                if (factory.getActionByName(ActionType.KEEP).isApplicable(args)) {
                     actions.add("keep" + args);
                 }
                 for (int i = 1; i < args.length(); i++) {
@@ -460,27 +470,27 @@ public class CatanDiceExtra {
                 for (int j = i; j < 54; j++) {
                     String first = i >= 10 ? String.valueOf(i) : "0" + i;
                     String second = j >= 10 ? String.valueOf(j) : "0" + j;
-                    if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('R' + first + second)) {
+                    if (factory.getActionByName(ActionType.BUILD).isApplicable('R' + first + second)) {
                         actions.add("buildR" + first + second);
                     }
                 }
             }
             for (int i = 0; i < 20; i++) {
                 String param = i >= 10 ? String.valueOf(i) : "0" + i;
-                if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('K' + param)) {
+                if (factory.getActionByName(ActionType.BUILD).isApplicable('K' + param)) {
                     actions.add("buildK" + param);
                 }
             }
             for (int i = 0; i < 4; i++) {
-                if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable("C" + i)) {
+                if (factory.getActionByName(ActionType.BUILD).isApplicable("C" + i)) {
                     actions.add("buildC" + i);
                 }
             }
             for (int i = 0; i < 54; i++) {
                 String param = i >= 10 ? String.valueOf(i) : "0" + i;
-                if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('T' + param)) {
+                if (factory.getActionByName(ActionType.BUILD).isApplicable('T' + param)) {
                     actions.add("buildT" + param);
-                } else if (factory.getActionByName(ActionFactory.ActionType.BUILD).isApplicable('S' + param)) {
+                } else if (factory.getActionByName(ActionType.BUILD).isApplicable('S' + param)) {
                     actions.add("buildS" + param);
                 }
             }
@@ -488,7 +498,7 @@ public class CatanDiceExtra {
             // SWAP
             for (Resource a : Resource.values()) {
                 for (Resource b : Resource.values()) {
-                    if (factory.getActionByName(ActionFactory.ActionType.SWAP).isApplicable(a.getId() + String.valueOf(b.getId()))) {
+                    if (factory.getActionByName(ActionType.SWAP).isApplicable(a.getId() + String.valueOf(b.getId()))) {
                         actions.add("swap" + a.getId() + b.getId());
                     }
                 }
@@ -501,7 +511,7 @@ public class CatanDiceExtra {
             while (!potentialTrades.isEmpty()) {
                 String args = potentialTrades.pop();
                 if (args.isEmpty()) continue;
-                if (factory.getActionByName(ActionFactory.ActionType.TRADE).isApplicable(args)) {
+                if (factory.getActionByName(ActionType.TRADE).isApplicable(args)) {
                     actions.add("trade" + args);
                 }
                 for (int i = 1; i < args.length(); i++) {
@@ -524,7 +534,7 @@ public class CatanDiceExtra {
         while (!sequences.isEmpty()) {
             String[] sequence = sequences.pop();
             list.add(sequence);
-            generateAllPossibleActions(applyActionSequence(boardState, sequence)).forEach(a -> {
+            generateAllPossibleActions(applyActionSequenceUtil(boardState, sequence)).forEach(a -> {
                 String[] nextSequence = new String[sequence.length + 1];
                 System.arraycopy(sequence, 0, nextSequence, 0, sequence.length);
                 nextSequence[nextSequence.length - 1] = a;

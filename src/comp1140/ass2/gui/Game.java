@@ -2,6 +2,7 @@ package comp1140.ass2.gui;
 
 import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.actionstrategies.ActionFactory;
+import comp1140.ass2.actionstrategies.ActionFactory.ActionType;
 import comp1140.ass2.actionstrategies.ActionStrategy;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.game.Resource;
@@ -427,7 +428,7 @@ public class Game extends Application implements Initializable {
             System.out.println(knightAddress);
             knightShape.setOnMouseClicked(mouseEvent -> {
                 System.out.println("I am inside");
-                ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.BUILD);
+                ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.BUILD);
                 if (actionStrategy.isApplicable("K" + knightAddress)) {
                     actionStrategy.apply("K" + knightAddress);
                     knightShape.setFill(game.getCurrentPlayer().getColor());
@@ -452,7 +453,7 @@ public class Game extends Application implements Initializable {
 
     public void setEventHandlerForRollDicesButton() {
         rollDicesButton.setOnMouseClicked(mouseEvent -> {
-            ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.KEEP);
+            ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.KEEP);
             int diceCount = game.getDiceCount();
             int rollsDone = game.getRollsDone();
             if (game.getRollsDone() > 1 && game.getRollsDone() < 4 && GameInstance.stringResourcesToMap(keep).equals(game.getDiceResult())) {
@@ -479,7 +480,7 @@ public class Game extends Application implements Initializable {
             String b = road.getEnd() < 10 ? "0" + end : "" + end;
             Rectangle roadShape = (Rectangle) getClass().getDeclaredField("r" + a + b).get(this);
             roadShape.setOnMouseClicked(mouseEvent -> {
-                ActionStrategy actionFactory = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.BUILD);
+                ActionStrategy actionFactory = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.BUILD);
                 if (actionFactory.isApplicable("R" + a + b)) {
                     System.out.println(game.getCurrentPlayer());
 
@@ -505,7 +506,7 @@ public class Game extends Application implements Initializable {
         Castle[] castlesBoard = game.getBoard().getCastleBoard();
         for (int i = 1; i <= castlesBoard.length; i++) {
             Polyline castleShape = (Polyline) getClass().getDeclaredField("c" + i).get(this);
-            ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.BUILD);
+            ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.BUILD);
             String argument = "R" + i;
             if (actionStrategy.isApplicable(argument)) {
                 actionStrategy.apply(argument);
@@ -522,7 +523,7 @@ public class Game extends Application implements Initializable {
                 for (Resource resource : Resource.values()) {
                     MenuItem menuItem = new MenuItem(resource.toString());
                     menuItem.setOnAction(event1 -> {
-                        ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.TRADE);
+                        ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.TRADE);
                         actionStrategy.apply(String.valueOf(resource.getId()));
                         renderGameInfo();
                         tradeButton.getItems().clear();
@@ -557,7 +558,7 @@ public class Game extends Application implements Initializable {
                     for (var rs : swappableResources) {
                         MenuItem menuItem = new MenuItem(resource.toString() + " to " + rs.toString());
                         menuItem.setOnAction(event -> {
-                            ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.SWAP);
+                            ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.SWAP);
                             String argument = String.valueOf(resource.getId()) + ((Resource) rs).getId();
                             actionStrategy.apply(argument);
                             renderGameInfo();
@@ -578,7 +579,7 @@ public class Game extends Application implements Initializable {
             String houseAddress = index < 10 ? "0" + index : "" + index;
             Polyline houseShape = (Polyline) getClass().getDeclaredField("h" + houseAddress).get(this);
             houseShape.setOnMouseClicked(mouseEvent -> {
-                ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.BUILD);
+                ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.BUILD);
                 String argument = "";
                 if (building instanceof Settlement) {
                     argument += "S";

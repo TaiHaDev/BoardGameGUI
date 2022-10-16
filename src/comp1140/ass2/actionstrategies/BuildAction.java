@@ -8,6 +8,7 @@ import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -73,9 +74,10 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
             game.checkAndUpdateLongestRoad();
         }
         else if (buildingType == 'C') {
-            game.useResources(Castle.COST);
+            Arrays.stream(Resource.values()).filter(resource -> GameInstance.isResourcesSufficient(game.getDiceResult(), Map.of(resource, 6)))
+                    .findFirst()
+                    .ifPresent(resource -> game.useResources(Map.of(resource, 6)));
             currentPlayer.setScore(currentPlayer.getScore() + 2);
-
         }
         else if (buildingType == 'S') {
             game.useResources(Settlement.COST);
