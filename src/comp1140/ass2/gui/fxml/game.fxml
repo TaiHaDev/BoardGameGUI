@@ -35,20 +35,20 @@
    <ImageView fitHeight="670.0" fitWidth="696.0" layoutX="263.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../img/catan-dice-extra-map.png" />
    </ImageView>
-   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="344.0" pickOnBounds="true" preserveRatio="true">
+   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="34.0" layoutY="432.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../img/city.png" />
    </ImageView>
-   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="468.0" pickOnBounds="true" preserveRatio="true">
+   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="34.0" layoutY="556.0" pickOnBounds="true" preserveRatio="true">
       <image>
          <Image url="@../img/knight.png" />
       </image>
    </ImageView>
-   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="530.0" pickOnBounds="true" preserveRatio="true">
+   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="34.0" layoutY="618.0" pickOnBounds="true" preserveRatio="true">
       <image>
          <Image url="@../img/road.png" />
       </image>
    </ImageView>
-   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="406.0" pickOnBounds="true" preserveRatio="true">
+   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="34.0" layoutY="494.0" pickOnBounds="true" preserveRatio="true">
       <image>
          <Image url="@../img/settlement.png" />
       </image>
@@ -280,6 +280,12 @@
    <Button fx:id="doneButton" layoutX="1036.0" layoutY="650.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="67.0" text="Done" />
    <SplitMenuButton fx:id="swapButton" layoutX="1072.0" layoutY="599.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="83.0" text="Swap" />
    <SplitMenuButton fx:id="tradeButton" layoutX="984.0" layoutY="599.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="91.0" text="Trade" />
+   <Text fx:id="possibleActions" layoutX="35.0" layoutY="327.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+   <Label layoutX="24.0" layoutY="284.0" text="Possible Actions:" underline="true">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Label>
 
 
 </AnchorPane>

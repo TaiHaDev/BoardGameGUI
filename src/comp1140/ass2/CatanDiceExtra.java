@@ -439,13 +439,16 @@ public class CatanDiceExtra {
      */
     public static List<String> generateAllPossibleActions(String boardState) {
         GameInstance game = new GameInstance(boardState);
+        return generateAllPossibleActionsHelper(game);
+    }
+    public static List<String> generateAllPossibleActionsHelper(GameInstance game) {
         ActionFactory factory = ActionFactory.of(game, game.getCurrentPlayer());
 
         List<String> actions = new ArrayList<>();
 
         // KEEP
         String resources = diceResultMapToString(game.getDiceResult());
-        if (game.getRollsDone() != 0 && game.getRollsDone() != 3) { // is this it?
+        if (game.getRollsDone() != 0 && game.getRollsDone() != 3 && game.getRollsDone() != 4) { // is this it?
             Stack<String> potentialKeeps = new Stack<>();
             potentialKeeps.push(resources);
             List<String> argsVisited = new ArrayList<>();

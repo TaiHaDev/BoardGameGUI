@@ -2,15 +2,12 @@ package comp1140.ass2.gameobjects;
 
 import javafx.scene.paint.Color;
 
-import java.util.Date;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class Player {
-
     private final String uniqueId;
     private Date birthday;
-    private final Color color;
+    private Color color;
     private int score;
 
     public Player(String name) {
