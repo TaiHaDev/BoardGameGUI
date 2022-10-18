@@ -574,13 +574,11 @@ public class Game extends Application implements Initializable {
         try {
             renderDices(GameInstance.game.diceResultToString());
         } catch (Exception exception) {
-            System.out.println("Render dices function failed: " + exception.getMessage());
+            exception.printStackTrace();
         }
 
     }
     public void renderPossibleActions() {
-        System.out.println("1");
-        System.out.println("2");
         StringBuilder showingText = new StringBuilder();
         if (game.getDiceCount() == 0) {
             List<String> actions = CatanDiceExtra.generateAllPossibleActionsHelper(game);
@@ -602,7 +600,6 @@ public class Game extends Application implements Initializable {
     public void renderBuildingGuide(List<String> actions) {
         try {
             List<String> buildingList = new ArrayList<>();
-            System.out.println(actions);
             actions.forEach(str -> {
                 if (str.contains("build")) {
                     String sub = str.substring(5).toLowerCase();
