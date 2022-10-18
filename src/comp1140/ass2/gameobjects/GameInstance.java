@@ -1,6 +1,7 @@
 package comp1140.ass2.gameobjects;
 
 import comp1140.ass2.CatanDiceExtra;
+import comp1140.ass2.actionstrategies.ActionFactory;
 import comp1140.ass2.board.Board;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.handlers.BoardStateHandler;
@@ -339,6 +340,13 @@ public class GameInstance {
                 .append(player.equals(this.getLongestRoad()) ? "R" : "")
                 .append(player.equals(this.getLargestArmy()) ? "A" : ""));
         return state.toString();
+    }
+
+    public void applyActionSequence(String[] args) {
+        Stream.of(args).forEach(action -> Arrays.stream(ActionFactory.ActionType.values())
+                .filter(e -> action.startsWith(e.getName()))
+                .findFirst()
+                .ifPresent(type -> ActionFactory.of(this, getCurrentPlayer()).getActionByName(type).apply(action.substring(type.getName().length()))));
     }
 
 }

@@ -1,20 +1,17 @@
 package comp1140.ass2.ai;
 
 import comp1140.ass2.gameobjects.GameInstance;
+import comp1140.ass2.gameobjects.Player;
 
-public class SmartAI extends AIPlayer {
-
-    public SmartAI(GameInstance game) {
-        super(game);
-    }
+public record SmartAI(GameInstance game, Player player) implements AIPlayer {
 
     @Override
-    double evaluate() {
+    public double evaluate() {
         return 0;
     }
 
     @Override
-    String[] selectActionSequence() {
+    public String[] selectActionSequence() {
         return new String[0];
     }
 

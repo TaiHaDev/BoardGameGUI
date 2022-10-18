@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import static comp1140.ass2.CatanDiceExtra.generateAllPossibleActionSequences;
 
-@Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
+
 public class GenerateAllPossibleActionSequencesTest {
     private void testGenerateAllPossibleActions(String boardState,String[][] expected) {
         String[][] actual = generateAllPossibleActionSequences(boardState);

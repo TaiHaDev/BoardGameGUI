@@ -4,23 +4,19 @@ import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.actionstrategies.ActionFactory;
 import comp1140.ass2.actionstrategies.ActionFactory.ActionType;
 import comp1140.ass2.actionstrategies.ActionStrategy;
+import comp1140.ass2.ai.GreedyAI;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
-import javafx.animation.RotateTransition;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.InnerShadow;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
@@ -28,16 +24,12 @@ import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javafx.util.Pair;
 
-import javax.swing.event.DocumentEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
@@ -48,6 +40,7 @@ public class Game extends Application implements Initializable {
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 700;
     private static int numberOfPlayers = 0;
+    private final static List<Player> aiPlayers = new ArrayList<>();
     GameInstance game = GameInstance.getInstance();
 
     public SplitMenuButton tradeButton;
@@ -446,9 +439,10 @@ public class Game extends Application implements Initializable {
             game.emptyDiceResult();
             game.setRollsDone(1);
             game.setDiceCount();
-            game.getPlayers().poll();
+            game.nextPlayer();
             keep = "";
         });
+        endTurn();
     }
 
     public void setEventHandlerForRollDicesButton() {
@@ -487,7 +481,8 @@ public class Game extends Application implements Initializable {
                     actionFactory.apply("R" + a + b);
                     System.out.println(game.getDiceCount());
                     if (game.getDiceCount() == 0) {
-                        roadShape.setFill((game.getPlayers().poll().getColor()));
+                        roadShape.setFill((game.nextPlayer().getColor()));
+                        endTurn();
                         if(starterRoadsCount == numberOfPlayers) {
                             game.setDiceCount();
                             game.setRollsDone();
@@ -627,6 +622,18 @@ public class Game extends Application implements Initializable {
         }
         statsFreeText.setText(stat.toString());
     }
+
+    // handle post-turn stuff here...
+    private void endTurn() {
+        if (aiPlayers.contains(game.getCurrentPlayer()) || game.getCurrentPlayer().getUniqueId().equals("X")) {
+            GreedyAI ai = new GreedyAI(game, game.getCurrentPlayer());
+            String[] sequence = ai.selectActionSequence();
+            game.applyActionSequence(sequence);
+            System.out.println("AI " + game.getCurrentPlayer().getUniqueId() + " chose " + List.of(sequence));
+            endTurn();
+        }
+    }
+
 }
 
 
