@@ -11,6 +11,7 @@ import comp1140.ass2.actionstrategies.ActionFactory.ActionType;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -379,9 +380,7 @@ public class CatanDiceExtra {
      */
     public static String applyActionSequence(String boardState, String[] actionSequence) {
         GameInstance game = new GameInstance(boardState);
-        for (String action : actionSequence) {
-            game = new GameInstance(applyAction(game.getAsEncodedString(), action));
-        }
+        game.applyActionSequence(actionSequence);
         game.nextPlayer();
         return game.getAsEncodedString();
     }
@@ -458,7 +457,7 @@ public class CatanDiceExtra {
                 if (factory.getActionByName(ActionType.KEEP).isApplicable(args)) {
                     actions.add("keep" + args);
                 }
-                for (int i = 1; i < args.length(); i++) {
+                for (int i = 1; i <= args.length(); i++) {
                     String arg = args.substring(0, i - 1) + args.substring(i);
                     if (!argsVisited.contains(arg)) {
                         potentialKeeps.push(arg);
@@ -501,6 +500,7 @@ public class CatanDiceExtra {
             // SWAP
             for (Resource a : Resource.values()) {
                 for (Resource b : Resource.values()) {
+                    if (a.equals(b)) continue;
                     if (factory.getActionByName(ActionType.SWAP).isApplicable(a.getId() + String.valueOf(b.getId()))) {
                         actions.add("swap" + a.getId() + b.getId());
                     }
@@ -508,21 +508,19 @@ public class CatanDiceExtra {
             }
 
             // TRADE
-            Stack<String> potentialTrades = new Stack<>();
-            potentialTrades.push(resources);
-            List<String> argsVisited = new ArrayList<>();
-            while (!potentialTrades.isEmpty()) {
-                String args = potentialTrades.pop();
-                if (args.isEmpty()) continue;
-                if (factory.getActionByName(ActionType.TRADE).isApplicable(args)) {
-                    actions.add("trade" + args);
-                }
-                for (int i = 1; i < args.length(); i++) {
-                    String arg = args.substring(0, i - 1) + args.substring(i);
-                    if (!argsVisited.contains(arg)) {
-                        potentialTrades.push(arg);
-                        argsVisited.add(arg);
+            int length = game.getDiceResult().getOrDefault(Resource.GOLD, 0) / 2;
+            if (length > 0) {
+                Stack<String> params = new Stack<>();
+                params.push("");
+                while (!params.isEmpty()) {
+                    String trade = params.pop();
+                    if (trade.length() == length) {
+                        actions.add("trade" + trade);
+                        continue;
                     }
+                    Stream.of(Resource.values())
+                            .filter(Predicate.not(Resource.GOLD::equals))
+                            .forEach(resource -> params.push(trade + resource.getId()));
                 }
             }
         }
@@ -533,18 +531,41 @@ public class CatanDiceExtra {
     public static String[][] generateAllPossibleActionSequences(String boardState) {
         List<String[]> list = new ArrayList<>();
         Stack<String[]> sequences = new Stack<>();
+        if (boardState.charAt(2) == '3' || boardState.charAt(2) == '0') list.add(new String[] {});
         sequences.addAll(generateAllPossibleActions(boardState).stream().map(e -> new String[] { e }).collect(Collectors.toList()));
         while (!sequences.isEmpty()) {
             String[] sequence = sequences.pop();
             list.add(sequence);
             generateAllPossibleActions(applyActionSequenceUtil(boardState, sequence)).forEach(a -> {
-                String[] nextSequence = new String[sequence.length + 1];
-                System.arraycopy(sequence, 0, nextSequence, 0, sequence.length);
-                nextSequence[nextSequence.length - 1] = a;
-                sequences.push(nextSequence);
+                if (!a.startsWith("keep")) {
+                    String[] nextSequence = new String[sequence.length + 1];
+                    System.arraycopy(sequence, 0, nextSequence, 0, sequence.length);
+                    nextSequence[nextSequence.length - 1] = a;
+                    sequences.push(nextSequence);
+                }
             });
         }
-        list.add(new String[] {}); // doing nothing is always an option
+        List<String[]> redundantSequences = new ArrayList<>();
+        for (String[] sequence : list) {
+            int trades = 0;
+            for (String action : sequence) {
+                if (action.startsWith("trade")) {
+                    if (++trades > 1) {
+                        redundantSequences.add(sequence);
+                        continue;
+                    }
+                    String state = applyActionSequence(boardState, sequence);
+                    if (action.substring(5).codePoints().mapToObj(c -> (char) c).map(Resource::decodeChar).anyMatch(new GameInstance(state).getDiceResult()::containsKey)) {
+                        redundantSequences.add(sequence);
+                    }
+                } else if (action.startsWith("swap")) {
+                    if (new GameInstance(applyActionSequence(boardState, sequence)).getDiceResult().containsKey(Resource.decodeChar(action.charAt(5)))) {
+                        redundantSequences.add(sequence);
+                    }
+                }
+            }
+        }
+        list.removeAll(redundantSequences);
         return list.toArray(String[][]::new);
     }
 
