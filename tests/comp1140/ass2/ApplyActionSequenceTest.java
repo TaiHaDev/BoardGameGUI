@@ -7,12 +7,9 @@ import org.junit.jupiter.api.Timeout;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 import static comp1140.ass2.CatanDiceExtra.applyActionSequence;
 
-@Disabled
-@Timeout(value = 2000, unit = TimeUnit.MILLISECONDS)
 public class ApplyActionSequenceTest {
     private void testBuildPhase(String boardState, String[] actionSequence, String expected) {
         String actual = applyActionSequence(boardState, actionSequence);

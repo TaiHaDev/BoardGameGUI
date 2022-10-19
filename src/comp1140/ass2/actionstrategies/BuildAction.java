@@ -4,24 +4,21 @@ import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.board.Board;
 import comp1140.ass2.builderstrategies.BuilderFactory;
 import comp1140.ass2.buildings.*;
+import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 public record BuildAction(GameInstance game, Player player) implements ActionStrategy {
-    public static void main(String[] args) {
-        GameInstance game = GameInstance.getInstance();
-        game.getPlayers().addAll(List.of(new Player("T"), new Player("M")));
-        System.out.println(ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.BUILD).isApplicable("R0003"));
 
-    }
     @Override
     public boolean isApplicable(String argument) {
         // TODO refactor this
-        if (argument.length() < 3) return false;
         char typeOfBuilding = argument.charAt(0);
-        int location = Integer.parseInt(argument.substring(1,3));
         if (typeOfBuilding == 'R') {
             int firstPos = Integer.parseInt(argument.substring(1,3));
             int secondPos = Integer.parseInt(argument.substring(3,5));
@@ -36,19 +33,22 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
             }
             return valid;
         } else if (typeOfBuilding == 'C') {
-            location = Integer.parseInt(argument.substring(1,2));
+            int location = Integer.parseInt(argument.substring(1,2));
             if (game.getBoard().canCastleBuild(location)) {
-                return GameInstance.isResourcesSufficient(game.getDiceResult(), Castle.COST);
+                return Stream.of(Resource.values()).anyMatch(resource -> GameInstance.isResourcesSufficient(game.getDiceResult(), Map.of(resource, 6)));
             }
         } else if (typeOfBuilding == 'K') {
+            int location = Integer.parseInt(argument.substring(1,3));
             if (game.getBoard().canKnightBuild(location, player)) {
                 return GameInstance.isResourcesSufficient(game.getDiceResult(), Knight.COST);
             }
         } else if (typeOfBuilding == 'S') {
+            int location = Integer.parseInt(argument.substring(1,3));
             if (game.getBoard().canSettlementBuild(location, player)) {
                 return GameInstance.isResourcesSufficient(game.getDiceResult(), Settlement.COST);
             }
         } else if (typeOfBuilding == 'T') {
+            int location = Integer.parseInt(argument.substring(1,3));
             if (game.getBoard().canCityBuild(location, player)) {
                 return GameInstance.isResourcesSufficient(game.getDiceResult(), City.COST);
             }
@@ -69,21 +69,23 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
             game.checkAndUpdateLongestRoad();
         }
         else if (buildingType == 'C') {
-            game.useResources(Castle.COST);
-            currentPlayer.setScore(currentPlayer.getScore() + 2);
-
+            Arrays.stream(Resource.values()).filter(resource -> GameInstance.isResourcesSufficient(game.getDiceResult(), Map.of(resource, 6)))
+                    .findFirst()
+                    .ifPresent(resource -> game.useResources(Map.of(resource, 6)));
+            currentPlayer.setScore(currentPlayer.getScore() + Castle.POINTS);
         }
         else if (buildingType == 'S') {
             game.useResources(Settlement.COST);
-            currentPlayer.setScore(currentPlayer.getScore() + 1);
+            currentPlayer.setScore(currentPlayer.getScore() + Settlement.POINTS);
         }
         else if (buildingType == 'T') {
             game.useResources(City.COST);
-            currentPlayer.setScore(currentPlayer.getScore() + 1);
+            currentPlayer.setScore(currentPlayer.getScore() + City.POINTS);
         }
-        else if (buildingType == 'J') {
+        else if (buildingType == 'K' || buildingType == 'J') {
             game.useResources(Knight.COST);
             game.checkAndUpdateLargestArmy();
+            currentPlayer.setScore(currentPlayer.getScore() + Knight.POINTS);
         };
 
     }

@@ -8,6 +8,7 @@ import comp1140.ass2.buildings.*;
 import comp1140.ass2.helpers.DepthFirstSearch;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static comp1140.ass2.CatanDiceExtra.isEulerianTrail;
 import static comp1140.ass2.CatanDiceExtra.pathToGraph;
@@ -172,7 +173,7 @@ public class Board {
      * @return boolean value
      */
     public boolean isRoadBuildable(int firstPos, int secondPos, Player player) {
-        if (!Arrays.asList(roads).contains(new Road(firstPos, secondPos))) return false;
+        if (!Arrays.asList(roads).contains(new Road(firstPos, secondPos, null))) return false;
         for (int n : new int[] { firstPos, secondPos }) {
             Building house = residentialBuilding.get(n);
             for (int node : getRoadBoard().getGraphMap().get(n)) {
@@ -189,10 +190,14 @@ public class Board {
 
     public boolean canKnightBuild(int position, Player player) {
         boolean canKnightBuild = false;
-        for (int neighbourIndex : knightBoard.get(position).getNeighbours()) {
-            if (Arrays.stream(roads).anyMatch(road -> road.getStart() == neighbourIndex || road.getEnd() == neighbourIndex)
-                    || player.equals(residentialBuilding.get(neighbourIndex).getOwner())) {
-                canKnightBuild = true;
+        if (knightBoard.get(position).getOwner() != null) return false;
+        int[] neighbourIndex = knightBoard.get(position).getNeighbours();
+        for (int i : neighbourIndex) {
+            for (int j : neighbourIndex) {
+                if (i == j) continue;
+                if (Arrays.asList(roads).contains(new Road(i, j, player))) {
+                    return true;
+                }
             }
         }
         return canKnightBuild;
@@ -204,16 +209,23 @@ public class Board {
     }
 
     public boolean canSettlementBuild(int location, Player player) {
-        return Arrays.stream(roadBoard.getAdjacencyMatrix()[location])
-                .filter(e -> roadBoard.getAdjacencyMatrix()[location][e] == 1)
-                .allMatch(e -> residentialBuilding.get(e) == null ||
-                        residentialBuilding.get(e).getOwner() == null ||
-                        player.equals(residentialBuilding.get(e).getOwner()));
+        if (!residentialBuilding.containsKey(location) || residentialBuilding.get(location).getOwner() != null) {
+            return false;
+        }
+        for (int i = 0; i < roadBoard.getAdjacencyMatrix()[location].length; i++) {
+            if (roadBoard.getAdjacencyMatrix()[location][i] == 1 && List.of(roads).contains(new Road(location, i, player))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean canCityBuild(int location, Player player) {
+        if (!residentialBuilding.containsKey(location)) return false;
         Player owner = residentialBuilding.get(location).getOwner();
-        Settlement settlement = (Settlement) residentialBuilding.get(location);
+        if (!(residentialBuilding.get(location) instanceof Settlement settlement)) {
+            return false;
+        }
         return owner == player && settlement.isUpgradeable();
     }
 

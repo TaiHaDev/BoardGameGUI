@@ -2,41 +2,34 @@ package comp1140.ass2.gui;
 
 import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.actionstrategies.ActionFactory;
+import comp1140.ass2.actionstrategies.ActionFactory.ActionType;
 import comp1140.ass2.actionstrategies.ActionStrategy;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
-import javafx.animation.RotateTransition;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.InnerShadow;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Polyline;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
-import javax.swing.event.DocumentEvent;
+import java.beans.EventHandler;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
@@ -47,6 +40,7 @@ public class Game extends Application implements Initializable {
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 700;
     private static int numberOfPlayers = 0;
+    public Text possibleActions;
     GameInstance game = GameInstance.getInstance();
 
     public SplitMenuButton tradeButton;
@@ -178,7 +172,6 @@ public class Game extends Application implements Initializable {
     public Polyline c4;
     public Polyline h53;
     public Polyline h51;
-    public TextField textField;
     public Ellipse k00;
     public Ellipse k01;
     public Ellipse k02;
@@ -234,6 +227,7 @@ public class Game extends Application implements Initializable {
     }
 
     public void startGame() throws IllegalAccessException, NoSuchFieldException {
+        renderGameInfo();
         setEventHandlerForRoads();
         setEventHandlerForRollDicesButton();
         setEventHandlerForDoneButton();
@@ -260,8 +254,6 @@ public class Game extends Application implements Initializable {
     }
 
     public void renderPlayerStatus() throws NoSuchFieldException, IllegalAccessException {
-        int layoutX = 80;
-        int layoutY = 50;
         String playerName = "playerName";
         String playerColor = "playerColor";
         String imageIcon = "imageIcon";
@@ -280,19 +272,6 @@ public class Game extends Application implements Initializable {
             Circle color = (Circle) getClass().getDeclaredField(playerColor + i).get(this);
             color.setVisible(false);
         }
-    }
-
-
-
-
-
-    public static void showError() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("Malformed board state");
-        alert.setContentText("Check board state and try again.");
-
-        alert.show();
     }
 
     public static void showWarning() {
@@ -323,7 +302,7 @@ public class Game extends Application implements Initializable {
             playerNameTextField.setLayoutY(layoutY - 5);
             playerNameTextField.setPromptText("Enter your name: ");
             final int currentI = i;
-            playerNameTextField.setOnKeyTyped(event1 -> players[currentI] = new Player(playerNameTextField.getText()));
+            playerNameTextField.setOnKeyTyped(event1 -> players[currentI] = new Player(Character.toString('W' + currentI)));
 
             layoutY += 30;
             Label label2 = new Label(player + "'s DOB: ");
@@ -362,8 +341,8 @@ public class Game extends Application implements Initializable {
                     renderPlayerStatus();
                     startGame();
                 }
-            } catch (Exception ignored) {
-                System.out.println(ignored.toString());
+            } catch (Exception exception) {
+                exception.printStackTrace();
                 showWarning();
             }
 
@@ -419,21 +398,30 @@ public class Game extends Application implements Initializable {
 
     public void setEventHandlerForKnight() throws NoSuchFieldException, IllegalAccessException {
         for (var entry : game.getBoard().getKnightBoard().entrySet()) {
-            Knight knight = entry.getValue();
             int index = entry.getKey();
             String knightAddress = index < 10 ? "0" + index : "" + index;
-            System.out.println("I am outside");
             Ellipse knightShape = (Ellipse) getClass().getDeclaredField("k" + knightAddress).get(this);
-            System.out.println(knightAddress);
-            knightShape.setOnMouseClicked(mouseEvent -> {
-                System.out.println("I am inside");
-                ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.BUILD);
+            knightShape.setOnMouseReleased(mouseEvent -> {
+                ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.BUILD);
                 if (actionStrategy.isApplicable("K" + knightAddress)) {
                     actionStrategy.apply("K" + knightAddress);
                     knightShape.setFill(game.getCurrentPlayer().getColor());
                     knightShape.setOpacity(1);
+
+                    Map<String, Integer> largestArmy = game.calculateLargestArmy();
+                    Optional<Map.Entry<String, Integer>> maxEntry = largestArmy.entrySet().stream()
+                            .filter(e -> e.getValue() >= 3)
+                            .max(Map.Entry.comparingByValue());
+                    if (largestArmy.values().stream().filter(maxEntry.map(Map.Entry::getValue).orElse(0)::equals).count() == 1) {
+                        if (game.getLargestArmy() != null) game.getLargestArmy().setScore(game.getLargestArmy().getScore() - 2);
+                        game.setLargestArmy(maxEntry
+                                .flatMap(e -> game.getPlayers().stream().filter(player -> player.getUniqueId().equals(e.getKey())).findFirst())
+                                .orElse(null));
+                        game.getLargestArmy().setScore(game.getLargestArmy().getScore() + 2);
+                    }
+
                     renderGameInfo();
-                    knightShape.setOnMouseClicked(null);
+                    knightShape.setOnMouseReleased(null);
                 }
 
             });
@@ -446,13 +434,14 @@ public class Game extends Application implements Initializable {
             game.setRollsDone(1);
             game.setDiceCount();
             game.getPlayers().poll();
+            renderGameInfo();
             keep = "";
         });
     }
 
     public void setEventHandlerForRollDicesButton() {
         rollDicesButton.setOnMouseClicked(mouseEvent -> {
-            ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.KEEP);
+            ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.KEEP);
             int diceCount = game.getDiceCount();
             int rollsDone = game.getRollsDone();
             if (game.getRollsDone() > 1 && game.getRollsDone() < 4 && GameInstance.stringResourcesToMap(keep).equals(game.getDiceResult())) {
@@ -478,13 +467,10 @@ public class Game extends Application implements Initializable {
             String a = road.getStart() < 10 ? "0" + start : "" + start;
             String b = road.getEnd() < 10 ? "0" + end : "" + end;
             Rectangle roadShape = (Rectangle) getClass().getDeclaredField("r" + a + b).get(this);
-            roadShape.setOnMouseClicked(mouseEvent -> {
-                ActionStrategy actionFactory = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.BUILD);
+            roadShape.setOnMouseReleased(mouseEvent -> {
+                ActionStrategy actionFactory = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.BUILD);
                 if (actionFactory.isApplicable("R" + a + b)) {
-                    System.out.println(game.getCurrentPlayer());
-
                     actionFactory.apply("R" + a + b);
-                    System.out.println(game.getDiceCount());
                     if (game.getDiceCount() == 0) {
                         roadShape.setFill((game.getPlayers().poll().getColor()));
                         if(starterRoadsCount == numberOfPlayers) {
@@ -492,11 +478,23 @@ public class Game extends Application implements Initializable {
                             game.setRollsDone();
                         }
                         else starterRoadsCount++;
+
                     } else if (game.getRollsDone() == 4) {
                         roadShape.setFill(game.getCurrentPlayer().getColor());
-                        renderGameInfo();
                     }
-                    roadShape.setOnMouseClicked(null);
+                    Map<String, Integer> longestRoad = game.calculateLongestRoad();
+                    Optional<Map.Entry<String, Integer>> maxEntry = longestRoad.entrySet().stream()
+                            .filter(e -> e.getValue() >= 5)
+                            .max(Map.Entry.comparingByValue());
+                    if (longestRoad.values().stream().filter(maxEntry.map(Map.Entry::getValue).orElse(0)::equals).count() == 1) {
+                        if (game.getLongestRoad() != null) game.getLongestRoad().setScore(game.getLongestRoad().getScore() - 1);
+                        game.setLongestRoad(maxEntry
+                                .flatMap(entry -> game.getPlayers().stream().filter(player -> player.getUniqueId().equals(entry.getKey())).findFirst())
+                                .orElse(null));
+                        if (game.getLongestRoad() != null) game.getLongestRoad().setScore(game.getLongestRoad().getScore() + 1);
+                    }
+                    renderGameInfo();
+                    roadShape.setOnMouseReleased(null);
                 }
             });
         }
@@ -505,14 +503,16 @@ public class Game extends Application implements Initializable {
         Castle[] castlesBoard = game.getBoard().getCastleBoard();
         for (int i = 1; i <= castlesBoard.length; i++) {
             Polyline castleShape = (Polyline) getClass().getDeclaredField("c" + i).get(this);
-            ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.BUILD);
-            String argument = "R" + i;
-            if (actionStrategy.isApplicable(argument)) {
-                actionStrategy.apply(argument);
-                castleShape.setFill(game.getCurrentPlayer().getColor());
-                renderGameInfo();
-            }
-            castleShape.setOnMouseClicked(null);
+            ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.BUILD);
+            String argument = "C" + i;
+            castleShape.setOnMouseReleased(mouseEvent -> {
+                if (actionStrategy.isApplicable(argument)) {
+                    actionStrategy.apply(argument);
+                    castleShape.setFill(game.getCurrentPlayer().getColor());
+                    renderGameInfo();
+                }
+                castleShape.setOnMouseReleased(null);
+            });
         }
     }
 
@@ -522,7 +522,7 @@ public class Game extends Application implements Initializable {
                 for (Resource resource : Resource.values()) {
                     MenuItem menuItem = new MenuItem(resource.toString());
                     menuItem.setOnAction(event1 -> {
-                        ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.TRADE);
+                        ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.TRADE);
                         actionStrategy.apply(String.valueOf(resource.getId()));
                         renderGameInfo();
                         tradeButton.getItems().clear();
@@ -539,7 +539,7 @@ public class Game extends Application implements Initializable {
         swapButton.setOnAction(mouseEvent -> {
             for (Resource resource : Resource.values()) {
                 String id = String.valueOf(resource.getId());
-                if(game.diceResultToString().contains(id) && !keep.contains(id)) {
+                if(game.diceResultToString().contains(id)) {
                     List<Object> swappableResources = game
                             .getBoard()
                             .getKnightBoard()
@@ -557,7 +557,7 @@ public class Game extends Application implements Initializable {
                     for (var rs : swappableResources) {
                         MenuItem menuItem = new MenuItem(resource.toString() + " to " + rs.toString());
                         menuItem.setOnAction(event -> {
-                            ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.SWAP);
+                            ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.SWAP);
                             String argument = String.valueOf(resource.getId()) + ((Resource) rs).getId();
                             actionStrategy.apply(argument);
                             renderGameInfo();
@@ -577,37 +577,83 @@ public class Game extends Application implements Initializable {
             int index = entry.getKey();
             String houseAddress = index < 10 ? "0" + index : "" + index;
             Polyline houseShape = (Polyline) getClass().getDeclaredField("h" + houseAddress).get(this);
-            houseShape.setOnMouseClicked(mouseEvent -> {
-                ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.BUILD);
+            houseShape.setOnMouseReleased(mouseEvent -> {
+                ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.BUILD);
                 String argument = "";
-                if (building instanceof Settlement) {
-                    argument += "S";
-                } else {
-                    argument += "T";
-                }
+                if (building instanceof Settlement && building.getOwner() == null) argument += "S";
+                if (building instanceof Settlement && building.getOwner() == game.getCurrentPlayer()) argument += "T";
                 argument += houseAddress;
                 if (actionStrategy.isApplicable(argument)) {
                     actionStrategy.apply(argument);
                     houseShape.setFill(game.getCurrentPlayer().getColor());
                     renderGameInfo();
-                    houseShape.setOnMouseClicked(null);
+                    if (building instanceof City) houseShape.setOnMouseReleased(null);
                 }
             });
-        }
-    }
+        }}
     public void renderGameInfo() {
         renderDiceInformation();
         renderStat();
+        renderPossibleActions();
         try {
             renderDices(GameInstance.game.diceResultToString());
         } catch (Exception exception) {
-            System.out.println("Render dices function failed: " + exception.getMessage());
+            exception.printStackTrace();
+        }
+
+    }
+    public void renderPossibleActions() {
+        StringBuilder showingText = new StringBuilder();
+        if (game.getDiceCount() == 0) {
+            List<String> actions = CatanDiceExtra.generateAllPossibleActionsHelper(game);
+            if (!actions.isEmpty()) renderBuildingGuide(actions);
+            showingText.append("- choose a starting coastal road");
+        } else if (game.getRollsDone() < 4) {
+            showingText.append("- roll dices").append("\n");
+            showingText.append("- click the dice to keep resource");
+        } else if (game.getRollsDone() == 4) {
+            List<String> actions = CatanDiceExtra.generateAllPossibleActionsHelper(game);
+            if (!actions.isEmpty()) renderBuildingGuide(actions);
+            for (String str : actions) {
+                showingText.append("- ").append(str).append("\n");
+            }
+        }
+        if (showingText.isEmpty()) showingText.append("- No possible action press \"Done\" to finish turn");
+        possibleActions.setText(showingText.toString());
+    }
+    public void renderBuildingGuide(List<String> actions) {
+        try {
+            List<String> buildingList = new ArrayList<>();
+            actions.forEach(str -> {
+                if (str.contains("build")) {
+                    String sub = str.substring(5).toLowerCase();
+                    sub = sub.replaceFirst("[s,t]", "h");
+                    buildingList.add(sub);
+                }
+            });
+            for (String building : buildingList) {
+                Shape shape = (Shape) getClass().getDeclaredField(building).get(this);
+                shape.setOpacity(1);
+                shape.setFill(Color.GRAY);
+                shape.setOnMousePressed(mouseEvent -> {
+                    for (String b : buildingList) {
+                        try {
+                            Shape s2 = (Shape) getClass().getDeclaredField(b).get(this);
+                            if (!b.equals(building)) s2.setFill(Color.WHITE);
+                            s2.setOnMousePressed(null);
+                        } catch (IllegalAccessException | NoSuchFieldException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
 
     }
     public void renderDiceInformation() {
         Map<Resource, Integer> rolledResources = game.getDiceResult();
-        System.out.println(game.getDiceResult());
         StringBuilder diceResults = new StringBuilder();
         turnText.setText("It's " + game.getCurrentPlayer().getUniqueId() + " turn.");
         if (rolledResources != null) {

@@ -1,15 +1,17 @@
 package comp1140.ass2.gameobjects;
 
+import comp1140.ass2.CatanDiceExtra;
+import comp1140.ass2.actionstrategies.ActionFactory;
 import comp1140.ass2.board.Board;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.handlers.BoardStateHandler;
 import comp1140.ass2.handlers.ScoreStateHandler;
 import comp1140.ass2.handlers.TurnStateHandler;
+import comp1140.ass2.helpers.DepthFirstSearch;
 import comp1140.ass2.pipeline.Pipeline;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.helpers.CircularQueue;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -130,7 +132,7 @@ public class GameInstance {
         Player player = Board.hasLargestArmy(this);
         if (player == null) return;
         if (largestArmy == null) {
-            player.setScore(player.getScore() + 1);
+            player.setScore(player.getScore() + 2);
             largestArmy = player;
         } else if (!largestArmy.equals(player)) {
             player.setScore(player.getScore() + 2);
@@ -151,7 +153,7 @@ public class GameInstance {
                     .findFirst()
                     .ifPresent(resource -> diceResult.put(resource, 0));
         for (var entry : buildingCost.entrySet()) {
-            diceResult.put(entry.getKey(), diceResult.get(entry.getKey()) - entry.getValue());
+            diceResult.put(entry.getKey(), diceResult.getOrDefault(entry.getKey(), 0) - entry.getValue());
         }
 
     }
@@ -232,8 +234,8 @@ public class GameInstance {
      * @param indicesToReroll  the indices of the dice that the
      *                         player wants to be rerolled.
      */
-    public void rollDice(int... indicesToReroll) {
-        // TODO
+    public void rollDice(int n) {
+        setDiceResult(stringResourcesToMap(CatanDiceExtra.rollDice(n)));
     }
 
     public Map<Resource, Integer> getDiceResult() {
@@ -303,12 +305,7 @@ public class GameInstance {
                 .append(this.getCurrentPlayer().getUniqueId())
                 .append(this.getDiceCount())
                 .append(this.getRollsDone())
-                .append(this.getDiceResult().entrySet().stream()
-                        .flatMap(entry -> Stream.generate(entry::getKey).limit(entry.getValue()))
-                        .map(Resource::getId)
-                        .map(String::valueOf)
-                        .sorted()
-                        .reduce("", (a, b) -> a + b));
+                .append(CatanDiceExtra.diceResultMapToString(this.getDiceResult()));
         this.getPlayers().stream().sorted(Comparator.comparing(Player::getUniqueId)).forEach(player -> {
             state.append(player.getUniqueId());
             for (int i = 0; i < this.getBoard().getCastleBoard().length; i++) {
@@ -345,4 +342,64 @@ public class GameInstance {
         return state.toString();
     }
 
+    public void applyActionSequence(String[] args) {
+        Stream.of(args).forEach(action -> Arrays.stream(ActionFactory.ActionType.values())
+                .filter(e -> action.startsWith(e.getName()))
+                .findFirst()
+                .ifPresent(type -> ActionFactory.of(this, getCurrentPlayer()).getActionByName(type).apply(action.substring(type.getName().length()))));
+    }
+
+    public Map<String, Integer> calculateLongestRoad() {
+        Map<String, Integer> longestRoad = new HashMap<>();
+        for (Player player : getPlayers()) {
+            // initialise a new graph that only contains the current player's
+            // owned roads.
+            Map<Integer, List<Integer>> graph = new HashMap<>();
+            Set<Road> ownedRoads = new HashSet<>();
+            for (Road road : getBoard().getRoads()) {
+                if (player.equals(road.getOwner())) {
+                    ownedRoads.add(road);
+                }
+            }
+            for (Road road : ownedRoads) {
+                List<Integer> values = graph.getOrDefault(road.getStart(), new ArrayList<>());
+                values.add(road.getEnd());
+                graph.put(road.getStart(), values);
+
+                values = graph.getOrDefault(road.getEnd(), new ArrayList<>());
+                values.add(road.getStart());
+                graph.put(road.getEnd(), values);
+            }
+
+            // create a list of every path existing in the player's graph
+            HashSet<List<Integer>> paths = new HashSet<>();
+            for (int start : graph.keySet()) {
+                if (graph.get(start).size() == 2) continue;
+                for (int end : graph.keySet()) {
+                    if (graph.get(end).size() == 2 || start == end) continue;
+                    DepthFirstSearch dfs = new DepthFirstSearch(paths, graph);
+                    dfs.search(start, end);
+                }
+            }
+
+            int max = 0;
+            for (List<Integer> path : paths) {
+                if (CatanDiceExtra.isEulerianTrail(CatanDiceExtra.pathToGraph(path))) {
+                    max = Math.max(path.size() - 1, max);
+                }
+            }
+            longestRoad.put(player.getUniqueId(), max);
+        }
+        return longestRoad;
+    }
+
+    public Map<String, Integer> calculateLargestArmy() {
+        return getPlayers().stream()
+                .sorted(Comparator.comparing(Player::getUniqueId))
+                .map(player ->
+                        new AbstractMap.SimpleEntry<>(player.getUniqueId(), (int) getBoard().getKnightBoard().values().stream()
+                                .filter(knight -> player.equals(knight.getOwner()))
+                                .count()))
+                .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+    }
 }
