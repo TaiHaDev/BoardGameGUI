@@ -7,8 +7,11 @@ import comp1140.ass2.gameobjects.Player;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.helpers.DepthFirstSearch;
 import comp1140.ass2.actionstrategies.ActionFactory;
+import comp1140.ass2.actionstrategies.ActionFactory.ActionType;
 
+import javax.swing.*;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -179,7 +182,7 @@ public class CatanDiceExtra {
      */
     public static boolean isActionValid(String boardState, String action) {
         GameInstance game = new GameInstance(boardState);
-        Optional<ActionFactory.ActionType> type = Arrays.stream(ActionFactory.ActionType.values()).filter(e -> action.startsWith(e.getName())).findFirst();
+        Optional<ActionType> type = Arrays.stream(ActionType.values()).filter(e -> action.startsWith(e.getName())).findFirst();
         return type.isPresent() &&
                 ActionFactory.of(game, game.getCurrentPlayer())
                         .getActionByName(type.get())
@@ -236,46 +239,8 @@ public class CatanDiceExtra {
      */
     public static int[] longestRoad(String boardState) {
         GameInstance game = new GameInstance(boardState);
-        int[] longestRoad = new int[2];
-        for (Player player : game.getPlayers()) {
-            // initialise a new graph that only contains the current player's
-            // owned roads.
-            Map<Integer, List<Integer>> graph = new HashMap<>();
-            Set<Road> ownedRoads = new HashSet<>();
-            for (Road road : game.getBoard().getRoads()) {
-                if (player.equals(road.getOwner())) {
-                    ownedRoads.add(road);
-                }
-            }
-            for (Road road : ownedRoads) {
-                List<Integer> values = graph.getOrDefault(road.getStart(), new ArrayList<>());
-                values.add(road.getEnd());
-                graph.put(road.getStart(), values);
-
-                values = graph.getOrDefault(road.getEnd(), new ArrayList<>());
-                values.add(road.getStart());
-                graph.put(road.getEnd(), values);
-            }
-
-            // create a list of every path existing in the player's graph
-            HashSet<List<Integer>> paths = new HashSet<>();
-            for (int start : graph.keySet()) {
-                if (graph.get(start).size() == 2) continue;
-                for (int end : graph.keySet()) {
-                    if (graph.get(end).size() == 2 || start == end) continue;
-                    DepthFirstSearch dfs = new DepthFirstSearch(paths, graph);
-                    dfs.search(start, end);
-                }
-            }
-
-            int max = 0;
-            for (List<Integer> path : paths) {
-                if (isEulerianTrail(pathToGraph(path))) {
-                    max = Math.max(path.size() - 1, max);
-                }
-            }
-            longestRoad[player.getUniqueId().toCharArray()[0] - 'W'] = max;
-        }
+        int[] longestRoad = new int[game.getPlayers().size()];
+        game.calculateLongestRoad().forEach((key, value) -> longestRoad[key.charAt(0) - 'W'] = value);
         return longestRoad;
     }
 
@@ -291,14 +256,7 @@ public class CatanDiceExtra {
      * @return array of army sizes, one per player.
      */
     public static int[] largestArmy(String boardState) {
-        GameInstance game = new GameInstance(boardState);
-        return game.getPlayers().stream()
-                .sorted(Comparator.comparing(Player::getUniqueId))
-                .mapToInt(player ->
-                        (int) game.getBoard().getKnightBoard().values().stream()
-                                .filter(knight -> player.equals(knight.getOwner()))
-                                .count()
-                ).toArray();
+        return new GameInstance(boardState).calculateLargestArmy().values().stream().mapToInt(i -> i).toArray();
     }
 
     /**
@@ -330,7 +288,7 @@ public class CatanDiceExtra {
      */
     public static String applyAction(String boardState, String action) {
         GameInstance game = new GameInstance(boardState);
-        Arrays.stream(ActionFactory.ActionType.values())
+        Arrays.stream(ActionType.values())
                 .filter(e -> action.startsWith(e.getName()))
                 .findFirst()
                 .ifPresent(type -> ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(type).apply(action.substring(type.getName().length())));
@@ -349,8 +307,15 @@ public class CatanDiceExtra {
      * @return true if the sequence is executable, false otherwise.
      */
     public static boolean isActionSequenceValid(String boardState, String[] actionSequence) {
-        // FIXME: Task 10a
-        return false;
+        GameInstance game = new GameInstance(boardState);
+        for (String action : actionSequence) {
+            if (isActionValid(game.getAsEncodedString(), action)) {
+                game = new GameInstance(applyAction(game.getAsEncodedString(), action));
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -369,8 +334,30 @@ public class CatanDiceExtra {
      * @return string representation of the new board state
      */
     public static String applyActionSequence(String boardState, String[] actionSequence) {
-        // FIXME: Task 10b
-        return null;
+        GameInstance game = new GameInstance(boardState);
+        game.applyActionSequence(actionSequence);
+        if (game.getPlayers().stream().noneMatch(player -> player.getScore() >= 10))  {
+            game.nextPlayer();
+            if (game.getDiceCount() == 0 && game.getCurrentPlayer().getUniqueId().equals("W")) {
+                game.setDiceCount(3);
+            } else if (game.getDiceCount() != 0 && game.getDiceCount() < 6) {
+                game.setDiceCount(game.getDiceCount() + 1);
+            }
+            if (game.getRollsDone() < game.getDiceCount()) {
+                game.setRollsDone(game.getRollsDone() + 1);
+            }
+            game.rollDice(game.getDiceCount());
+        }
+        return game.getAsEncodedString();
+    }
+
+    // apply action sequence without going to the next player
+    private static String applyActionSequenceUtil(String boardState, String[] actionSequence) {
+        GameInstance game = new GameInstance(boardState);
+        for (String action : actionSequence) {
+            game = new GameInstance(applyAction(game.getAsEncodedString(), action));
+        }
+        return game.getAsEncodedString();
     }
 
     /**
@@ -415,9 +402,137 @@ public class CatanDiceExtra {
      * @param boardState: string representation of the current board state.
      * @return array of possible action sequences.
      */
+    public static List<String> generateAllPossibleActions(String boardState) {
+        GameInstance game = new GameInstance(boardState);
+        return generateAllPossibleActionsHelper(game);
+    }
+    public static List<String> generateAllPossibleActionsHelper(GameInstance game) {
+        ActionFactory factory = ActionFactory.of(game, game.getCurrentPlayer());
+
+        List<String> actions = new ArrayList<>();
+
+        // KEEP
+        String resources = diceResultMapToString(game.getDiceResult());
+        if (game.getRollsDone() != 0 && game.getRollsDone() != 3 && game.getRollsDone() != 4) { // is this it?
+            Stack<String> potentialKeeps = new Stack<>();
+            potentialKeeps.push(resources);
+            List<String> argsVisited = new ArrayList<>();
+            while (!potentialKeeps.isEmpty()) {
+                String args = potentialKeeps.pop();
+                if (args.isEmpty()) continue;
+                if (factory.getActionByName(ActionType.KEEP).isApplicable(args)) {
+                    actions.add("keep" + args);
+                }
+                for (int i = 1; i <= args.length(); i++) {
+                    String arg = args.substring(0, i - 1) + args.substring(i);
+                    if (!argsVisited.contains(arg)) {
+                        potentialKeeps.push(arg);
+                        argsVisited.add(arg);
+                    }
+                }
+            }
+            actions.add("keep"); // you'll always be able to keep nothing given it is the roll phase
+        } else {
+            // BUILD
+            for (int i = 0; i < 54; i++) {
+                for (int j = i; j < 54; j++) {
+                    String first = i >= 10 ? String.valueOf(i) : "0" + i;
+                    String second = j >= 10 ? String.valueOf(j) : "0" + j;
+                    if (factory.getActionByName(ActionType.BUILD).isApplicable('R' + first + second)) {
+                        actions.add("buildR" + first + second);
+                    }
+                }
+            }
+            for (int i = 0; i < 20; i++) {
+                String param = i >= 10 ? String.valueOf(i) : "0" + i;
+                if (factory.getActionByName(ActionType.BUILD).isApplicable('K' + param)) {
+                    actions.add("buildK" + param);
+                }
+            }
+            for (int i = 0; i < 4; i++) {
+                if (factory.getActionByName(ActionType.BUILD).isApplicable("C" + i)) {
+                    actions.add("buildC" + i);
+                }
+            }
+            for (int i = 0; i < 54; i++) {
+                String param = i >= 10 ? String.valueOf(i) : "0" + i;
+                if (factory.getActionByName(ActionType.BUILD).isApplicable('T' + param)) {
+                    actions.add("buildT" + param);
+                } else if (factory.getActionByName(ActionType.BUILD).isApplicable('S' + param)) {
+                    actions.add("buildS" + param);
+                }
+            }
+
+            // SWAP
+            for (Resource a : Resource.values()) {
+                for (Resource b : Resource.values()) {
+                    if (a.equals(b)) continue;
+                    if (factory.getActionByName(ActionType.SWAP).isApplicable(a.getId() + String.valueOf(b.getId()))) {
+                        actions.add("swap" + a.getId() + b.getId());
+                    }
+                }
+            }
+
+            // TRADE
+            int length = game.getDiceResult().getOrDefault(Resource.GOLD, 0) / 2;
+            if (length > 0) {
+                Stack<String> params = new Stack<>();
+                params.push("");
+                while (!params.isEmpty()) {
+                    String trade = params.pop();
+                    if (trade.length() == length) {
+                        actions.add("trade" + trade);
+                        continue;
+                    }
+                    Stream.of(Resource.values())
+                            .filter(Predicate.not(Resource.GOLD::equals))
+                            .forEach(resource -> params.push(trade + resource.getId()));
+                }
+            }
+        }
+
+        return actions;
+    }
+
     public static String[][] generateAllPossibleActionSequences(String boardState) {
-        // FIXME: Task 12
-        return null;
+        List<String[]> list = new ArrayList<>();
+        Stack<String[]> sequences = new Stack<>();
+        if (boardState.charAt(2) == '3' || boardState.charAt(2) == '0') list.add(new String[] {});
+        sequences.addAll(generateAllPossibleActions(boardState).stream().map(e -> new String[] { e }).collect(Collectors.toList()));
+        while (!sequences.isEmpty()) {
+            String[] sequence = sequences.pop();
+            list.add(sequence);
+            generateAllPossibleActions(applyActionSequenceUtil(boardState, sequence)).forEach(a -> {
+                if (!a.startsWith("keep")) {
+                    String[] nextSequence = new String[sequence.length + 1];
+                    System.arraycopy(sequence, 0, nextSequence, 0, sequence.length);
+                    nextSequence[nextSequence.length - 1] = a;
+                    sequences.push(nextSequence);
+                }
+            });
+        }
+        List<String[]> redundantSequences = new ArrayList<>();
+        for (String[] sequence : list) {
+            int trades = 0;
+            for (String action : sequence) {
+                if (action.startsWith("trade")) {
+                    if (++trades > 1) {
+                        redundantSequences.add(sequence);
+                        continue;
+                    }
+                    String state = applyActionSequenceUtil(boardState, sequence);
+                    if (action.substring(5).codePoints().mapToObj(c -> (char) c).map(Resource::decodeChar).anyMatch(new GameInstance(state).getDiceResult()::containsKey)) {
+                        redundantSequences.add(sequence);
+                    }
+                } else if (action.startsWith("swap")) {
+                    if (new GameInstance(applyActionSequenceUtil(boardState, sequence)).getDiceResult().containsKey(Resource.decodeChar(action.charAt(5)))) {
+                        redundantSequences.add(sequence);
+                    }
+                }
+            }
+        }
+        list.removeAll(redundantSequences);
+        return list.toArray(String[][]::new);
     }
 
     /**
@@ -438,4 +553,14 @@ public class CatanDiceExtra {
         // FIXME: Task 14 Implement a "smart" generateAction()
         return null;
     }
+
+    public static String diceResultMapToString(Map<Resource, Integer> diceResult) {
+        return diceResult.entrySet().stream()
+                .flatMap(entry -> Stream.generate(entry::getKey).limit(entry.getValue()))
+                .map(Resource::getId)
+                .map(String::valueOf)
+                .sorted()
+                .reduce("", (a, b) -> a + b);
+    }
+
 }

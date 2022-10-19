@@ -32,4 +32,6 @@ public record SwapAction(GameInstance game, Player player) implements ActionStra
                 .filter(knight -> (knight.getJokerResource() == in || knight.getJokerResource() == null)
                         && !knight.isJoker()
                         && player.equals(knight.getOwner())).findFirst().ifPresent(knight -> knight.setJoker(true));
-}}
+    }
+
+}
