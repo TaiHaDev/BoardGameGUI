@@ -6,6 +6,7 @@ import java.util.*;
 
 public class Player {
     private final String uniqueId;
+    private String displayName;
     private Date birthday;
     private Color color;
     private int score;
@@ -57,5 +58,13 @@ public class Player {
     @Override
     public String toString() {
         return uniqueId;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 }
