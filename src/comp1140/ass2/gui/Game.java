@@ -41,6 +41,8 @@ public class Game extends Application implements Initializable {
     private static final int WINDOW_HEIGHT = 700;
     private static int numberOfPlayers = 0;
     public Text possibleActions;
+    public Button instructions;
+    public AnchorPane possibleActionsPane;
     GameInstance game = GameInstance.getInstance();
 
     public SplitMenuButton tradeButton;
@@ -223,6 +225,7 @@ public class Game extends Application implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        setEventHandlerForInstructionsButton();
         formatSetupPane();
     }
 
@@ -375,17 +378,16 @@ public class Game extends Application implements Initializable {
             if (currentKeep.contains(diceName)) {
                 imageView.setEffect(innerShadow);
                 currentKeep = currentKeep.replaceFirst(diceName, "");
-            } else {
-                imageView.setOnMouseClicked(event -> {
-                    if (imageView.getEffect() == null) {
-                        keep += diceName;
-                        imageView.setEffect(innerShadow);
-                    } else {
-                        keep = keep.replaceFirst(diceName, "");
-                        imageView.setEffect(null);
-                    }
-                });
             }
+            imageView.setOnMouseClicked(event -> {
+                if (imageView.getEffect() == null) {
+                    keep += diceName;
+                    imageView.setEffect(innerShadow);
+                } else {
+                    keep = keep.replaceFirst(diceName, "");
+                    imageView.setEffect(null);
+                }
+            });
             dicesPane.getChildren().add(imageView);
             if (i < 2) layoutX += 80;
             if (i == 2) {
@@ -494,7 +496,8 @@ public class Game extends Application implements Initializable {
 
     public void setEventHandlerForTradeButton() {
         tradeButton.setOnAction(event -> {
-            if (game.getDiceResult().get(Resource.GOLD) > 1) {
+            tradeButton.getItems().clear();
+            if (game.getDiceResult() != null && game.getDiceResult().get(Resource.GOLD) > 1) {
                 for (Resource resource : Resource.values()) {
                     MenuItem menuItem = new MenuItem(resource.toString());
                     menuItem.setOnAction(event1 -> {
@@ -547,6 +550,19 @@ public class Game extends Application implements Initializable {
         });
 
     }
+
+    public void setEventHandlerForInstructionsButton() {
+        instructions.setOnMouseClicked(mouseEvent -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Game Instructions");
+            alert.setContentText("""
+                    1. Input your name and date of birth to the game setup window
+                    2. Press Done button to finish your move
+                    3. Press Trade or Swap button then the drop down menu to choose from the list
+                    4. Press Roll Dices and Keep to roll dices and click the dices before to keep""");
+            alert.show();
+        });
+    }
     public void setEventHandlerForResidentialBuildings() throws NoSuchFieldException, IllegalAccessException {
         for (var entry : game.getBoard().getResidentialBuilding().entrySet()) {
             Building building = entry.getValue();
@@ -590,11 +606,15 @@ public class Game extends Application implements Initializable {
         } else if (game.getRollsDone() == 4) {
             List<String> actions = CatanDiceExtra.generateAllPossibleActionsHelper(game);
             if (!actions.isEmpty()) renderBuildingGuide(actions);
-            for (String str : actions) {
-                showingText.append("- ").append(str).append("\n");
-            }
+            System.out.println(actions);
+            actions.stream().filter(s -> s.startsWith("buildR")).findAny().ifPresent(s -> showingText.append("- build road\n"));
+            actions.stream().filter(s -> s.startsWith("buildS")).findAny().ifPresent(s -> showingText.append("- build settlement\n"));
+            actions.stream().filter(s -> s.startsWith("buildT")).findAny().ifPresent(s -> showingText.append("- build city\n"));
+            actions.stream().filter(s -> s.startsWith("buildK")).findAny().ifPresent(s -> showingText.append("- build knight\n"));
+            actions.stream().filter(s -> s.startsWith("swap")).findAny().ifPresent(s -> showingText.append("- swap\n"));
+            actions.stream().filter(s -> s.startsWith("trade")).findAny().ifPresent(s -> showingText.append("- trade\n"));
         }
-        if (showingText.isEmpty()) showingText.append("- No possible action press \"Done\" to finish turn");
+        if (showingText.isEmpty()) showingText.append("- No possible action \n press \"Done\" to finish turn");
         possibleActions.setText(showingText.toString());
     }
     public void renderBuildingGuide(List<String> actions) {
@@ -631,7 +651,7 @@ public class Game extends Application implements Initializable {
     public void renderDiceInformation() {
         Map<Resource, Integer> rolledResources = game.getDiceResult();
         StringBuilder diceResults = new StringBuilder();
-        turnText.setText("It's " + game.getCurrentPlayer().getUniqueId() + " turn.");
+        turnText.setText("Turn: " + game.getCurrentPlayer().getUniqueId());
         if (rolledResources != null) {
             for (var entry : rolledResources.entrySet()) {
                 if (entry.getValue() > 0) {
@@ -640,6 +660,7 @@ public class Game extends Application implements Initializable {
             }
         }
         resourceList.setText(diceResults.toString());
+        diceCountText.setText("Dices Number: " + game.getDiceCount() + "\nRolls Done: " + game.getRollsDone());
     }
     public void renderStat() {
         StringBuilder stat = new StringBuilder();
