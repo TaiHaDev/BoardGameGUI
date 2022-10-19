@@ -407,6 +407,19 @@ public class Game extends Application implements Initializable {
                     actionStrategy.apply("K" + knightAddress);
                     knightShape.setFill(game.getCurrentPlayer().getColor());
                     knightShape.setOpacity(1);
+
+                    Map<String, Integer> largestArmy = game.calculateLargestArmy();
+                    Optional<Map.Entry<String, Integer>> maxEntry = largestArmy.entrySet().stream()
+                            .filter(e -> e.getValue() >= 3)
+                            .max(Map.Entry.comparingByValue());
+                    if (largestArmy.values().stream().filter(maxEntry.map(Map.Entry::getValue).orElse(0)::equals).count() == 1) {
+                        if (game.getLargestArmy() != null) game.getLargestArmy().setScore(game.getLargestArmy().getScore() - 2);
+                        game.setLargestArmy(maxEntry
+                                .flatMap(e -> game.getPlayers().stream().filter(player -> player.getUniqueId().equals(e.getKey())).findFirst())
+                                .orElse(null));
+                        game.getLargestArmy().setScore(game.getLargestArmy().getScore() + 2);
+                    }
+
                     renderGameInfo();
                     knightShape.setOnMouseReleased(null);
                 }
@@ -468,6 +481,17 @@ public class Game extends Application implements Initializable {
 
                     } else if (game.getRollsDone() == 4) {
                         roadShape.setFill(game.getCurrentPlayer().getColor());
+                    }
+                    Map<String, Integer> longestRoad = game.calculateLongestRoad();
+                    Optional<Map.Entry<String, Integer>> maxEntry = longestRoad.entrySet().stream()
+                            .filter(e -> e.getValue() >= 5)
+                            .max(Map.Entry.comparingByValue());
+                    if (longestRoad.values().stream().filter(maxEntry.map(Map.Entry::getValue).orElse(0)::equals).count() == 1) {
+                        if (game.getLongestRoad() != null) game.getLongestRoad().setScore(game.getLongestRoad().getScore() - 1);
+                        game.setLongestRoad(maxEntry
+                                .flatMap(entry -> game.getPlayers().stream().filter(player -> player.getUniqueId().equals(entry.getKey())).findFirst())
+                                .orElse(null));
+                        game.getLongestRoad().setScore(game.getLongestRoad().getScore() + 1);
                     }
                     renderGameInfo();
                     roadShape.setOnMouseReleased(null);

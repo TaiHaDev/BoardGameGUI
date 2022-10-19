@@ -7,11 +7,11 @@ import comp1140.ass2.buildings.*;
 import comp1140.ass2.handlers.BoardStateHandler;
 import comp1140.ass2.handlers.ScoreStateHandler;
 import comp1140.ass2.handlers.TurnStateHandler;
+import comp1140.ass2.helpers.DepthFirstSearch;
 import comp1140.ass2.pipeline.Pipeline;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.helpers.CircularQueue;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -349,4 +349,57 @@ public class GameInstance {
                 .ifPresent(type -> ActionFactory.of(this, getCurrentPlayer()).getActionByName(type).apply(action.substring(type.getName().length()))));
     }
 
+    public Map<String, Integer> calculateLongestRoad() {
+        Map<String, Integer> longestRoad = new HashMap<>();
+        for (Player player : getPlayers()) {
+            // initialise a new graph that only contains the current player's
+            // owned roads.
+            Map<Integer, List<Integer>> graph = new HashMap<>();
+            Set<Road> ownedRoads = new HashSet<>();
+            for (Road road : getBoard().getRoads()) {
+                if (player.equals(road.getOwner())) {
+                    ownedRoads.add(road);
+                }
+            }
+            for (Road road : ownedRoads) {
+                List<Integer> values = graph.getOrDefault(road.getStart(), new ArrayList<>());
+                values.add(road.getEnd());
+                graph.put(road.getStart(), values);
+
+                values = graph.getOrDefault(road.getEnd(), new ArrayList<>());
+                values.add(road.getStart());
+                graph.put(road.getEnd(), values);
+            }
+
+            // create a list of every path existing in the player's graph
+            HashSet<List<Integer>> paths = new HashSet<>();
+            for (int start : graph.keySet()) {
+                if (graph.get(start).size() == 2) continue;
+                for (int end : graph.keySet()) {
+                    if (graph.get(end).size() == 2 || start == end) continue;
+                    DepthFirstSearch dfs = new DepthFirstSearch(paths, graph);
+                    dfs.search(start, end);
+                }
+            }
+
+            int max = 0;
+            for (List<Integer> path : paths) {
+                if (CatanDiceExtra.isEulerianTrail(CatanDiceExtra.pathToGraph(path))) {
+                    max = Math.max(path.size() - 1, max);
+                }
+            }
+            longestRoad.put(player.getUniqueId(), max);
+        }
+        return longestRoad;
+    }
+
+    public Map<String, Integer> calculateLargestArmy() {
+        return getPlayers().stream()
+                .sorted(Comparator.comparing(Player::getUniqueId))
+                .map(player ->
+                        new AbstractMap.SimpleEntry<>(player.getUniqueId(), (int) getBoard().getKnightBoard().values().stream()
+                                .filter(knight -> player.equals(knight.getOwner()))
+                                .count()))
+                .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+    }
 }

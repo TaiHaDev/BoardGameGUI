@@ -77,19 +77,20 @@ public record BuildAction(GameInstance game, Player player) implements ActionStr
             Arrays.stream(Resource.values()).filter(resource -> GameInstance.isResourcesSufficient(game.getDiceResult(), Map.of(resource, 6)))
                     .findFirst()
                     .ifPresent(resource -> game.useResources(Map.of(resource, 6)));
-            currentPlayer.setScore(currentPlayer.getScore() + 2);
+            currentPlayer.setScore(currentPlayer.getScore() + Castle.POINTS);
         }
         else if (buildingType == 'S') {
             game.useResources(Settlement.COST);
-            currentPlayer.setScore(currentPlayer.getScore() + 1);
+            currentPlayer.setScore(currentPlayer.getScore() + Settlement.POINTS);
         }
         else if (buildingType == 'T') {
             game.useResources(City.COST);
-            currentPlayer.setScore(currentPlayer.getScore() + 1);
+            currentPlayer.setScore(currentPlayer.getScore() + City.POINTS);
         }
-        else if (buildingType == 'J') {
+        else if (buildingType == 'K' || buildingType == 'J') {
             game.useResources(Knight.COST);
             game.checkAndUpdateLargestArmy();
+            currentPlayer.setScore(currentPlayer.getScore() + Knight.POINTS);
         };
 
     }
