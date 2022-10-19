@@ -260,7 +260,7 @@ public class Game extends Application implements Initializable {
         for (int i = 1; i <= numberOfPlayers; i++) {
             Player currentPlayer = players[i - 1];
             Label label = (Label) getClass().getDeclaredField(playerName + i).get(this);
-            label.setText(currentPlayer.getUniqueId());
+            label.setText(currentPlayer.getDisplayName());
             Circle color = (Circle) getClass().getDeclaredField(playerColor + i).get(this);
             color.setFill(currentPlayer.getColor());
         }
@@ -302,7 +302,11 @@ public class Game extends Application implements Initializable {
             playerNameTextField.setLayoutY(layoutY - 5);
             playerNameTextField.setPromptText("Enter your name: ");
             final int currentI = i;
-            playerNameTextField.setOnKeyTyped(event1 -> players[currentI] = new Player(Character.toString('W' + currentI)));
+            playerNameTextField.setOnKeyTyped(event1 -> {
+                Player nextPlayer = new Player(Character.toString('W' + currentI));
+                nextPlayer.setDisplayName(playerNameTextField.getText());
+                players[currentI] = nextPlayer;
+            });
 
             layoutY += 30;
             Label label2 = new Label(player + "'s DOB: ");
@@ -326,7 +330,7 @@ public class Game extends Application implements Initializable {
         checkButton.setLayoutY(lowerPane.getPrefHeight() - 30);
         checkButton.setOnAction(event -> {
             try {
-                if (Arrays.stream(players).anyMatch(player -> player.getUniqueId().startsWith(" "))) {
+                if (Arrays.stream(players).anyMatch(player -> player.getDisplayName().startsWith(" "))) {
                     showWarning();
                 } else {
                     GameInstance
@@ -655,7 +659,7 @@ public class Game extends Application implements Initializable {
     public void renderDiceInformation() {
         Map<Resource, Integer> rolledResources = game.getDiceResult();
         StringBuilder diceResults = new StringBuilder();
-        turnText.setText("It's " + game.getCurrentPlayer().getUniqueId() + " turn.");
+        turnText.setText("It's " + game.getCurrentPlayer().getDisplayName() + " turn.");
         if (rolledResources != null) {
             for (var entry : rolledResources.entrySet()) {
                 if (entry.getValue() > 0) {
@@ -668,7 +672,7 @@ public class Game extends Application implements Initializable {
     public void renderStat() {
         StringBuilder stat = new StringBuilder();
         for (Player player : game.getPlayers()) {
-            stat.append(player.getUniqueId()).append(" point(s): ").append(player.getScore()).append("\n");
+            stat.append(player.getDisplayName()).append(" point(s): ").append(player.getScore()).append("\n");
         }
         statsFreeText.setText(stat.toString());
     }
