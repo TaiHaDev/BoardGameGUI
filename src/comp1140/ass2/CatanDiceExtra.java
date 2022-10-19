@@ -240,7 +240,7 @@ public class CatanDiceExtra {
     public static int[] longestRoad(String boardState) {
         GameInstance game = new GameInstance(boardState);
         int[] longestRoad = new int[game.getPlayers().size()];
-        game.calculateLongestRoad().entrySet().forEach(entry -> longestRoad[entry.getKey().charAt(0) - 'W'] = entry.getValue());
+        game.calculateLongestRoad().forEach((key, value) -> longestRoad[key.charAt(0) - 'W'] = value);
         return longestRoad;
     }
 
@@ -337,10 +337,19 @@ public class CatanDiceExtra {
         GameInstance game = new GameInstance(boardState);
         game.applyActionSequence(actionSequence);
         game.nextPlayer();
+        if (game.getDiceCount() == 0 && game.getCurrentPlayer().getUniqueId().equals("W")) {
+            game.setDiceCount(3);
+        } else if (game.getDiceCount() != 0 && game.getDiceCount() < 6) {
+            game.setDiceCount(game.getDiceCount() + 1);
+        }
+        if (game.getRollsDone() < game.getDiceCount()) {
+            game.setRollsDone(game.getRollsDone() + 1);
+        }
+        game.rollDice(game.getDiceCount());
         return game.getAsEncodedString();
     }
 
-    // apply action sequence wihtout going ot the next player
+    // apply action sequence without going to the next player
     private static String applyActionSequenceUtil(String boardState, String[] actionSequence) {
         GameInstance game = new GameInstance(boardState);
         for (String action : actionSequence) {
@@ -509,12 +518,12 @@ public class CatanDiceExtra {
                         redundantSequences.add(sequence);
                         continue;
                     }
-                    String state = applyActionSequence(boardState, sequence);
+                    String state = applyActionSequenceUtil(boardState, sequence);
                     if (action.substring(5).codePoints().mapToObj(c -> (char) c).map(Resource::decodeChar).anyMatch(new GameInstance(state).getDiceResult()::containsKey)) {
                         redundantSequences.add(sequence);
                     }
                 } else if (action.startsWith("swap")) {
-                    if (new GameInstance(applyActionSequence(boardState, sequence)).getDiceResult().containsKey(Resource.decodeChar(action.charAt(5)))) {
+                    if (new GameInstance(applyActionSequenceUtil(boardState, sequence)).getDiceResult().containsKey(Resource.decodeChar(action.charAt(5)))) {
                         redundantSequences.add(sequence);
                     }
                 }

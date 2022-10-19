@@ -132,7 +132,7 @@ public class GameInstance {
         Player player = Board.hasLargestArmy(this);
         if (player == null) return;
         if (largestArmy == null) {
-            player.setScore(player.getScore() + 1);
+            player.setScore(player.getScore() + 2);
             largestArmy = player;
         } else if (!largestArmy.equals(player)) {
             player.setScore(player.getScore() + 2);
