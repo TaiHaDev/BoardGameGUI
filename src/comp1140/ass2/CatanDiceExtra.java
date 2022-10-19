@@ -434,13 +434,13 @@ public class CatanDiceExtra {
             actions.add("keep"); // you'll always be able to keep nothing given it is the roll phase
         } else {
             // BUILD
-            for (int i = 0; i < 54; i++) {
-                for (int j = i; j < 54; j++) {
-                    String first = i >= 10 ? String.valueOf(i) : "0" + i;
-                    String second = j >= 10 ? String.valueOf(j) : "0" + j;
-                    if (factory.getActionByName(ActionType.BUILD).isApplicable('R' + first + second)) {
-                        actions.add("buildR" + first + second);
-                    }
+            for (Road road : game.getBoard().getRoads()) {
+                int i = road.getStart();
+                int j = road.getEnd();
+                String first = i >= 10 ? String.valueOf(i) : "0" + i;
+                String second = j >= 10 ? String.valueOf(j) : "0" + j;
+                if (factory.getActionByName(ActionType.BUILD).isApplicable('R' + first + second)) {
+                    actions.add("buildR" + first + second);
                 }
             }
             for (int i = 0; i < 20; i++) {
