@@ -14,12 +14,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public record BuildAction(GameInstance game, Player player) implements ActionStrategy {
-    public static void main(String[] args) {
-        GameInstance game = GameInstance.getInstance();
-        game.getPlayers().addAll(List.of(new Player("T"), new Player("M")));
-        System.out.println(ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionFactory.ActionType.BUILD).isApplicable("R0003"));
 
-    }
     @Override
     public boolean isApplicable(String argument) {
         // TODO refactor this

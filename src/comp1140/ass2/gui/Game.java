@@ -302,7 +302,7 @@ public class Game extends Application implements Initializable {
             playerNameTextField.setLayoutY(layoutY - 5);
             playerNameTextField.setPromptText("Enter your name: ");
             final int currentI = i;
-            playerNameTextField.setOnKeyTyped(event1 -> players[currentI] = new Player(playerNameTextField.getText()));
+            playerNameTextField.setOnKeyTyped(event1 -> players[currentI] = new Player(Character.toString('W' + currentI)));
 
             layoutY += 30;
             Label label2 = new Label(player + "'s DOB: ");
@@ -491,7 +491,7 @@ public class Game extends Application implements Initializable {
                         game.setLongestRoad(maxEntry
                                 .flatMap(entry -> game.getPlayers().stream().filter(player -> player.getUniqueId().equals(entry.getKey())).findFirst())
                                 .orElse(null));
-                        game.getLongestRoad().setScore(game.getLongestRoad().getScore() + 1);
+                        if (game.getLongestRoad() != null) game.getLongestRoad().setScore(game.getLongestRoad().getScore() + 1);
                     }
                     renderGameInfo();
                     roadShape.setOnMouseReleased(null);
