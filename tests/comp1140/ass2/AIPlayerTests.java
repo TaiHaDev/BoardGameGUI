@@ -1,5 +1,6 @@
 package comp1140.ass2;
 
+import comp1140.ass2.ai.AIPlayer;
 import comp1140.ass2.ai.GreedyAI;
 import comp1140.ass2.gameobjects.GameInstance;
 import org.junit.jupiter.api.Assertions;
@@ -17,6 +18,8 @@ public class AIPlayerTests {
             GameInstance game = new GameInstance(array[0][0][0]);
             if (Stream.of(array[1]).anyMatch(action -> action.length > 0 && action[0].startsWith("build"))) {
                 GreedyAI ai = new GreedyAI(game, game.getCurrentPlayer());
+
+                System.out.println("Original board eval: " + ai.evaluate(array[0][0][0]));
                 Stream.of(CatanDiceExtra.generateAllPossibleActionSequences(array[0][0][0]))
                         .map(sequence -> new AbstractMap.SimpleEntry<>(Arrays.stream(sequence).toList(), ai.evaluate(CatanDiceExtra.applyActionSequence(array[0][0][0], sequence))))
                         .forEach(entry -> System.out.println(entry.getKey() + ": " + entry.getValue()));

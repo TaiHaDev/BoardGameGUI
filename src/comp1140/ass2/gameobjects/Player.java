@@ -10,8 +10,8 @@ public class Player {
     private Color color;
     private int score;
 
-    public Player(String name) {
-        this.uniqueId = name;
+    public Player(String uniqueId) {
+        this.uniqueId = uniqueId;
         Random rand = new Random();
         int r = rand.nextInt(0, 256);
         int g = rand.nextInt(0,256) ;

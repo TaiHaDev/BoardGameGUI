@@ -239,46 +239,8 @@ public class CatanDiceExtra {
      */
     public static int[] longestRoad(String boardState) {
         GameInstance game = new GameInstance(boardState);
-        int[] longestRoad = new int[2];
-        for (Player player : game.getPlayers()) {
-            // initialise a new graph that only contains the current player's
-            // owned roads.
-            Map<Integer, List<Integer>> graph = new HashMap<>();
-            Set<Road> ownedRoads = new HashSet<>();
-            for (Road road : game.getBoard().getRoads()) {
-                if (player.equals(road.getOwner())) {
-                    ownedRoads.add(road);
-                }
-            }
-            for (Road road : ownedRoads) {
-                List<Integer> values = graph.getOrDefault(road.getStart(), new ArrayList<>());
-                values.add(road.getEnd());
-                graph.put(road.getStart(), values);
-
-                values = graph.getOrDefault(road.getEnd(), new ArrayList<>());
-                values.add(road.getStart());
-                graph.put(road.getEnd(), values);
-            }
-
-            // create a list of every path existing in the player's graph
-            HashSet<List<Integer>> paths = new HashSet<>();
-            for (int start : graph.keySet()) {
-                if (graph.get(start).size() == 2) continue;
-                for (int end : graph.keySet()) {
-                    if (graph.get(end).size() == 2 || start == end) continue;
-                    DepthFirstSearch dfs = new DepthFirstSearch(paths, graph);
-                    dfs.search(start, end);
-                }
-            }
-
-            int max = 0;
-            for (List<Integer> path : paths) {
-                if (isEulerianTrail(pathToGraph(path))) {
-                    max = Math.max(path.size() - 1, max);
-                }
-            }
-            longestRoad[player.getUniqueId().toCharArray()[0] - 'W'] = max;
-        }
+        int[] longestRoad = new int[game.getPlayers().size()];
+        game.calculateLongestRoad().forEach((key, value) -> longestRoad[key.charAt(0) - 'W'] = value);
         return longestRoad;
     }
 
@@ -294,14 +256,7 @@ public class CatanDiceExtra {
      * @return array of army sizes, one per player.
      */
     public static int[] largestArmy(String boardState) {
-        GameInstance game = new GameInstance(boardState);
-        return game.getPlayers().stream()
-                .sorted(Comparator.comparing(Player::getUniqueId))
-                .mapToInt(player ->
-                        (int) game.getBoard().getKnightBoard().values().stream()
-                                .filter(knight -> player.equals(knight.getOwner()))
-                                .count()
-                ).toArray();
+        return new GameInstance(boardState).calculateLargestArmy().values().stream().mapToInt(i -> i).toArray();
     }
 
     /**
@@ -381,11 +336,22 @@ public class CatanDiceExtra {
     public static String applyActionSequence(String boardState, String[] actionSequence) {
         GameInstance game = new GameInstance(boardState);
         game.applyActionSequence(actionSequence);
-        game.nextPlayer();
+        if (game.getPlayers().stream().noneMatch(player -> player.getScore() >= 10))  {
+            game.nextPlayer();
+            if (game.getDiceCount() == 0 && game.getCurrentPlayer().getUniqueId().equals("W")) {
+                game.setDiceCount(3);
+            } else if (game.getDiceCount() != 0 && game.getDiceCount() < 6) {
+                game.setDiceCount(game.getDiceCount() + 1);
+            }
+            if (game.getRollsDone() < game.getDiceCount()) {
+                game.setRollsDone(game.getRollsDone() + 1);
+            }
+            game.rollDice(game.getDiceCount());
+        }
         return game.getAsEncodedString();
     }
 
-    // apply action sequence wihtout going ot the next player
+    // apply action sequence without going to the next player
     private static String applyActionSequenceUtil(String boardState, String[] actionSequence) {
         GameInstance game = new GameInstance(boardState);
         for (String action : actionSequence) {
@@ -554,12 +520,12 @@ public class CatanDiceExtra {
                         redundantSequences.add(sequence);
                         continue;
                     }
-                    String state = applyActionSequence(boardState, sequence);
+                    String state = applyActionSequenceUtil(boardState, sequence);
                     if (action.substring(5).codePoints().mapToObj(c -> (char) c).map(Resource::decodeChar).anyMatch(new GameInstance(state).getDiceResult()::containsKey)) {
                         redundantSequences.add(sequence);
                     }
                 } else if (action.startsWith("swap")) {
-                    if (new GameInstance(applyActionSequence(boardState, sequence)).getDiceResult().containsKey(Resource.decodeChar(action.charAt(5)))) {
+                    if (new GameInstance(applyActionSequenceUtil(boardState, sequence)).getDiceResult().containsKey(Resource.decodeChar(action.charAt(5)))) {
                         redundantSequences.add(sequence);
                     }
                 }
