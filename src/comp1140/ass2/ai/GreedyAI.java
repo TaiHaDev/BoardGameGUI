@@ -23,7 +23,6 @@ public record GreedyAI(GameInstance game, Player player) implements AIPlayer {
                 + Stream.of(game.getBoard().getRoads()).filter(building -> player.equals(building.getOwner())).count()
                 + 2 * CatanDiceExtra.longestRoad(game.getAsEncodedString())[player.getUniqueId().charAt(0) - 'W'];
     }
-
     @Override
     public String[] selectActionSequence() {
         String boardState = game.getAsEncodedString();
