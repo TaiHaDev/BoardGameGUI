@@ -234,8 +234,8 @@ public class GameInstance {
      * @param indicesToReroll  the indices of the dice that the
      *                         player wants to be rerolled.
      */
-    public void rollDice(int... indicesToReroll) {
-        // TODO
+    public void rollDice(int n) {
+        setDiceResult(stringResourcesToMap(CatanDiceExtra.rollDice(n)));
     }
 
     public Map<Resource, Integer> getDiceResult() {
