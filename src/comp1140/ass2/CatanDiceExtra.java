@@ -336,16 +336,7 @@ public class CatanDiceExtra {
     public static String applyActionSequence(String boardState, String[] actionSequence) {
         GameInstance game = new GameInstance(boardState);
         game.applyActionSequence(actionSequence);
-
-        String lastPlayer = game.getPlayers().stream().map(Player::getUniqueId).max(Comparator.naturalOrder()).orElse("");
-        if (game.getDiceCount() == 0 && game.getPlayers().get(0).getUniqueId().equals(lastPlayer)) {
-            game.setDiceCount(3);
-        } else if (game.getDiceCount() < 6) {
-            game.setDiceCount(game.getDiceCount() + 1);
-        }
-        game.rollDice(game.getDiceCount());
         game.nextPlayer();
-
         return game.getAsEncodedString();
     }
 
