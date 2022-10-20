@@ -19,7 +19,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class CatanDiceExtra {
-
     /**
      * Check if the string encoding of a board state is well-formed.
      * Note that this does not mean checking if the state is valid
@@ -498,7 +497,8 @@ public class CatanDiceExtra {
         List<String[]> list = new ArrayList<>();
         Stack<String[]> sequences = new Stack<>();
         if (boardState.charAt(2) == '3' || boardState.charAt(2) == '0') list.add(new String[] {});
-        sequences.addAll(generateAllPossibleActions(boardState).stream().map(e -> new String[] { e }).collect(Collectors.toList()));
+        if (boardState.charAt(1) == '0') return new String[][]{new String[] {generateAllPossibleActions(boardState).get(0)}};
+        sequences.addAll(generateAllPossibleActions(boardState).stream().map(e -> new String[] { e }).toList());
         while (!sequences.isEmpty()) {
             String[] sequence = sequences.pop();
             list.add(sequence);
