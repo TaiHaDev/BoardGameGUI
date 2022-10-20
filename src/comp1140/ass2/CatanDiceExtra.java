@@ -1,21 +1,18 @@
 package comp1140.ass2;
 
-import comp1140.ass2.actionstrategies.ActionStrategy;
-import comp1140.ass2.game.Resource;
-import comp1140.ass2.gameobjects.GameInstance;
-import comp1140.ass2.gameobjects.Player;
-import comp1140.ass2.buildings.*;
-import comp1140.ass2.helpers.DepthFirstSearch;
 import comp1140.ass2.actionstrategies.ActionFactory;
 import comp1140.ass2.actionstrategies.ActionFactory.ActionType;
+import comp1140.ass2.ai.AIPlayer;
+import comp1140.ass2.ai.GreedyAI;
+import comp1140.ass2.buildings.Road;
+import comp1140.ass2.game.Resource;
+import comp1140.ass2.gameobjects.GameInstance;
 
-import javax.swing.*;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class CatanDiceExtra {
@@ -549,9 +546,10 @@ public class CatanDiceExtra {
      * @return array of strings representing the actions the AI will take.
      */
     public static String[] generateAction(String boardState) {
-        // FIXME: Task 13
-        // FIXME: Task 14 Implement a "smart" generateAction()
-        return null;
+        GameInstance game = new GameInstance(boardState);
+        AIPlayer ai = new GreedyAI(game, game.getCurrentPlayer());
+
+        return ai.selectActionSequence();
     }
 
     public static String diceResultMapToString(Map<Resource, Integer> diceResult) {

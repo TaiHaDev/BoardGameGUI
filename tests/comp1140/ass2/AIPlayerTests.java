@@ -13,6 +13,15 @@ import java.util.stream.Stream;
 public class AIPlayerTests {
 
     @Test
+    public void test_that_ai_works_on_empty_board() {
+        GameInstance game = new GameInstance("W00WXW00X00");
+        GreedyAI ai = new GreedyAI(game, game.getCurrentPlayer());
+        for (String[] sequence : CatanDiceExtra.generateAllPossibleActionSequences(game.getAsEncodedString())) {
+
+        }
+    }
+
+    @Test
     public void test_that_ai_players_always_build_when_possible() {
         for (String[][][] array : ExampleGames.FULL_GAME1_WITH_ALL_POSSIBLE_ACTION_SEQUENCES) {
             GameInstance game = new GameInstance(array[0][0][0]);
