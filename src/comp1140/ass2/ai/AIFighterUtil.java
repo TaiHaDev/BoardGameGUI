@@ -17,7 +17,6 @@ public class AIFighterUtil {
                 if (game.getCurrentPlayer().getUniqueId().equals(ai.player().getUniqueId())) {
                     String[] sequence = ai.selectActionSequence(game.getAsEncodedString());
                     game.applyActionSequenceAndCompleteTurn(sequence);
-                    Thread.sleep(150);
                     System.out.println("Player " + game.getCurrentPlayer().getUniqueId() + " chose " + List.of(sequence));
                 }
             }
