@@ -349,14 +349,9 @@ public class GameInstance {
                 .ifPresent(type -> ActionFactory.of(this, getCurrentPlayer()).getActionByName(type).apply(action.substring(type.getName().length()))));
     }
 
-    public void applyActionSequenceAndCompleteTurn(String[] args) {
-        applyActionSequence(args);
-        completeTurn();
-    }
-
-    public void completeTurn() {
+    public void completeTurn(boolean next) {
         if (getPlayers().stream().noneMatch(player -> player.getScore() >= 10))  {
-            nextPlayer();
+            if (next) nextPlayer();
             if (getDiceCount() == 0 && getCurrentPlayer().getUniqueId().equals("W")) {
                 setDiceCount(3);
             } else if (getDiceCount() != 0 && getDiceCount() < 6) {

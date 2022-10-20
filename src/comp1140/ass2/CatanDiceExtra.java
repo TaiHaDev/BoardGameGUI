@@ -333,7 +333,7 @@ public class CatanDiceExtra {
     public static String applyActionSequence(String boardState, String[] actionSequence) {
         GameInstance game = new GameInstance(boardState);
         game.applyActionSequence(actionSequence);
-        game.completeTurn();
+        game.completeTurn(true);
         return game.getAsEncodedString();
     }
 

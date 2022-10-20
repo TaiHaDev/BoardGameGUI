@@ -3,6 +3,7 @@ package comp1140.ass2.ai;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class AIFighterUtil {
@@ -15,8 +16,13 @@ public class AIFighterUtil {
         while (game.getPlayers().stream().noneMatch(player -> player.getScore() >= 10)) {
             for (AIPlayer ai : new AIPlayer[] { guy1, guy2 }) {
                 if (game.getCurrentPlayer().getUniqueId().equals(ai.player().getUniqueId())) {
-                    String[] sequence = ai.selectActionSequence(game.getAsEncodedString());
-                    game.applyActionSequenceAndCompleteTurn(sequence);
+                    String[] sequence;
+                    do {
+                        sequence = ai.selectActionSequence(game.getAsEncodedString());
+                        game.applyActionSequence(sequence);
+                        game.completeTurn(false);
+                    } while (Arrays.stream(sequence).anyMatch(action -> action.startsWith("keep")));
+                    game.nextPlayer();
                     System.out.println("Player " + game.getCurrentPlayer().getUniqueId() + " chose " + List.of(sequence));
                 }
             }
