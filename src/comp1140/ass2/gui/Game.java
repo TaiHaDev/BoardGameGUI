@@ -216,6 +216,7 @@ public class Game extends Application implements Initializable {
     public static void main(String[] args) {
         launch(args);
     }
+
     @Override
     public void start(Stage stage) throws IOException {
         Scene scene = new Scene(fxmlLoader.load(), WINDOW_WIDTH, WINDOW_HEIGHT);
