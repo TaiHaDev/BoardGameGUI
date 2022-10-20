@@ -9,6 +9,7 @@ import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -41,6 +42,11 @@ public class Game extends Application implements Initializable {
     private static final int WINDOW_HEIGHT = 700;
     private static int numberOfPlayers = 0;
     public Text possibleActions;
+    public Button instructions;
+    public AnchorPane possibleActionsPane;
+    public Label winnerLabel;
+    public Button quitButton;
+    public AnchorPane winnerPane;
     GameInstance game = GameInstance.getInstance();
 
     public SplitMenuButton tradeButton;
@@ -223,6 +229,7 @@ public class Game extends Application implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        setEventHandlerForInstructionsButton();
         formatSetupPane();
     }
 
@@ -330,7 +337,7 @@ public class Game extends Application implements Initializable {
         checkButton.setLayoutY(lowerPane.getPrefHeight() - 30);
         checkButton.setOnAction(event -> {
             try {
-                if (Arrays.stream(players).anyMatch(player -> player.getDisplayName().startsWith(" "))) {
+                if (Arrays.stream(players).anyMatch(player -> player.getUniqueId().startsWith(" "))) {
                     showWarning();
                 } else {
                     GameInstance
@@ -379,17 +386,16 @@ public class Game extends Application implements Initializable {
             if (currentKeep.contains(diceName)) {
                 imageView.setEffect(innerShadow);
                 currentKeep = currentKeep.replaceFirst(diceName, "");
-            } else {
-                imageView.setOnMouseClicked(event -> {
-                    if (imageView.getEffect() == null) {
-                        keep += diceName;
-                        imageView.setEffect(innerShadow);
-                    } else {
-                        keep = keep.replaceFirst(diceName, "");
-                        imageView.setEffect(null);
-                    }
-                });
             }
+            imageView.setOnMouseClicked(event -> {
+                if (imageView.getEffect() == null) {
+                    keep += diceName;
+                    imageView.setEffect(innerShadow);
+                } else {
+                    keep = keep.replaceFirst(diceName, "");
+                    imageView.setEffect(null);
+                }
+            });
             dicesPane.getChildren().add(imageView);
             if (i < 2) layoutX += 80;
             if (i == 2) {
@@ -407,23 +413,10 @@ public class Game extends Application implements Initializable {
             Ellipse knightShape = (Ellipse) getClass().getDeclaredField("k" + knightAddress).get(this);
             knightShape.setOnMouseReleased(mouseEvent -> {
                 ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.BUILD);
-                if (actionStrategy.isApplicable("K" + knightAddress)) {
+                if (actionStrategy.isApplicable("K" + knightAddress) && game.getRollsDone() == 4) {
                     actionStrategy.apply("K" + knightAddress);
                     knightShape.setFill(game.getCurrentPlayer().getColor());
                     knightShape.setOpacity(1);
-
-                    Map<String, Integer> largestArmy = game.calculateLargestArmy();
-                    Optional<Map.Entry<String, Integer>> maxEntry = largestArmy.entrySet().stream()
-                            .filter(e -> e.getValue() >= 3)
-                            .max(Map.Entry.comparingByValue());
-                    if (largestArmy.values().stream().filter(maxEntry.map(Map.Entry::getValue).orElse(0)::equals).count() == 1) {
-                        if (game.getLargestArmy() != null) game.getLargestArmy().setScore(game.getLargestArmy().getScore() - 2);
-                        game.setLargestArmy(maxEntry
-                                .flatMap(e -> game.getPlayers().stream().filter(player -> player.getUniqueId().equals(e.getKey())).findFirst())
-                                .orElse(null));
-                        game.getLargestArmy().setScore(game.getLargestArmy().getScore() + 2);
-                    }
-
                     renderGameInfo();
                     knightShape.setOnMouseReleased(null);
                 }
@@ -434,12 +427,14 @@ public class Game extends Application implements Initializable {
     }
     public void setEventHandlerForDoneButton() {
         doneButton.setOnMouseClicked(mouseEvent -> {
-            game.emptyDiceResult();
-            game.setRollsDone(1);
-            game.setDiceCount();
-            game.getPlayers().poll();
-            renderGameInfo();
-            keep = "";
+            if (game.getRollsDone() == 4) {
+                game.emptyDiceResult();
+                game.setRollsDone(1);
+                game.setDiceCount();
+                game.getPlayers().poll();
+                renderGameInfo();
+                keep = "";
+            }
         });
     }
 
@@ -474,31 +469,22 @@ public class Game extends Application implements Initializable {
             roadShape.setOnMouseReleased(mouseEvent -> {
                 ActionStrategy actionFactory = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.BUILD);
                 if (actionFactory.isApplicable("R" + a + b)) {
-                    actionFactory.apply("R" + a + b);
+
                     if (game.getDiceCount() == 0) {
                         roadShape.setFill((game.getPlayers().poll().getColor()));
+                        actionFactory.apply("R" + a + b);
                         if(starterRoadsCount == numberOfPlayers) {
                             game.setDiceCount();
                             game.setRollsDone();
                         }
                         else starterRoadsCount++;
-
                     } else if (game.getRollsDone() == 4) {
+                        actionFactory.apply("R" + a + b);
                         roadShape.setFill(game.getCurrentPlayer().getColor());
-                    }
-                    Map<String, Integer> longestRoad = game.calculateLongestRoad();
-                    Optional<Map.Entry<String, Integer>> maxEntry = longestRoad.entrySet().stream()
-                            .filter(e -> e.getValue() >= 5)
-                            .max(Map.Entry.comparingByValue());
-                    if (longestRoad.values().stream().filter(maxEntry.map(Map.Entry::getValue).orElse(0)::equals).count() == 1) {
-                        if (game.getLongestRoad() != null) game.getLongestRoad().setScore(game.getLongestRoad().getScore() - 1);
-                        game.setLongestRoad(maxEntry
-                                .flatMap(entry -> game.getPlayers().stream().filter(player -> player.getUniqueId().equals(entry.getKey())).findFirst())
-                                .orElse(null));
-                        if (game.getLongestRoad() != null) game.getLongestRoad().setScore(game.getLongestRoad().getScore() + 1);
+                        roadShape.setOnMouseReleased(null);
                     }
                     renderGameInfo();
-                    roadShape.setOnMouseReleased(null);
+
                 }
             });
         }
@@ -510,19 +496,20 @@ public class Game extends Application implements Initializable {
             ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.BUILD);
             String argument = "C" + i;
             castleShape.setOnMouseReleased(mouseEvent -> {
-                if (actionStrategy.isApplicable(argument)) {
+                if (actionStrategy.isApplicable(argument) && game.getRollsDone() == 4) {
                     actionStrategy.apply(argument);
                     castleShape.setFill(game.getCurrentPlayer().getColor());
                     renderGameInfo();
+                    castleShape.setOnMouseReleased(null);
                 }
-                castleShape.setOnMouseReleased(null);
             });
         }
     }
 
     public void setEventHandlerForTradeButton() {
         tradeButton.setOnAction(event -> {
-            if (game.getDiceResult().get(Resource.GOLD) > 1) {
+            tradeButton.getItems().clear();
+            if (game.getDiceResult().getOrDefault(Resource.GOLD, 0) > 1) {
                 for (Resource resource : Resource.values()) {
                     MenuItem menuItem = new MenuItem(resource.toString());
                     menuItem.setOnAction(event1 -> {
@@ -559,11 +546,28 @@ public class Game extends Application implements Initializable {
                             .distinct()
                             .toList();
                     for (var rs : swappableResources) {
-                        MenuItem menuItem = new MenuItem(resource.toString() + " to " + rs.toString());
+                        MenuItem menuItem = new MenuItem(resource.toString() + " for " + rs.toString());
                         menuItem.setOnAction(event -> {
                             ActionStrategy actionStrategy = ActionFactory.of(game, game.getCurrentPlayer()).getActionByName(ActionType.SWAP);
                             String argument = String.valueOf(resource.getId()) + ((Resource) rs).getId();
+                            int knightIndex = game.getBoard().getKnightBoard().entrySet().stream().filter(entry -> {
+                                Knight knight = entry.getValue();
+                                Resource currentResource = (Resource) rs;
+                                return !knight.isJoker()
+                                        && (knight.getJokerResource() == null || currentResource == knight.getJokerResource())
+                                        && game.getCurrentPlayer().equals(entry.getValue().getOwner());
+                            }).findFirst().get().getKey();
+                            String knightAddress = knightIndex < 10 ? "0" + knightIndex : String.valueOf(knightIndex);
+                            try {
+                                Shape knightShape = (Shape) getClass().getDeclaredField("k" + knightAddress).get(this);
+                                InnerShadow innerShadow = new InnerShadow();
+                                innerShadow.setWidth(100);
+                                knightShape.setEffect(innerShadow);
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
                             actionStrategy.apply(argument);
+
                             renderGameInfo();
                             swapButton.getItems().clear();
                         });
@@ -574,6 +578,19 @@ public class Game extends Application implements Initializable {
 
         });
 
+    }
+
+    public void setEventHandlerForInstructionsButton() {
+        instructions.setOnMouseClicked(mouseEvent -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Game Instructions");
+            alert.setContentText("""
+                    1. Input your name and date of birth to the game setup window
+                    2. Press Done button to finish your move
+                    3. Press Trade or Swap button then the drop down menu to choose from the list
+                    4. Press Roll Dices and Keep to roll dices and click the dices beforehand to keep""");
+            alert.show();
+        });
     }
     public void setEventHandlerForResidentialBuildings() throws NoSuchFieldException, IllegalAccessException {
         for (var entry : game.getBoard().getResidentialBuilding().entrySet()) {
@@ -587,7 +604,7 @@ public class Game extends Application implements Initializable {
                 if (building instanceof Settlement && building.getOwner() == null) argument += "S";
                 if (building instanceof Settlement && building.getOwner() == game.getCurrentPlayer()) argument += "T";
                 argument += houseAddress;
-                if (actionStrategy.isApplicable(argument)) {
+                if (actionStrategy.isApplicable(argument) && game.getRollsDone() == 4) {
                     actionStrategy.apply(argument);
                     houseShape.setFill(game.getCurrentPlayer().getColor());
                     renderGameInfo();
@@ -618,11 +635,14 @@ public class Game extends Application implements Initializable {
         } else if (game.getRollsDone() == 4) {
             List<String> actions = CatanDiceExtra.generateAllPossibleActionsHelper(game);
             if (!actions.isEmpty()) renderBuildingGuide(actions);
-            for (String str : actions) {
-                showingText.append("- ").append(str).append("\n");
-            }
+            actions.stream().filter(s -> s.startsWith("buildR")).findAny().ifPresent(s -> showingText.append("- build road\n"));
+            actions.stream().filter(s -> s.startsWith("buildS")).findAny().ifPresent(s -> showingText.append("- build settlement\n"));
+            actions.stream().filter(s -> s.startsWith("buildT")).findAny().ifPresent(s -> showingText.append("- build city\n"));
+            actions.stream().filter(s -> s.startsWith("buildK")).findAny().ifPresent(s -> showingText.append("- build knight\n"));
+            actions.stream().filter(s -> s.startsWith("swap")).findAny().ifPresent(s -> showingText.append("- swap\n"));
+            actions.stream().filter(s -> s.startsWith("trade")).findAny().ifPresent(s -> showingText.append("- trade\n"));
         }
-        if (showingText.isEmpty()) showingText.append("- No possible action press \"Done\" to finish turn");
+        if (showingText.isEmpty()) showingText.append("- No possible action \n press \"Done\" to finish turn");
         possibleActions.setText(showingText.toString());
     }
     public void renderBuildingGuide(List<String> actions) {
@@ -668,12 +688,24 @@ public class Game extends Application implements Initializable {
             }
         }
         resourceList.setText(diceResults.toString());
+        diceCountText.setText("Dices Number: " + game.getDiceCount() + "\nRolls Done: " + (game.getRollsDone() - 1));
     }
     public void renderStat() {
         StringBuilder stat = new StringBuilder();
         for (Player player : game.getPlayers()) {
-            stat.append(player.getDisplayName()).append(" point(s): ").append(player.getScore()).append("\n");
+            if (player.getScore() > 9) {
+                winnerPane.toFront();
+                wholePane.setVisible(false);
+                winnerLabel.setText("Our winner is " + player.getDisplayName());
+                quitButton.setOnMouseClicked(mouseEvent -> Platform.exit());
+                return;
+            }
+            stat.append(player.getUniqueId()).append(" point(s): ").append(player.getScore()).append("\n");
         }
+        stat.append("Longest Road: ");
+        if (game.getLongestRoad() != null) stat.append(game.getLongestRoad().getDisplayName());
+        stat.append("\nLargest Army: ");
+        if (game.getLargestArmy() != null) stat.append(game.getLargestArmy().getDisplayName());
         statsFreeText.setText(stat.toString());
     }
 }

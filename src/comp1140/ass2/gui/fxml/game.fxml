@@ -20,6 +20,23 @@
    <cursor>
       <Cursor fx:constant="DEFAULT" />
    </cursor>
+   <AnchorPane fx:id="dicesPane" layoutX="949.0" layoutY="422.0" prefHeight="232.0" prefWidth="245.0" />
+   <Button fx:id="rollDicesButton" layoutX="984.0" layoutY="625.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Roll Dices and Keep" />
+   <AnchorPane fx:id="winnerPane" layoutX="497.0" layoutY="212.0" prefHeight="200.0" prefWidth="200.0">
+      <children>
+         <Label layoutX="53.0" layoutY="12.0" text="Congratulations!!!" textFill="#00b2ff">
+            <font>
+               <Font size="15.0" />
+            </font>
+         </Label>
+         <Label fx:id="winnerLabel" layoutX="38.0" layoutY="92.0">
+            <font>
+               <Font size="20.0" />
+            </font>
+         </Label>
+         <Button fx:id="quitButton" layoutX="72.0" layoutY="161.0" mnemonicParsing="false" text="Quit" />
+      </children>
+   </AnchorPane>
    <Label fx:id="playerName2" layoutX="88.0" layoutY="123.0" text="Player 2">
       <font>
          <Font size="14.0" />
@@ -28,9 +45,9 @@
       <font>
          <Font size="14.0" />
       </font></Label>
-   <Label layoutX="1039.0" layoutY="24.0" text="Dice Information" underline="true">
+   <Label layoutX="1011.0" layoutY="18.0" text="Dice Information" textFill="#fff200" underline="true">
       <font>
-         <Font size="14.0" />
+         <Font size="17.0" />
       </font></Label>
    <ImageView fitHeight="670.0" fitWidth="696.0" layoutX="263.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../img/catan-dice-extra-map.png" />
@@ -147,9 +164,9 @@
    <Polyline fx:id="h45" fill="WHITE" layoutX="727.0" layoutY="485.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
    <Polyline fx:id="h51" fill="WHITE" layoutX="532.0" layoutY="608.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
    <Polyline fx:id="h53" fill="WHITE" layoutX="797.0" layoutY="601.0" points="-33.0, 68.0, -63.0, 68.0, -63.0, 47.0, -47.0, 40.0, -33.0, 47.0, -33.0, 68.0" strokeType="INSIDE" />
-   <Polyline fx:id="h01" fill="WHITE" layoutX="709.0" layoutY="5.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h01" fill="WHITE" layoutX="710.0" layoutY="5.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
    <Polyline fx:id="h07" fill="WHITE" layoutX="503.0" layoutY="130.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
-   <Polyline fx:id="h10" fill="WHITE" layoutX="910.0" layoutY="127.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h10" fill="WHITE" layoutX="910.0" layoutY="126.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
    <Polyline fx:id="h18" fill="WHITE" layoutX="708.0" layoutY="243.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
    <Polyline fx:id="h17" fill="WHITE" layoutX="576.0" layoutY="245.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
    <Polyline fx:id="h19" fill="WHITE" layoutX="842.0" layoutY="248.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
@@ -157,7 +174,7 @@
    <Polyline fx:id="h35" fill="WHITE" layoutX="705.0" layoutY="394.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
    <Polyline fx:id="h36" fill="WHITE" layoutX="848.0" layoutY="395.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
    <Polyline fx:id="h46" fill="WHITE" layoutX="914.0" layoutY="512.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
-   <Polyline fx:id="h43" fill="WHITE" layoutX="507.0" layoutY="512.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
+   <Polyline fx:id="h43" fill="WHITE" layoutX="506.0" layoutY="512.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
    <Polyline fx:id="h52" fill="WHITE" layoutX="705.0" layoutY="627.0" points="-97.0, 46.0, -118.0, 46.0, -118.0, 25.0, -106.0, 19.0, -97.0, 25.0, -97.0, 19.0, -84.0, 5.0, -72.0, 19.0, -72.0, 46.0, -97.0, 46.0" strokeType="INSIDE" />
    <Ellipse fx:id="k00" fill="WHITE" layoutX="484.0" layoutY="102.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="WHITE" strokeType="INSIDE" />
    <Ellipse fx:id="k01" fill="WHITE" layoutX="626.0" layoutY="93.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
@@ -166,7 +183,7 @@
    <Ellipse fx:id="k04" fill="WHITE" layoutX="553.0" layoutY="218.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
    <Ellipse fx:id="k06" fill="WHITE" layoutX="822.0" layoutY="219.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="WHITE" strokeType="INSIDE" />
    <Ellipse fx:id="k05" fill="WHITE" layoutX="688.0" layoutY="214.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
-   <Ellipse fx:id="k07" fill="WHITE" layoutX="357.0" layoutY="338.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
+   <Ellipse fx:id="k07" fill="WHITE" layoutX="355.0" layoutY="338.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
    <Ellipse fx:id="k08" fill="WHITE" layoutX="484.0" layoutY="337.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
    <Ellipse fx:id="k09" fill="WHITE" layoutX="594.0" layoutY="331.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
    <Ellipse fx:id="k10" fill="WHITE" layoutX="634.0" layoutY="331.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
@@ -180,33 +197,39 @@
    <Ellipse fx:id="k18" fill="WHITE" layoutX="620.0" layoutY="565.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
    <Ellipse fx:id="k19" fill="WHITE" layoutX="755.0" layoutY="569.0" opacity="0.0" radiusX="9.0" radiusY="21.0" stroke="BLACK" strokeType="INSIDE" />
    <Polyline fx:id="c2" fill="WHITE" layoutX="1113.0" layoutY="90.0" points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0" strokeType="INSIDE" />
-   <Polyline fx:id="c1" fill="WHITE" layoutX="502.0" layoutY="97.0" points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0" smooth="false" stroke="WHITE" strokeType="INSIDE" />
+   <Polyline fx:id="c1" fill="WHITE" layoutX="500.0" layoutY="97.0" points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0" smooth="false" stroke="WHITE" strokeType="INSIDE" />
    <Polyline fx:id="c4" fill="WHITE" layoutX="1122.0" layoutY="647.0" points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0" strokeType="INSIDE" />
-   <Polyline fx:id="c3" fill="#fffbfb" layoutX="500.0" layoutY="655.0" points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0" strokeType="INSIDE" />
+   <Polyline fx:id="c3" fill="#fffbfb" layoutX="499.0" layoutY="655.0" points="-226.0, 4.0, -226.0, 4.0, -226.0, -33.0, -218.0, -33.0, -218.0, -53.0, -204.0, -63.0, -188.0, -53.0, -188.0, -33.0, -178.0, -33.0, -178.0, 4.0" strokeType="INSIDE" />
    <Circle fx:id="playerColor2" fill="DODGERBLUE" layoutX="174.0" layoutY="131.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
    <Circle fx:id="playerColor3" fill="DODGERBLUE" layoutX="174.0" layoutY="193.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
-   <Text fx:id="turnText" layoutX="986.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0">
+   <Text fx:id="turnText" layoutX="986.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0">
       <font>
-         <Font size="14.0" />
+         <Font size="18.0" />
       </font>
    </Text>
-   <Text fx:id="resourceList" layoutX="999.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="184.53155517578125">
+   <Text fx:id="resourceList" layoutX="979.0" layoutY="163.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="184.53155517578125">
       <font>
-         <Font size="14.0" />
+         <Font size="18.0" />
       </font>
    </Text>
-   <Text fx:id="rolledResourceLabel" layoutX="986.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rolled resources:">
+   <Text fx:id="rolledResourceLabel" fill="#fff200" layoutX="1010.0" layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rolled resources:" underline="true">
       <font>
-         <Font size="14.0" />
+         <Font size="17.0" />
       </font>
    </Text>
-   <Label layoutX="1070.0" layoutY="251.0" text="Stats" underline="true">
+   <Label layoutX="1049.0" layoutY="275.0" text="Stats" textFill="#fff200" underline="true">
       <font>
-         <Font size="14.0" />
+         <Font size="17.0" />
       </font>
    </Label>
-   <Text fx:id="statsFreeText" layoutX="986.0" layoutY="295.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-   <Text fx:id="diceCountText" layoutX="986.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+   <Text fx:id="statsFreeText" layoutX="986.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0">
+      <font>
+         <Font size="16.0" />
+      </font></Text>
+   <Text fx:id="diceCountText" layoutX="986.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0">
+      <font>
+         <Font size="16.0" />
+      </font></Text>
    <ImageView fx:id="l" fitHeight="67.0" fitWidth="97.0" layoutX="17.0" layoutY="564.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
       <image>
          <Image url="@../img/l.png" />
@@ -274,18 +297,21 @@
          <Image url="@../img/w3.png" />
       </image>
    </ImageView>
-   <Circle fx:id="playerColor1" fill="DODGERBLUE" layoutX="174.0" layoutY="73.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
-   <Button fx:id="rollDicesButton" layoutX="984.0" layoutY="625.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Roll Dices and Keep" />
-   <AnchorPane fx:id="dicesPane" layoutX="949.0" layoutY="392.0" prefHeight="232.0" prefWidth="245.0" />
-   <Button fx:id="doneButton" layoutX="1036.0" layoutY="650.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="67.0" text="Done" />
-   <SplitMenuButton fx:id="swapButton" layoutX="1072.0" layoutY="599.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="83.0" text="Swap" />
-   <SplitMenuButton fx:id="tradeButton" layoutX="984.0" layoutY="599.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="91.0" text="Trade" />
-   <Text fx:id="possibleActions" layoutX="35.0" layoutY="327.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-   <Label layoutX="24.0" layoutY="284.0" text="Possible Actions:" underline="true">
+   <Circle fx:id="playerColor1" fill="#369af8" layoutX="174.0" layoutY="73.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+   <Button fx:id="doneButton" layoutX="1037.0" layoutY="650.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="67.0" text="Done" textFill="RED" />
+   <SplitMenuButton fx:id="swapButton" layoutX="1072.0" layoutY="599.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="83.0" text="Swap" textFill="RED" />
+   <SplitMenuButton fx:id="tradeButton" layoutX="984.0" layoutY="599.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="91.0" text="Trade" textFill="RED" />
+   <Label layoutX="24.0" layoutY="284.0" text="Possible Actions:" textFill="#fff200" underline="true">
       <font>
          <Font size="14.0" />
       </font>
    </Label>
+   <Button fx:id="instructions" layoutX="71.0" layoutY="18.0" mnemonicParsing="false" text="Instructions" textFill="RED" />
+   <Text fx:id="possibleActions" layoutX="6.0" layoutY="322.0" strokeType="OUTSIDE" strokeWidth="0.0">
+      <font>
+         <Font size="15.0" />
+      </font>
+   </Text>
 
 
 </AnchorPane>

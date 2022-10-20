@@ -115,7 +115,6 @@ public class Board {
         Building house = residentialBuilding.get(houseNumber);
         if (house instanceof Settlement) {
             if (house.getOwner() == null) {
-                System.out.println("yes");
                 house.setOwner(player);
                 return 1;
             }
