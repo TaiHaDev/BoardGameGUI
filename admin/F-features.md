@@ -11,3 +11,5 @@ of our project implements the following features:
  - Implements intresting extensions (Task 16)
 
 additional features...
+ - A live-updating possible moves (highlighted gray) and prompts (text in the sidebar) feature to help new players
+ - An extra viewer to watch AI fight
