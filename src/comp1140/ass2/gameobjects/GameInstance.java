@@ -349,6 +349,26 @@ public class GameInstance {
                 .ifPresent(type -> ActionFactory.of(this, getCurrentPlayer()).getActionByName(type).apply(action.substring(type.getName().length()))));
     }
 
+    public void applyActionSequenceAndCompleteTurn(String[] args) {
+        applyActionSequence(args);
+        completeTurn();
+    }
+
+    public void completeTurn() {
+        if (getPlayers().stream().noneMatch(player -> player.getScore() >= 10))  {
+            nextPlayer();
+            if (getDiceCount() == 0 && getCurrentPlayer().getUniqueId().equals("W")) {
+                setDiceCount(3);
+            } else if (getDiceCount() != 0 && getDiceCount() < 6) {
+                setDiceCount(getDiceCount() + 1);
+            }
+            if (getRollsDone() < getDiceCount()) {
+                setRollsDone(getRollsDone() + 1);
+            }
+            rollDice(getDiceCount());
+        }
+    }
+
     public Map<String, Integer> calculateLongestRoad() {
         Map<String, Integer> longestRoad = new HashMap<>();
         for (Player player : getPlayers()) {

@@ -1,6 +1,9 @@
 package comp1140.ass2.gui;
 
 import comp1140.ass2.CatanDiceExtra;
+import comp1140.ass2.ai.AIPlayer;
+import comp1140.ass2.ai.GreedyAI;
+import comp1140.ass2.ai.SmartAI;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
@@ -161,12 +164,12 @@ public class Viewer extends Application implements Initializable {
     public Text statsFreeText;
     public Text diceCountText;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         launch(args);
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws IOException, NoSuchFieldException, IllegalAccessException, InterruptedException {
         Scene scene = new Scene(fxmlLoader.load(), WINDOW_WIDTH, WINDOW_HEIGHT);
 
         URL css = Game.class.getResource("css/myCSS.css");
@@ -176,6 +179,22 @@ public class Viewer extends Application implements Initializable {
 
         stage.setScene(scene);
         stage.show();
+
+        GameInstance game = new GameInstance("W00WXW00X00");
+        AIPlayer guy1 = new GreedyAI(game, game.getPlayers().get(0));
+        AIPlayer guy2 = new SmartAI(game, game.getPlayers().get(1));
+
+        while (game.getPlayers().stream().noneMatch(player -> player.getScore() >= 10)) {
+            for (AIPlayer ai : new AIPlayer[] { guy1, guy2 }) {
+                if (game.getCurrentPlayer().getUniqueId().equals(ai.player().getUniqueId())) {
+                    String[] sequence = ai.selectActionSequence(game.getAsEncodedString());
+                    game.applyActionSequenceAndCompleteTurn(sequence);
+                    Thread.sleep(150);
+                    System.out.println("Player " + game.getCurrentPlayer().getUniqueId() + " chose " + List.of(sequence));
+                    displayState(game.getAsEncodedString());
+                }
+            }
+        }
     }
 
     @Override

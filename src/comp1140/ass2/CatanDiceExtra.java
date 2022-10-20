@@ -4,6 +4,7 @@ import comp1140.ass2.actionstrategies.ActionFactory;
 import comp1140.ass2.actionstrategies.ActionFactory.ActionType;
 import comp1140.ass2.ai.AIPlayer;
 import comp1140.ass2.ai.GreedyAI;
+import comp1140.ass2.ai.SmartAI;
 import comp1140.ass2.buildings.Road;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
@@ -332,18 +333,7 @@ public class CatanDiceExtra {
     public static String applyActionSequence(String boardState, String[] actionSequence) {
         GameInstance game = new GameInstance(boardState);
         game.applyActionSequence(actionSequence);
-        if (game.getPlayers().stream().noneMatch(player -> player.getScore() >= 10))  {
-            game.nextPlayer();
-            if (game.getDiceCount() == 0 && game.getCurrentPlayer().getUniqueId().equals("W")) {
-                game.setDiceCount(3);
-            } else if (game.getDiceCount() != 0 && game.getDiceCount() < 6) {
-                game.setDiceCount(game.getDiceCount() + 1);
-            }
-            if (game.getRollsDone() < game.getDiceCount()) {
-                game.setRollsDone(game.getRollsDone() + 1);
-            }
-            game.rollDice(game.getDiceCount());
-        }
+        game.completeTurn();
         return game.getAsEncodedString();
     }
 
@@ -549,7 +539,7 @@ public class CatanDiceExtra {
         GameInstance game = new GameInstance(boardState);
         AIPlayer ai = new GreedyAI(game, game.getCurrentPlayer());
 
-        return ai.selectActionSequence();
+        return ai.selectActionSequence(boardState);
     }
 
     public static String diceResultMapToString(Map<Resource, Integer> diceResult) {
