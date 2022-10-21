@@ -31,7 +31,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.IntStream;
 
-
 public class Game extends Application implements Initializable {
 
 
@@ -74,8 +73,6 @@ public class Game extends Application implements Initializable {
     public Label playerName2;
     public ImageView imageIcon3;
     public ImageView imageIcon2;
-
-    @FXML
     public Rectangle r0104;
     public Rectangle r0003;
     public Rectangle r0307;
@@ -622,8 +619,14 @@ public class Game extends Application implements Initializable {
                 if (building instanceof Settlement && building.getOwner() == game.getCurrentPlayer()) argument += "T";
                 argument += houseAddress;
                 if (actionStrategy.isApplicable(argument) && game.getRollsDone() == 4) {
-                    actionStrategy.apply(argument);
+                    if (building instanceof Settlement) {
+                        InnerShadow innerShadow = new InnerShadow();
+                        innerShadow.setWidth(125);
+                        houseShape.setEffect(innerShadow);
+                    } else
+                        houseShape.setEffect(null);
                     houseShape.setFill(game.getCurrentPlayer().getColor());
+                    actionStrategy.apply(argument);
                     renderGameInfo();
                     if (building instanceof City) houseShape.setOnMouseReleased(null);
                 }
@@ -705,7 +708,8 @@ public class Game extends Application implements Initializable {
             }
         }
         resourceList.setText(diceResults.toString());
-        diceCountText.setText("Dices Number: " + game.getDiceCount() + "\nRolls Done: " + (game.getRollsDone() - 1));
+        diceCountText.setText("Dices Number: " + game.getDiceCount() + "\nRolls Done: " +
+                (game.getRollsDone() == 0 ? game.getRollsDone() : game.getRollsDone() - 1));
     }
     public void renderStat() {
         StringBuilder stat = new StringBuilder();

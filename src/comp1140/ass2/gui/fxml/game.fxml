@@ -119,7 +119,7 @@
    <Rectangle fx:id="r2833" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="372.0" layoutY="397.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
    <Rectangle fx:id="r1621" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="298.0" layoutY="286.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
    <Rectangle fx:id="r1722" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="433.0" layoutY="285.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
-   <Rectangle fx:id="r0711" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="363.0" layoutY="172.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
+   <Rectangle fx:id="r0711" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="360.0" layoutY="172.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
    <Rectangle fx:id="r1014" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="762.0" layoutY="163.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
    <Rectangle fx:id="r0913" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="645.0" layoutY="156.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />
    <Rectangle fx:id="r0812" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="37.0" layoutX="507.0" layoutY="157.0" rotate="60.0" stroke="WHITE" strokeType="INSIDE" width="13.0" />

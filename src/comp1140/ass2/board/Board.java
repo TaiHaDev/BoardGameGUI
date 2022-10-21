@@ -126,42 +126,6 @@ public class Board {
         return roadBoard.getAdjacencyMatrix()[startPos][endPos] == 1;
     }
 
-//    public void updateBoardUsingEncodedString (String structureIdentifier, Player player) {
-//        char buildingType = structureIdentifier.charAt(0);
-//        if (buildingType == 'R') {
-//            int source = Integer.parseInt(structureIdentifier.substring(1,3));
-//            int destination = Integer.parseInt(structureIdentifier.substring(3,5));
-//            for (GameGraph.Node node : roadBoard.getAdjacencyMatrix().get(source)) {
-//                if (node.id == destination) {
-//                    node.player = player;
-//                }
-//            }
-//            for (GameGraph.Node node : roadBoard.adjacencyMatrix.get(destination)) {
-//                if (node.id == source) {
-//                    node.player = player;
-//                }
-//            }
-//        }else if (buildingType == 'C') {
-//            int location = Integer.parseInt(structureIdentifier.substring(1,2));
-//            Castle castle = castleBoard[location];
-//            castle.setOwner(player);
-//        }  else {
-//            int location = Integer.parseInt(structureIdentifier.substring(1,3));
-//            if (buildingType == 'J' || buildingType == 'K') {
-//                Knight currentKnight = knightBoard.get(location);
-//                if (buildingType == 'K')
-//                    currentKnight.setJoker(true);
-//                currentKnight.setOwner(player);
-//            } else if (buildingType == 'S') {
-//                Building settlement = residentialBuilding.get(location);
-//                settlement.setOwner(player);
-//            } else if (buildingType == 'T') {
-//                Building city = residentialBuilding.get(location);
-//                city.setOwner(player);  // TODO refactor later
-//            }
-//        }
-//    }
-
     /**
      * determine if road is buildable with the conditions of
      * being connected by another road and cannot build further if
@@ -269,84 +233,6 @@ public class Board {
         }
 
         return isRoadCoastal && isRoadStartAndEndAdjacent && isRoad5RoadsAwayFromPrevious;
-    }
-
-    public static Player hasLongestRoad(GameInstance game) {
-        HashMap<Player, Integer> playersAndTheirLongestRoad = new HashMap<>();
-        for (Player player : game.getPlayers()) {
-            // initialise a new graph that only contains the current player's
-            // owned roads.
-            Map<Integer, List<Integer>> graph = new HashMap<>();
-            Set<Road> ownedRoads = new HashSet<>();
-            for (Road road : game.getBoard().getRoads()) {
-                if (player.equals(road.getOwner())) {
-                    ownedRoads.add(road);
-                }
-            }
-            for (Road road : ownedRoads) {
-                List<Integer> values = graph.getOrDefault(road.getStart(), new ArrayList<>());
-                values.add(road.getEnd());
-                graph.put(road.getStart(), values);
-
-                values = graph.getOrDefault(road.getEnd(), new ArrayList<>());
-                values.add(road.getStart());
-                graph.put(road.getEnd(), values);
-            }
-
-            // create a list of every path existing in the player's graph
-            HashSet<List<Integer>> paths = new HashSet<>();
-            for (int start : graph.keySet()) {
-                if (graph.get(start).size() == 2) continue;
-                for (int end : graph.keySet()) {
-                    if (graph.get(end).size() == 2 || start == end) continue;
-                    DepthFirstSearch dfs = new DepthFirstSearch(paths, graph);
-                    dfs.search(start, end);
-                }
-            }
-
-            int max = 0;
-
-            for (List<Integer> path : paths) {
-                if (isEulerianTrail(pathToGraph(path))) {
-                    max = Math.max(path.size() - 1, max);
-                }
-            }
-            playersAndTheirLongestRoad.put(player, max);
-        }
-        Player p = null;
-        int max = 0;
-        for (var entry : playersAndTheirLongestRoad.entrySet()) {
-            if (entry.getValue() > max) {
-                max = entry.getValue();
-                p = entry.getKey();
-            } else if (entry.getValue() == max) return null;
-        }
-        if(playersAndTheirLongestRoad.get(p) > 4) return p;
-        return null;
-    }
-
-    public static Player hasLargestArmy(GameInstance game) {
-        HashMap<Player, Integer> playersAndTheirKnightCount = new HashMap();
-        game.getPlayers()
-                .stream()
-                .forEach(
-                        player -> playersAndTheirKnightCount.put(player,(int) game
-                                .getBoard()
-                                .getKnightBoard()
-                                .values()
-                                .stream()
-                                .filter(knight -> player.equals(knight.getOwner())).count()));
-        if (playersAndTheirKnightCount.isEmpty()) return null;
-        Player p = null;
-        int max = 0;
-        for (var entry : playersAndTheirKnightCount.entrySet()) {
-            if (entry.getValue() > max) {
-                max = entry.getValue();
-                p = entry.getKey();
-            } else if (entry.getValue() == max) return null;
-        }
-        if(playersAndTheirKnightCount.get(p) > 2) return p;
-        return null;
     }
 
     public Map<Integer, Knight> getKnightBoard() {

@@ -21,15 +21,16 @@ declaration: >-
 # Add as many "url+licence+comment" entries as necessary
 # (or remove it altogether if you haven't used any external assets)
 assets:
-  - comment:
-    url:
-    licence:
+  - comment: images of dices
+    url: https://danongames.files.wordpress.com/2016/03/img_0072.jpg
+    licence: all rights reserved
 
 
 # Sign *your* name and uids here. (Remove entries if you have fewer
 # than three members.)
 signatures:
+  - name: Phuoc Ha
+    uid: u7454578
   - name: Matthew Richards
     uid: u7499989
-  - name:
-    uid:
+

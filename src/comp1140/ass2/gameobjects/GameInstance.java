@@ -29,7 +29,9 @@ public class GameInstance {
     private Player longestRoad;
     private Player largestArmy;
 
-
+    /**
+     * private constructor to enable singleton design pattern
+     */
     private GameInstance() {
     }
 
@@ -114,9 +116,40 @@ public class GameInstance {
                         resources.get(resource) >= requirement.get(resource));
     }
 
+    /**
+     * This is a helper function for checkAndUpdateLongestRoad() and checkAndUpdateLargestArmy().
+     * It evaluates a map contains player unique id as key
+     * and an integer as value to find out a unique id that has the highest value.
+     * If there is another
+     * key with same value of integer, return null.
+     * Then search for player in player list that has the same unique id and return it.
+     *
+     * @param map from calculateLongestRoad() or calculateLargestArmy()
+     * @param bound based on game rules (5 for road and 3 for knight)
+     * @return the corresponding Player that has the highest integer value in map
+     */
+    public Player findPlayerWithHighestValueInMap(Map<String, Integer> map, int bound) {
+        Player player;
+        int max = 0;
+        String playerUniqueID = null;
+        for (var entry : map.entrySet()) {
+            if (entry.getValue() < bound) continue;
+            if (entry.getValue() > max) {
+                playerUniqueID = entry.getKey();
+                max = entry.getValue();
+            } else if (entry.getValue() == max) return null;
+        }
+        if (playerUniqueID == null) return null;
+        else {
+            String finalPlayerUniqueID = playerUniqueID;
+            player = players.stream().filter(player1 -> player1.getUniqueId().equals(finalPlayerUniqueID)).findFirst().get();
+        }
+        return player;
+    }
 
     public void checkAndUpdateLongestRoad() {
-        Player player = Board.hasLongestRoad(this);
+        Map<String, Integer> map = calculateLongestRoad();
+        Player player = findPlayerWithHighestValueInMap(map, 5);
         if (player == null) return;
         if (longestRoad == null) {
             player.setScore(player.getScore() + 2);
@@ -129,7 +162,8 @@ public class GameInstance {
     }
 
     public void checkAndUpdateLargestArmy() {
-        Player player = Board.hasLargestArmy(this);
+        Map<String, Integer> map = calculateLargestArmy();
+        Player player = findPlayerWithHighestValueInMap(map, 3);
         if (player == null) return;
         if (largestArmy == null) {
             player.setScore(player.getScore() + 2);
@@ -196,44 +230,6 @@ public class GameInstance {
         return players;
     }
 
-    /**
-     * Generates a list of buildings that the given player can
-     * build on their current turn.
-     *
-     * @param player  the player whose balance should be checked
-     *                to see what they can afford
-     * @return the buildings that can be affordably and physically
-     * built by the current player.
-     */
-    public List<Building> availableToBuild(Player player) {
-        return null; // TODO
-    }
-
-    /**
-     * The player may choose to build at least one affordable
-     * building on their turn. This method places these buildings
-     * (iff they really are able to be afforded by the passed
-     * player) onto the board.
-     *
-     * @param buildings  the buildings requested to be placed
-     * @param player     the current player -- intended to be
-     *                   passed from the head of the player queue
-     */
-    public void chooseToBuild(List<Building> buildings, Player player) {
-        // TODO
-    }
-
-    /**
-     * After a player rolls their die, they may wish to reroll
-     * some. We provide this function to allow certain die to
-     * be rerolled but not necessarily all.
-     *
-     * Example usage would be ``GameInstance#rollDice(1, 2, 5)``
-     * to re-roll the first, second, and fifth die.
-     *
-     * @param indicesToReroll  the indices of the dice that the
-     *                         player wants to be rerolled.
-     */
     public void rollDice(int n) {
         setDiceResult(stringResourcesToMap(CatanDiceExtra.rollDice(n)));
     }
@@ -268,6 +264,10 @@ public class GameInstance {
         this.diceResult = new HashMap<>();
     }
 
+    /**
+     * parse the map of dice resources to its string encoding
+     * @return string encoding of dice results
+     */
     public String diceResultToString() {
         StringBuilder stringBuilder = new StringBuilder();
         for (Resource resource : diceResult.keySet()) {
@@ -408,6 +408,10 @@ public class GameInstance {
         return longestRoad;
     }
 
+    /**
+     * count a number of knight each player have
+     * @return a map containing each player and their knight count
+     */
     public Map<String, Integer> calculateLargestArmy() {
         return getPlayers().stream()
                 .sorted(Comparator.comparing(Player::getUniqueId))
