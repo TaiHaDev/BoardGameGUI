@@ -281,7 +281,7 @@ public class Game extends Application implements Initializable {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Warning");
         alert.setHeaderText("Invalid input");
-        alert.setContentText("check your input's name and date of birth and try again.");
+        alert.setContentText("Ensure you have entered your birthday, and chosen a valid name.");
         alert.show();
     }
 
