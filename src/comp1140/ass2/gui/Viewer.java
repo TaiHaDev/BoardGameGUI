@@ -1,6 +1,7 @@
 package comp1140.ass2.gui;
 
 import comp1140.ass2.CatanDiceExtra;
+import comp1140.ass2.ai.*;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
@@ -21,7 +22,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Time;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class Viewer extends Application implements Initializable {
@@ -29,7 +32,6 @@ public class Viewer extends Application implements Initializable {
     private final FXMLLoader fxmlLoader = new FXMLLoader(Game.class.getResource("fxml/game-view.fxml"));
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 700;
-
 
     public Rectangle r0104;
     public Rectangle r0003;
@@ -180,18 +182,36 @@ public class Viewer extends Application implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         displayStateButton.setOnAction(event -> {
             try {
-                displayState(textField.getText());
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                showError();
-                e.printStackTrace();
+                GameInstance game = new GameInstance("W00WXW00X00");
+                displayState(game.getAsEncodedString());
+                while(game.getPlayers().stream().noneMatch(player -> player.getScore() >=10)) {
+                    AIFight(game);
+                    displayState(game.getAsEncodedString());
+                    TimeUnit.SECONDS.sleep(2);
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
+
         });
     }
 
-    public static void showError() {
+    public void AIFight(GameInstance game) {
+        System.out.println(game.getAsEncodedString());
+        AIPlayer ai1 = new SmartNoExpAI(game.getPlayers().get(0));
+        AIPlayer ai2 = new SmartAI(game.getPlayers().get(1));
+        try {
+            System.out.println(game.getAsEncodedString());
+            displayState(game.getAsEncodedString());
+            AIFighterUtil.AIFight(game, ai1, ai2);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private void showError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText("Malformed board state");
@@ -241,7 +261,7 @@ public class Viewer extends Application implements Initializable {
             exception.printStackTrace();
             return;
         }
-        clearBoard(gameInstance);
+//        clearBoard(gameInstance);
         System.out.println(boardState);
         gameInstance.getPlayers()
                 .forEach(player -> (player.getUniqueId().equals("X") ? playerXColor : playerYColor)

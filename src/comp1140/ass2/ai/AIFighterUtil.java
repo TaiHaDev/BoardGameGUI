@@ -19,37 +19,41 @@ public class AIFighterUtil {
         game.getPlayers().get(2).setDisplayName("Greedy AI");
 
         while (game.getPlayers().stream().noneMatch(player -> player.getScore() >= 10)) {
-            for (AIPlayer ai : new AIPlayer[] { guy1, guy2, guy3 }) {
-                if (game.getCurrentPlayer().getUniqueId().equals(ai.player().getUniqueId())) {
-                    String[] sequence;
-                    while (game.getRollsDone() < 3 && game.getDiceCount() != 0) {
-                        game.setRollsDone(game.getRollsDone() + 1);
-                        game.rollDice(game.getDiceCount());
-                        sequence = ai.selectActionSequence(game.getAsEncodedString());
-                        game.applyActionSequence(sequence);
-                        System.out.println("Player " + game.getCurrentPlayer().getUniqueId() + " chose " + List.of(sequence));
-                    }
-                    sequence = ai.selectActionSequence(game.getAsEncodedString());
-                    game.applyActionSequence(sequence);
-                    System.out.println("Player " + game.getCurrentPlayer().getUniqueId() + " chose " + List.of(sequence) +
-                            " - now with " + game.getCurrentPlayer().getScore() + " points.");
-
-                    game.nextPlayer();
-                    if (game.getDiceCount() != 0 || game.getCurrentPlayer().getUniqueId().equals("W")) {
-                        game.setDiceCount(Math.max(3, Math.min(game.getDiceCount() + 1, 6)));
-                    }
-                    game.setRollsDone(0);
-
-                    for (Player player : game.getPlayers()) {
-                        if (player.getScore() >= 10) {
-                            System.out.println(player.getDisplayName() + " wins, with " + player.getScore() + " points!");
-                            return;
-                        }
-                    }
+            AIFight(game, guy1, guy2, guy3);
+            for (Player player : game.getPlayers()) {
+                if (player.getScore() >= 10) {
+                    System.out.println(player.getDisplayName() + " wins, with " + player.getScore() + " points!");
+                    return;
                 }
             }
         }
         System.out.println(game.getPlayers().stream().filter(player -> player.getScore() >= 0).map(Player::getUniqueId).findFirst().orElse("Nobody") + " won the game!");
+    }
+
+    public static void AIFight(GameInstance game, AIPlayer... players) {
+        for (AIPlayer ai : players) {
+            if (game.getCurrentPlayer().getUniqueId().equals(ai.player().getUniqueId())) {
+                String[] sequence;
+                while (game.getRollsDone() < 3 && game.getDiceCount() != 0) {
+                    game.setRollsDone(game.getRollsDone() + 1);
+                    game.rollDice(game.getDiceCount());
+                    sequence = ai.selectActionSequence(game.getAsEncodedString());
+                    game.applyActionSequence(sequence);
+                    System.out.println("Player " + game.getCurrentPlayer().getUniqueId() + " chose " + List.of(sequence));
+                }
+                sequence = ai.selectActionSequence(game.getAsEncodedString());
+                game.applyActionSequence(sequence);
+                System.out.println("Player " + game.getCurrentPlayer().getUniqueId() + " chose " + List.of(sequence) +
+                        " - now with " + game.getCurrentPlayer().getScore() + " points.");
+
+                game.nextPlayer();
+                if (game.getDiceCount() != 0 || game.getCurrentPlayer().getUniqueId().equals("W")) {
+                    game.setDiceCount(Math.max(3, Math.min(game.getDiceCount() + 1, 6)));
+                }
+                game.setRollsDone(1);
+
+            }
+        }
     }
 
 }
