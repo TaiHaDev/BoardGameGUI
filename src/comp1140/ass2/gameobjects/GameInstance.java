@@ -349,12 +349,6 @@ public class GameInstance {
                 .ifPresent(type -> ActionFactory.of(this, getCurrentPlayer()).getActionByName(type).apply(action.substring(type.getName().length()))));
     }
 
-<<<<<<< HEAD
-    /**
-     * Calculate the longest road's length of each player using the board instances
-     * @return a map containing each player and their road length
-     */
-=======
     public void completeTurn(boolean next) {
         if (getPlayers().stream().noneMatch(player -> player.getScore() >= 10))  {
             if (next) nextPlayer();
@@ -370,7 +364,6 @@ public class GameInstance {
         }
     }
 
->>>>>>> b70c9ce0b22c6f1241845b557908dac2725774b0
     public Map<String, Integer> calculateLongestRoad() {
         Map<String, Integer> longestRoad = new HashMap<>();
         for (Player player : getPlayers()) {
