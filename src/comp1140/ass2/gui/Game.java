@@ -619,7 +619,7 @@ public class Game extends Application implements Initializable {
                 if (building instanceof Settlement && building.getOwner() == game.getCurrentPlayer()) argument += "T";
                 argument += houseAddress;
                 if (actionStrategy.isApplicable(argument) && game.getRollsDone() == 4) {
-                    if (building instanceof Settlement) {
+                    if (building instanceof Settlement s && s.isUpgradeable()) {
                         InnerShadow innerShadow = new InnerShadow();
                         innerShadow.setWidth(125);
                         houseShape.setEffect(innerShadow);
