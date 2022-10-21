@@ -1,21 +1,19 @@
 package comp1140.ass2;
 
-import comp1140.ass2.actionstrategies.ActionStrategy;
-import comp1140.ass2.game.Resource;
-import comp1140.ass2.gameobjects.GameInstance;
-import comp1140.ass2.gameobjects.Player;
-import comp1140.ass2.buildings.*;
-import comp1140.ass2.helpers.DepthFirstSearch;
 import comp1140.ass2.actionstrategies.ActionFactory;
 import comp1140.ass2.actionstrategies.ActionFactory.ActionType;
+import comp1140.ass2.ai.AIPlayer;
+import comp1140.ass2.ai.GreedyAI;
+import comp1140.ass2.ai.SmartAI;
+import comp1140.ass2.buildings.Road;
+import comp1140.ass2.game.Resource;
+import comp1140.ass2.gameobjects.GameInstance;
 
-import javax.swing.*;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class CatanDiceExtra {
@@ -335,18 +333,7 @@ public class CatanDiceExtra {
     public static String applyActionSequence(String boardState, String[] actionSequence) {
         GameInstance game = new GameInstance(boardState);
         game.applyActionSequence(actionSequence);
-        if (game.getPlayers().stream().noneMatch(player -> player.getScore() >= 10))  {
-            game.nextPlayer();
-            if (game.getDiceCount() == 0 && game.getCurrentPlayer().getUniqueId().equals("W")) {
-                game.setDiceCount(3);
-            } else if (game.getDiceCount() != 0 && game.getDiceCount() < 6) {
-                game.setDiceCount(game.getDiceCount() + 1);
-            }
-            if (game.getRollsDone() < game.getDiceCount()) {
-                game.setRollsDone(game.getRollsDone() + 1);
-            }
-            game.rollDice(game.getDiceCount());
-        }
+        game.completeTurn(true);
         return game.getAsEncodedString();
     }
 
@@ -433,13 +420,13 @@ public class CatanDiceExtra {
             actions.add("keep"); // you'll always be able to keep nothing given it is the roll phase
         } else {
             // BUILD
-            for (int i = 0; i < 54; i++) {
-                for (int j = i; j < 54; j++) {
-                    String first = i >= 10 ? String.valueOf(i) : "0" + i;
-                    String second = j >= 10 ? String.valueOf(j) : "0" + j;
-                    if (factory.getActionByName(ActionType.BUILD).isApplicable('R' + first + second)) {
-                        actions.add("buildR" + first + second);
-                    }
+            for (Road road : game.getBoard().getRoads()) {
+                int i = road.getStart();
+                int j = road.getEnd();
+                String first = i >= 10 ? String.valueOf(i) : "0" + i;
+                String second = j >= 10 ? String.valueOf(j) : "0" + j;
+                if (factory.getActionByName(ActionType.BUILD).isApplicable('R' + first + second)) {
+                    actions.add("buildR" + first + second);
                 }
             }
             for (int i = 0; i < 20; i++) {
@@ -549,9 +536,10 @@ public class CatanDiceExtra {
      * @return array of strings representing the actions the AI will take.
      */
     public static String[] generateAction(String boardState) {
-        // FIXME: Task 13
-        // FIXME: Task 14 Implement a "smart" generateAction()
-        return null;
+        GameInstance game = new GameInstance(boardState);
+        AIPlayer ai = new GreedyAI(game, game.getCurrentPlayer());
+
+        return ai.selectActionSequence(boardState);
     }
 
     public static String diceResultMapToString(Map<Resource, Integer> diceResult) {

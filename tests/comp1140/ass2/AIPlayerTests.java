@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class AIPlayerTests {
-
+    
     @Test
     public void test_that_ai_players_always_build_when_possible() {
         for (String[][][] array : ExampleGames.FULL_GAME1_WITH_ALL_POSSIBLE_ACTION_SEQUENCES) {
@@ -24,7 +24,7 @@ public class AIPlayerTests {
                         .map(sequence -> new AbstractMap.SimpleEntry<>(Arrays.stream(sequence).toList(), ai.evaluate(CatanDiceExtra.applyActionSequence(array[0][0][0], sequence))))
                         .forEach(entry -> System.out.println(entry.getKey() + ": " + entry.getValue()));
 
-                Assertions.assertTrue(Arrays.stream(ai.selectActionSequence()).anyMatch(action -> action.startsWith("build")),
+                Assertions.assertTrue(Arrays.stream(ai.selectActionSequence(array[0][0][0])).anyMatch(action -> action.startsWith("build")),
                         "The AI had 'build' options, but chose something else");
             }
         }
