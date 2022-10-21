@@ -3,27 +3,49 @@ package comp1140.ass2.ai;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class AIFighterUtil {
 
     public static void main(String[] args) throws InterruptedException {
-        GameInstance game = new GameInstance("W00WXW00X00");
-        AIPlayer guy1 = new GreedyAI(game, game.getPlayers().get(0));
-        AIPlayer guy2 = new SmartAI(game, game.getPlayers().get(1));
+        GameInstance game = new GameInstance("W00WXYW00X00Y00");
+        AIPlayer guy1 = new SmartNoExpAI(game.getPlayers().get(0));
+        game.getPlayers().get(0).setDisplayName("Semi-Smart AI");
+
+        AIPlayer guy2 = new SmartAI(game.getPlayers().get(1));
+        game.getPlayers().get(1).setDisplayName("Smart AI");
+
+        AIPlayer guy3 = new GreedyAI(game.getPlayers().get(2));
+        game.getPlayers().get(2).setDisplayName("Greedy AI");
 
         while (game.getPlayers().stream().noneMatch(player -> player.getScore() >= 10)) {
-            for (AIPlayer ai : new AIPlayer[] { guy1, guy2 }) {
+            for (AIPlayer ai : new AIPlayer[] { guy1, guy2, guy3 }) {
                 if (game.getCurrentPlayer().getUniqueId().equals(ai.player().getUniqueId())) {
                     String[] sequence;
-                    do {
+                    while (game.getRollsDone() < 3 && game.getDiceCount() != 0) {
+                        game.setRollsDone(game.getRollsDone() + 1);
+                        game.rollDice(game.getDiceCount());
                         sequence = ai.selectActionSequence(game.getAsEncodedString());
                         game.applyActionSequence(sequence);
-                        game.completeTurn(false);
-                    } while (Arrays.stream(sequence).anyMatch(action -> action.startsWith("keep")));
+                        System.out.println("Player " + game.getCurrentPlayer().getUniqueId() + " chose " + List.of(sequence));
+                    }
+                    sequence = ai.selectActionSequence(game.getAsEncodedString());
+                    game.applyActionSequence(sequence);
+                    System.out.println("Player " + game.getCurrentPlayer().getUniqueId() + " chose " + List.of(sequence) +
+                            " - now with " + game.getCurrentPlayer().getScore() + " points.");
+
                     game.nextPlayer();
-                    System.out.println("Player " + game.getCurrentPlayer().getUniqueId() + " chose " + List.of(sequence));
+                    if (game.getDiceCount() != 0 || game.getCurrentPlayer().getUniqueId().equals("W")) {
+                        game.setDiceCount(Math.max(3, Math.min(game.getDiceCount() + 1, 6)));
+                    }
+                    game.setRollsDone(0);
+
+                    for (Player player : game.getPlayers()) {
+                        if (player.getScore() >= 10) {
+                            System.out.println(player.getDisplayName() + " wins, with " + player.getScore() + " points!");
+                            return;
+                        }
+                    }
                 }
             }
         }

@@ -1,28 +1,32 @@
 package comp1140.ass2.ai;
 
-import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.buildings.Knight;
+import comp1140.ass2.buildings.Road;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
 
-import java.util.Comparator;
-import java.util.stream.Stream;
-
-public record GreedyAI(GameInstance game, Player player) implements AIPlayer {
+public record GreedyAI(Player player) implements AIPlayer {
 
     public double evaluate(String boardState) {
+        double eval = 0;
         GameInstance game = new GameInstance(boardState);
-        return 5 * game.getBoard().getKnightBoard().values().stream().filter(knight -> player.equals(knight.getOwner())).filter(Knight::isJoker).count()
-                + 2.5 * player.getScore()
-                + game.getBoard().getResidentialBuilding().values().stream().filter(building -> building.getOwner() != null && player.getUniqueId().equals(building.getOwner().getUniqueId())).count()
-                + Stream.of(game.getBoard().getRoads()).filter(building -> building.getOwner() != null && player.getUniqueId().equals(building.getOwner().getUniqueId())).count();
-    }
-
-    @Override
-    public String[] selectActionSequence(String boardState) {
-        return Stream.of(CatanDiceExtra.generateAllPossibleActionSequences(boardState))
-                .max(Comparator.comparingDouble(sequence -> evaluate(CatanDiceExtra.applyActionSequence(boardState, sequence))))
-                .orElse(new String[] {});
+        for (Road road : game.getBoard().getRoads()) {
+            if (road.getOwner() != null && player.getUniqueId().equals(road.getOwner().getUniqueId())) {
+                ++eval;
+            }
+        }
+        for (Knight knight : game.getBoard().getKnightBoard().values()) {
+            if (knight.getOwner() != null && player.getUniqueId().equals(knight.getOwner().getUniqueId())) {
+                eval += 2;
+            }
+        }
+        for (Player player : game.getPlayers()) {
+            if (player.getUniqueId().equals(game.getCurrentPlayer().getUniqueId())) {
+                eval += game.getCurrentPlayer().getScore();
+                break;
+            }
+        }
+        return eval;
     }
 
 }

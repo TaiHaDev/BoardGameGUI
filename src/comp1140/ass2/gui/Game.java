@@ -4,6 +4,7 @@ import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.actionstrategies.ActionFactory;
 import comp1140.ass2.actionstrategies.ActionFactory.ActionType;
 import comp1140.ass2.actionstrategies.ActionStrategy;
+import comp1140.ass2.ai.GreedyAI;
 import comp1140.ass2.buildings.*;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
@@ -17,16 +18,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javafx.util.Pair;
 
-import java.beans.EventHandler;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -426,13 +424,31 @@ public class Game extends Application implements Initializable {
 
         }
     }
+
+    private void passThroughAi() throws NoSuchFieldException, IllegalAccessException {
+        if (game.getPlayers().get(1).getDisplayName().startsWith("AI (")) {
+            String[] sequence = new GreedyAI(game.getCurrentPlayer()).selectActionSequence(game.getAsEncodedString());
+            game.applyActionSequence(sequence);
+
+            for (Road road : game.getBoard().getRoads()) {
+                if (road.getOwner() != null && road.getOwner().equals(game.getPlayers().get(1))) {
+                    String a = road.getStart() < 10 ? "0" + road.getStart() : "" + road.getStart();
+                    String b = road.getEnd() < 10 ? "0" + road.getEnd() : "" + road.getEnd();
+                    Rectangle roadShape = (Rectangle) getClass().getDeclaredField("r" + a + b).get(this);
+                    roadShape.setFill(game.getCurrentPlayer().getColor());
+                    roadShape.setOnMouseReleased(null);
+                }
+            }
+        }
+    }
+
     public void setEventHandlerForDoneButton() {
         doneButton.setOnMouseClicked(mouseEvent -> {
             if (game.getRollsDone() == 4) {
                 game.emptyDiceResult();
                 game.setRollsDone(1);
-                game.setDiceCount();
-                game.getPlayers().poll();
+                game.updateDiceCount();
+                game.nextPlayer();
                 renderGameInfo();
                 keep = "";
             }
@@ -446,16 +462,16 @@ public class Game extends Application implements Initializable {
             int rollsDone = game.getRollsDone();
             if (game.getRollsDone() > 1 && game.getRollsDone() < 4 && GameInstance.stringResourcesToMap(keep).equals(game.getDiceResult())) {
                 game.setRollsDone(4);
-                game.setDiceCount();
+                game.updateDiceCount();
             } else if (diceCount > 2 && rollsDone == 1) {
                 game.setDiceResult(GameInstance.stringResourcesToMap(CatanDiceExtra.rollDice(diceCount)));
-                game.setRollsDone();
+                game.updateRollsDone();
             } else if (diceCount > 2 && rollsDone > 0 && rollsDone < 3) {
                 actionStrategy.apply(keep);
-                game.setRollsDone();
+                game.updateRollsDone();
             } else if (diceCount > 2 && rollsDone == 3) {
                 actionStrategy.apply(keep);
-                game.setRollsDone();
+                game.updateRollsDone();
             }
             renderGameInfo();
         });
@@ -475,8 +491,8 @@ public class Game extends Application implements Initializable {
                         roadShape.setFill((game.getPlayers().poll().getColor()));
                         actionFactory.apply("R" + a + b);
                         if(starterRoadsCount == numberOfPlayers) {
-                            game.setDiceCount();
-                            game.setRollsDone();
+                            game.updateDiceCount();
+                            game.updateRollsDone();
                         }
                         else starterRoadsCount++;
                     } else if (game.getRollsDone() == 4) {
