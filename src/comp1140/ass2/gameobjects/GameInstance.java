@@ -221,7 +221,7 @@ public class GameInstance {
         this.diceCount = diceCount;
     }
 
-    public void setDiceCount() {
+    public void updateDiceCount() {
         if (diceCount == 0) diceCount = 3;
         else if (diceCount < 6) diceCount++;
     }
@@ -241,7 +241,8 @@ public class GameInstance {
     public void setRollsDone(int rollsDone) {
         this.rollsDone = rollsDone;
     }
-    public void setRollsDone() throws RuntimeException {
+
+    public void updateRollsDone() throws RuntimeException {
         if (rollsDone > 3) rollsDone = 1;
         else if (rollsDone == 0) rollsDone = 1;
         else rollsDone++;
@@ -299,7 +300,6 @@ public class GameInstance {
      *
      * @return the encoded string representing the current object
      */
-    @Deprecated
     public String getAsEncodedString() {
         StringBuilder state = new StringBuilder()
                 .append(this.getCurrentPlayer().getUniqueId())
@@ -421,4 +421,5 @@ public class GameInstance {
                                 .count()))
                 .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
     }
+
 }

@@ -399,7 +399,7 @@ public class CatanDiceExtra {
 
         // KEEP
         String resources = diceResultMapToString(game.getDiceResult());
-        if (game.getRollsDone() != 0 && game.getRollsDone() != 3 && game.getRollsDone() != 4) { // is this it?
+        if (game.getRollsDone() != 0 && game.getRollsDone() != 3 && game.getRollsDone() != 4) {
             Stack<String> potentialKeeps = new Stack<>();
             potentialKeeps.push(resources);
             List<String> argsVisited = new ArrayList<>();
@@ -537,7 +537,7 @@ public class CatanDiceExtra {
      */
     public static String[] generateAction(String boardState) {
         GameInstance game = new GameInstance(boardState);
-        AIPlayer ai = new GreedyAI(game, game.getCurrentPlayer());
+        AIPlayer ai = new GreedyAI(game.getCurrentPlayer());
 
         return ai.selectActionSequence(boardState);
     }

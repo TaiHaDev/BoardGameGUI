@@ -25,7 +25,7 @@ public enum Resource {
                 return value;
             }
         }
-        throw new IllegalArgumentException("invalid resource");
+        throw new IllegalArgumentException("invalid resource " + c);
     }
 
 

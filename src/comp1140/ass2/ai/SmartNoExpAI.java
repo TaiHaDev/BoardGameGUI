@@ -6,10 +6,10 @@ import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
 
-import java.util.*;
+import java.util.Map;
 import java.util.stream.Stream;
 
-public record SmartAI(Player player) implements AIPlayer {
+public record SmartNoExpAI(Player player) implements AIPlayer {
 
     public double evaluate(String boardState) {
         GameInstance game = new GameInstance(boardState);
@@ -44,14 +44,7 @@ public record SmartAI(Player player) implements AIPlayer {
         eval += score;
 
         // encourage rerolling to afford buildings
-        // we add an exponential term to strongly encourage ignoring roads
-        // and taking on a strong focus on rerolling until a city can be
-        // afforded as the score goes up.
-        // this switch from exploitation (being greedy on expanding territory via roads)]
-        // to exploration and just rerolling and rerolling when our score is high allows us
-        // to accept that we have enough reach and should probably just reroll until we can
-        // afford a city, to more quickly finish the game.
-        eval += 0.75 * roadAffordability + Math.exp(cityAffordability * score);
+        eval += 0.75 * roadAffordability + 0.75 * cityAffordability;
 
         return eval;
     }
