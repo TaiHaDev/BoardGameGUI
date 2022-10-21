@@ -14,10 +14,9 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public record BuildAction(GameInstance game, Player player) implements ActionStrategy {
-
+    // Matt (50) / Phuoc (50)
     @Override
     public boolean isApplicable(String argument) {
-        // TODO refactor this
         char typeOfBuilding = argument.charAt(0);
         if (typeOfBuilding == 'R') {
             int firstPos = Integer.parseInt(argument.substring(1,3));

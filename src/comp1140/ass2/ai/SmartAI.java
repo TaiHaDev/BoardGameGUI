@@ -8,7 +8,7 @@ import comp1140.ass2.gameobjects.Player;
 
 import java.util.*;
 import java.util.stream.Stream;
-
+// author Matthew
 public record SmartAI(Player player) implements AIPlayer {
 
     public double evaluate(String boardState) {

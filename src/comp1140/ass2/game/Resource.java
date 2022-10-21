@@ -1,5 +1,5 @@
 package comp1140.ass2.game;
-
+// author Phuoc
 public enum Resource {
 
     GOLD('m'),

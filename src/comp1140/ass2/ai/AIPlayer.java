@@ -2,7 +2,7 @@ package comp1140.ass2.ai;
 
 import comp1140.ass2.CatanDiceExtra;
 import comp1140.ass2.gameobjects.Player;
-
+// author Matthew
 public interface AIPlayer {
 
     double evaluate(String boardState);

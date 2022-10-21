@@ -4,7 +4,6 @@ import comp1140.ass2.actionstrategies.ActionFactory;
 import comp1140.ass2.actionstrategies.ActionFactory.ActionType;
 import comp1140.ass2.ai.AIPlayer;
 import comp1140.ass2.ai.GreedyAI;
-import comp1140.ass2.ai.SmartAI;
 import comp1140.ass2.buildings.Road;
 import comp1140.ass2.game.Resource;
 import comp1140.ass2.gameobjects.GameInstance;
@@ -13,10 +12,10 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CatanDiceExtra {
+    // author Phuoc
     /**
      * Check if the string encoding of a board state is well-formed.
      * Note that this does not mean checking if the state is valid
@@ -50,11 +49,10 @@ public class CatanDiceExtra {
         boolean roadValid = isValidRoad(boardState);
         return b && roadValid;
     }
-
     /**
-     *
+     * check if road is valid
      * @param boardState
-     * @return
+     * @author Phuoc
      */
     public static boolean isValidRoad(String boardState) {
         boolean roadValid = true;
@@ -94,6 +92,7 @@ public class CatanDiceExtra {
      * @param action: The string representation of the action.
      * @return true iff the string is a well-formed representation of
      * a player action, false otherwise.
+     * @Author Phuoc
      */
 
     public static boolean isActionWellFormed(String action) {
@@ -114,13 +113,13 @@ public class CatanDiceExtra {
         }
         return b;
     }
-//authort
+
     public static boolean isSorted(String str) {
         char[] charList = str.toCharArray();
         Arrays.sort(charList);
         return new String(charList).equals(str);
     }
-
+    // Author Phuoc
     /**
      * Roll the specified number of *random* dice, and return the
      * rolled resources in string form.
@@ -140,7 +139,7 @@ public class CatanDiceExtra {
         return new String(resources);
 
     }
-
+    // author Matthew
     /**
      * Given a valid board state and player action, determine whether the
      * action can be executed.
@@ -185,7 +184,7 @@ public class CatanDiceExtra {
                         .getActionByName(type.get())
                         .isApplicable(action.substring(type.get().getName().length()));
     }
-
+    // author Matthew
     /**
      * Helper function for longestRoad to tell us if a graph can
      * be traced from start to finish without lifting your
@@ -222,7 +221,7 @@ public class CatanDiceExtra {
         }
         return graph;
     }
-
+    // author Matthew
     /**
      * Return an integer array containing the length of the longest contiguous
      * road owned by each player.
@@ -240,7 +239,7 @@ public class CatanDiceExtra {
         game.calculateLongestRoad().forEach((key, value) -> longestRoad[key.charAt(0) - 'W'] = value);
         return longestRoad;
     }
-
+    // author Matthew
     /**
      * Return an integer array containing the size of the army owned by
      * each player.
@@ -283,6 +282,7 @@ public class CatanDiceExtra {
      * @param action: string representation of the player action.
      * @return string representation of the updated board state.
      */
+    // author Matthew
     public static String applyAction(String boardState, String action) {
         GameInstance game = new GameInstance(boardState);
         Arrays.stream(ActionType.values())
@@ -303,6 +303,7 @@ public class CatanDiceExtra {
      * @param actionSequence: array of strings, each representing one action
      * @return true if the sequence is executable, false otherwise.
      */
+    // author Matthew
     public static boolean isActionSequenceValid(String boardState, String[] actionSequence) {
         GameInstance game = new GameInstance(boardState);
         for (String action : actionSequence) {
@@ -330,13 +331,14 @@ public class CatanDiceExtra {
      * @param actionSequence: array of strings, each representing one action
      * @return string representation of the new board state
      */
+    // author Matthew
     public static String applyActionSequence(String boardState, String[] actionSequence) {
         GameInstance game = new GameInstance(boardState);
         game.applyActionSequence(actionSequence);
         game.completeTurn(true);
         return game.getAsEncodedString();
     }
-
+    // author Matthew
     // apply action sequence without going to the next player
     private static String applyActionSequenceUtil(String boardState, String[] actionSequence) {
         GameInstance game = new GameInstance(boardState);
@@ -388,10 +390,12 @@ public class CatanDiceExtra {
      * @param boardState: string representation of the current board state.
      * @return array of possible action sequences.
      */
+    //author Matthew
     public static List<String> generateAllPossibleActions(String boardState) {
         GameInstance game = new GameInstance(boardState);
         return generateAllPossibleActionsHelper(game);
     }
+    //author Matthew
     public static List<String> generateAllPossibleActionsHelper(GameInstance game) {
         ActionFactory factory = ActionFactory.of(game, game.getCurrentPlayer());
 
@@ -479,7 +483,7 @@ public class CatanDiceExtra {
 
         return actions;
     }
-
+    //author Matthew
     public static String[][] generateAllPossibleActionSequences(String boardState) {
         List<String[]> list = new ArrayList<>();
         Stack<String[]> sequences = new Stack<>();
@@ -535,13 +539,14 @@ public class CatanDiceExtra {
      * @param boardState: string representation of the board state.
      * @return array of strings representing the actions the AI will take.
      */
+    //author Matthew
     public static String[] generateAction(String boardState) {
         GameInstance game = new GameInstance(boardState);
         AIPlayer ai = new GreedyAI(game.getCurrentPlayer());
 
         return ai.selectActionSequence(boardState);
     }
-
+    //author Matthew
     public static String diceResultMapToString(Map<Resource, Integer> diceResult) {
         return diceResult.entrySet().stream()
                 .flatMap(entry -> Stream.generate(entry::getKey).limit(entry.getValue()))

@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 public record TradeAction(GameInstance game, Player player) implements ActionStrategy {
-
+    // Author Matt (50) / Phuoc (50)
     @Override
     public boolean isApplicable(String argument) {
         Map<Resource, Integer> payResources = Map.of(Resource.GOLD, 2 * argument.length());

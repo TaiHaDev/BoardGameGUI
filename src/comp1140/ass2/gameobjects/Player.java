@@ -20,6 +20,15 @@ public class Player {
         color = Color.rgb(r,g,b);
     }
 
+    public Player(String uniqueId, Color color) {
+        this.uniqueId = uniqueId;
+        this.color = color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     public String getUniqueId() {
         return uniqueId;
     }

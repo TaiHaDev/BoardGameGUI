@@ -8,7 +8,7 @@ import comp1140.ass2.gameobjects.Player;
 
 import java.util.Map;
 import java.util.stream.Stream;
-
+// author Matthew
 public record SmartNoExpAI(Player player) implements AIPlayer {
 
     public double evaluate(String boardState) {

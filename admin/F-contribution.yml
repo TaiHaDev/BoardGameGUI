@@ -12,7 +12,7 @@ declaration: >-
 contributions:
   - uid: u7499989
     contribution: 50
-  - uid:
+  - uid: u7454578
     contribution: 50
 
 # Sign *your* name and uids here. (Remove entries if you have fewer
@@ -20,5 +20,5 @@ contributions:
 signatures:
   - name: Matthew Richards
     uid: u7499989
-  - name:
-    uid:
+  - name: Phuoc Ha
+    uid: u7454578

@@ -42,14 +42,14 @@ public class Board {
     public GameGraph getRoadBoard() {
         return roadBoard;
     }
-
+    // Author Phuoc
     public void initializeCastleBoard() {
         castleBoard[0] = new Castle(null);
         castleBoard[1] = new Castle(null);
         castleBoard[2] = new Castle(null);
         castleBoard[3] = new Castle(null);
     }
-
+    // author Phuoc
     public void initializeKnightBoard() {
         knightBoard.put(0,new Knight(null, Resource.WOOL,false, false, new int[] {0,3,4,7,8,12}));
         knightBoard.put(1,new Knight(null, Resource.GRAIN,false, false, new int[] {1,4,5,8,9,13}));
@@ -72,7 +72,7 @@ public class Board {
         knightBoard.put(18,new Knight(null, Resource.GRAIN,false, false, new int[] {40,44,45,48,49,52}));
         knightBoard.put(19,new Knight(null, Resource.WOOL,false, false, new int[] {41,45,46,49,40,53}));
     }
-    
+    // author Phuoc
     public void initializeResidentialBuilding() {
         residentialBuilding.put(0,new Settlement(null, false));
         residentialBuilding.put(1,new Settlement(null, true));
@@ -99,33 +99,10 @@ public class Board {
         residentialBuilding.put(52,new Settlement(null, true));
         residentialBuilding.put(53,new Settlement(null, false));
     }
-
-    public int upgradeToCity(int houseNumber, Player player) {
-        Building house = residentialBuilding.getOrDefault(houseNumber,null);
-        if (house instanceof Settlement settlement) {
-            if (settlement.isUpgradeable() && house.getOwner() == player) {
-                residentialBuilding.replace(houseNumber, new City(player));
-                return 1;
-            }
-        }
-        return 0;
-    }
-
-    public int upgradeToSettlement(int houseNumber, Player player) {
-        Building house = residentialBuilding.get(houseNumber);
-        if (house instanceof Settlement) {
-            if (house.getOwner() == null) {
-                house.setOwner(player);
-                return 1;
-            }
-        }
-        return 0;
-    }
-
     public boolean isRoadValid(int startPos, int endPos) {
         return roadBoard.getAdjacencyMatrix()[startPos][endPos] == 1;
     }
-
+    // author Phuoc
     /**
      * determine if road is buildable with the conditions of
      * being connected by another road and cannot build further if
@@ -150,7 +127,7 @@ public class Board {
         }
         return false;
     }
-
+    // author Phuoc
     public boolean canKnightBuild(int position, Player player) {
         boolean canKnightBuild = false;
         if (knightBoard.get(position).getOwner() != null) return false;
@@ -165,12 +142,12 @@ public class Board {
         }
         return canKnightBuild;
     }
-
+    // author Phuoc
     public boolean canCastleBuild(int location) {
         Castle castle = castleBoard[location];
         return castle.getOwner() == null;
     }
-
+    // author Phuoc
     public boolean canSettlementBuild(int location, Player player) {
         if (!residentialBuilding.containsKey(location) || residentialBuilding.get(location).getOwner() != null) {
             return false;
@@ -182,7 +159,7 @@ public class Board {
         }
         return false;
     }
-
+    // author Phuoc
     public boolean canCityBuild(int location, Player player) {
         if (!residentialBuilding.containsKey(location)) return false;
         Player owner = residentialBuilding.get(location).getOwner();
@@ -191,7 +168,7 @@ public class Board {
         }
         return owner == player && settlement.isUpgradeable();
     }
-
+    // author Phuoc
     public boolean isKnightResourceAvailable(Resource neededResource, Player player) {
         for (Knight knight : knightBoard.values()) {
             if (!knight.isJoker() && player.equals(knight.getOwner()) && knight.getJokerResource() == neededResource) {
@@ -203,7 +180,7 @@ public class Board {
         return (player.equals(wildCardKnight1.getOwner()) && !wildCardKnight1.isJoker()) ||
                         (player.equals(wildCardKnight2.getOwner()) && !wildCardKnight2.isJoker());
     }
-
+    // author Matthew
     /**
      * Determines whether a hypothetical road starting
      * at {@param firstPos} and ending at {@param secondPos} would

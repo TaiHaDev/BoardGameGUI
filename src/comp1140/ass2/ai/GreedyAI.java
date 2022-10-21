@@ -4,7 +4,7 @@ import comp1140.ass2.buildings.Knight;
 import comp1140.ass2.buildings.Road;
 import comp1140.ass2.gameobjects.GameInstance;
 import comp1140.ass2.gameobjects.Player;
-
+// Author Matthew
 public record GreedyAI(Player player) implements AIPlayer {
 
     public double evaluate(String boardState) {

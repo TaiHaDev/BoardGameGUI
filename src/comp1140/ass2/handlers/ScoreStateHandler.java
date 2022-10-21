@@ -2,7 +2,7 @@ package comp1140.ass2.handlers;
 
 import comp1140.ass2.pipeline.ChainableHandler;
 import comp1140.ass2.gameobjects.GameInstance;
-
+// author Matthew
 public record ScoreStateHandler(GameInstance game) implements ChainableHandler<String> {
 
     @Override

@@ -1,5 +1,5 @@
 package comp1140.ass2.game;
-
+// Author Matthew
 public class Matrices {
 
     public static int[][] multiply(int[][] left, int[][] right) {

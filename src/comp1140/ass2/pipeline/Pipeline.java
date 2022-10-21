@@ -1,5 +1,5 @@
 package comp1140.ass2.pipeline;
-
+// author Matthew
 public record Pipeline<T>(ChainableHandler<T> currentHandler) {
 
     public Pipeline<T> addHandler(ChainableHandler<T> handler) {

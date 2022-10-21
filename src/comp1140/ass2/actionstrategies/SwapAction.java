@@ -7,7 +7,7 @@ import comp1140.ass2.gameobjects.Player;
 import java.util.Map;
 
 public record SwapAction(GameInstance game, Player player) implements ActionStrategy {
-
+    // Author: Matt(50) / Phuoc (50)
     @Override
     public boolean isApplicable(String argument) {
         assert argument.length() == 2;

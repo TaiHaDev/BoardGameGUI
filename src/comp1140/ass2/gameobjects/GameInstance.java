@@ -41,7 +41,7 @@ public class GameInstance {
         }
         return game;
     }
-
+    // author Matthew
     /**
      * Passes the {@param encodedString} through the board reader pipeline.
      * Once the first handler has read what it is interested in from the string,
@@ -74,7 +74,7 @@ public class GameInstance {
     public GameInstance(Player[] players) {
         this.players.addAll(Arrays.asList(players));
     }
-
+    // author Matthew
     /**
      * Converts the resources section of a valid board
      * state to a map containing each present resource
@@ -98,7 +98,7 @@ public class GameInstance {
                 .mapToObj(e -> Resource.decodeChar((char) e))
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.summingInt(e -> 1)));
     }
-
+    // Author Phuoc
     /**
      * Returns whether for every entry in {@param requirements},
      * the passed map {@param resources} has either the same amount
@@ -115,7 +115,7 @@ public class GameInstance {
                 .allMatch(resource -> resources.containsKey(resource) &&
                         resources.get(resource) >= requirement.get(resource));
     }
-
+    // author Phuoc
     /**
      * This is a helper function for checkAndUpdateLongestRoad() and checkAndUpdateLargestArmy().
      * It evaluates a map contains player unique id as key
@@ -146,7 +146,7 @@ public class GameInstance {
         }
         return player;
     }
-
+    // author Phuoc
     public void checkAndUpdateLongestRoad() {
         Map<String, Integer> map = calculateLongestRoad();
         Player player = findPlayerWithHighestValueInMap(map, 5);
@@ -160,7 +160,7 @@ public class GameInstance {
             longestRoad = player;
         }
     }
-
+    // author Phuoc
     public void checkAndUpdateLargestArmy() {
         Map<String, Integer> map = calculateLargestArmy();
         Player player = findPlayerWithHighestValueInMap(map, 3);
@@ -174,6 +174,7 @@ public class GameInstance {
             largestArmy = player;
         }
     }
+    // author Matthew 50 / Phuoc 50
     /**
      * mutate the diceResult map as it is used to build buildings.
      * this function will be used in buildAction classes.
@@ -291,7 +292,7 @@ public class GameInstance {
     public void setLongestRoad(Player longestRoad) {
         this.longestRoad = longestRoad;
     }
-
+    // author Matthew
     /**
      * Converts a GameInstance object to a valid encoded string.
      *
@@ -341,14 +342,14 @@ public class GameInstance {
                 .append(player.equals(this.getLargestArmy()) ? "A" : ""));
         return state.toString();
     }
-
+    // author Matthew
     public void applyActionSequence(String[] args) {
         Stream.of(args).forEach(action -> Arrays.stream(ActionFactory.ActionType.values())
                 .filter(e -> action.startsWith(e.getName()))
                 .findFirst()
                 .ifPresent(type -> ActionFactory.of(this, getCurrentPlayer()).getActionByName(type).apply(action.substring(type.getName().length()))));
     }
-
+    // author Matthew
     public void completeTurn(boolean next) {
         if (getPlayers().stream().noneMatch(player -> player.getScore() >= 10))  {
             if (next) nextPlayer();
@@ -363,7 +364,7 @@ public class GameInstance {
             rollDice(getDiceCount());
         }
     }
-
+    // author Matthew
     public Map<String, Integer> calculateLongestRoad() {
         Map<String, Integer> longestRoad = new HashMap<>();
         for (Player player : getPlayers()) {
@@ -407,7 +408,7 @@ public class GameInstance {
         }
         return longestRoad;
     }
-
+    // author Matthew
     /**
      * count a number of knight each player have
      * @return a map containing each player and their knight count
