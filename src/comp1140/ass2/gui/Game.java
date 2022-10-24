@@ -448,6 +448,7 @@ public class Game extends Application implements Initializable {
                 game.nextPlayer();
                 renderGameInfo();
                 keep = "";
+                resetColour();
             }
         });
     }
@@ -619,14 +620,14 @@ public class Game extends Application implements Initializable {
                 if (building instanceof Settlement && building.getOwner() == game.getCurrentPlayer()) argument += "T";
                 argument += houseAddress;
                 if (actionStrategy.isApplicable(argument) && game.getRollsDone() == 4) {
+                    houseShape.setFill(game.getCurrentPlayer().getColor());
+                    actionStrategy.apply(argument);
                     if (building instanceof Settlement s && s.isUpgradeable()) {
                         InnerShadow innerShadow = new InnerShadow();
                         innerShadow.setWidth(125);
                         houseShape.setEffect(innerShadow);
-                    } else
-                        houseShape.setEffect(null);
-                    houseShape.setFill(game.getCurrentPlayer().getColor());
-                    actionStrategy.apply(argument);
+                    }
+                    if (argument.contains("T")) houseShape.setEffect(null);
                     renderGameInfo();
                     if (building instanceof City) houseShape.setOnMouseReleased(null);
                 }
@@ -677,13 +678,14 @@ public class Game extends Application implements Initializable {
             });
             for (String building : buildingList) {
                 Shape shape = (Shape) getClass().getDeclaredField(building).get(this);
+                Color initialColor = (Color) shape.getFill();
                 shape.setOpacity(1);
                 shape.setFill(Color.GRAY);
                 shape.setOnMousePressed(mouseEvent -> {
                     for (String b : buildingList) {
                         try {
                             Shape s2 = (Shape) getClass().getDeclaredField(b).get(this);
-                            if (!b.equals(building)) s2.setFill(Color.WHITE);
+                            if (!b.equals(building)) s2.setFill(initialColor);
                             s2.setOnMousePressed(null);
                         } catch (IllegalAccessException | NoSuchFieldException e) {
                             throw new RuntimeException(e);
@@ -716,7 +718,6 @@ public class Game extends Application implements Initializable {
         for (Player player : game.getPlayers()) {
             if (player.getScore() > 9) {
                 winnerPane.toFront();
-                wholePane.setVisible(false);
                 winnerLabel.setText("Our winner is " + player.getDisplayName());
                 quitButton.setOnMouseClicked(mouseEvent -> Platform.exit());
                 return;
@@ -728,6 +729,25 @@ public class Game extends Application implements Initializable {
         stat.append("\nLargest Army: ");
         if (game.getLargestArmy() != null) stat.append(game.getLargestArmy().getDisplayName());
         statsFreeText.setText(stat.toString());
+    }
+
+    public void resetColour() {
+        var fields = getClass().getFields();
+        for (var field : fields) {
+            try {
+                if (field.getName().matches("[r|h|k][0-9]*")) {
+                    Shape shape = (Shape) field.get(this);
+                    Color color = (Color) shape.getFill();
+                    if (color.equals(Color.GRAY)) {
+                        shape.setFill(Color.WHITE);
+                        shape.setEffect(null);
+                    }
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+
+        }
     }
 }
 
